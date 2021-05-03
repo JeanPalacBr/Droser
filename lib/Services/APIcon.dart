@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lease_drones/Models/modls.dart';
@@ -34,7 +35,6 @@ Future<bool> signUp(
         'password_confirmation': passwdconfirm
       }),
     );
-//{"status":"Success","message":null,"data":{"id":20,"token":"20|qfXCgLFvNKpYr8I3lcIufmaTCzIwunDd3IIO8QXx"}}
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -97,6 +97,73 @@ Future<List<City>> getCities(BuildContext context) async {
       }
 
       return coursesList;
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<UsuarioRegistradoProfile> getUserInfo(
+    BuildContext context, String tokn, String userid) async {
+  try {
+    final http.Response response = await http.get(
+        "https://pfinal.eastus.cloudapp.azure.com/api/user/" + userid,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: "Bearer " + tokn,
+        });
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      //List<UsuarioRegistrado> ofertList = <UsuarioRegistrado>[];
+      UsuarioRegistradoProfile us = new UsuarioRegistradoProfile(
+          nombre: jsonlist["data"][0]["nombre"],
+          ciudad: jsonlist["data"][0]["ciudad"],
+          direccion: jsonlist["data"][0]["direccion"],
+          documento: jsonlist["data"][0]["documento"],
+          email: jsonlist["data"][0]["email"],
+          idperfilusuario: jsonlist["data"][0]["perfil"],
+          telefono: jsonlist["data"][0]["telefono"],
+          estado: jsonlist["data"][0]["estado"]);
+      return us;
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
+  try {
+    final http.Response response = await http.get(
+        "https://pfinal.eastus.cloudapp.azure.com/api/articulos",
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: "Bearer " + tokn,
+        });
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      List<Ofert> ofertList = <Ofert>[];
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Ofert of = new Ofert(
+            nombre: jsonlist["data"][i]["nombre"],
+            categoria: jsonlist["data"][i]["categoria"],
+            descripcion: jsonlist["data"][i]["descripcion"],
+            precio: jsonlist["data"][i]["precio"],
+            dto: jsonlist["data"][i]["dto"],
+            cantidad: jsonlist["data"][i]["cantidad"]);
+        ofertList.add(of);
+      }
+
+      return ofertList;
     } else {
       print("request failed");
       print('${response.body}');

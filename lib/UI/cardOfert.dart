@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/UI/detailOfert.dart';
 
 class CardOfert extends StatelessWidget {
-  CardOfert();
+  Ofert ofe;
+  CardOfert(this.ofe);
+
   @override
   Widget build(BuildContext context) {
-    //final acStates = Provider.of<AccountState>(context);
     return InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DetailOfert(ofe)));
+        },
         child: Card(
           margin: EdgeInsets.all(5),
           shadowColor: Colors.black,
@@ -22,17 +27,6 @@ class CardOfert extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 25, top: 5),
-                child: Text(
-                  "Oferta del día",
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      decoration: TextDecoration.underline),
-                ),
-              ),
-              Padding(
                 padding: const EdgeInsets.all(5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40),
@@ -43,16 +37,20 @@ class CardOfert extends StatelessWidget {
                         width: 400,
                         alignment: Alignment.center,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
-                        child: Text(
-                          "-30%",
-                          style: TextStyle(
-                              backgroundColor: Colors.red,
-                              fontSize: 30,
-                              color: Colors.white),
-                        ),
-                      ),
+                      if (ofe.dto == "0")
+                        ...{}
+                      else ...{
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
+                          child: Text(
+                            "-" + ofe.dto.toString() + "%",
+                            style: TextStyle(
+                                backgroundColor: Colors.red,
+                                fontSize: 30,
+                                color: Colors.white),
+                          ),
+                        )
+                      },
                     ],
                   ),
                 ),
@@ -64,19 +62,21 @@ class CardOfert extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Drone quadcoptero DJI BoxMaster 5000",
+                      ofe.nombre.toString(),
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ),
-                    Text("\$250000",
-                        style: TextStyle(
-                            fontSize: 20.5,
-                            color: Colors.black54,
-                            decoration: TextDecoration.lineThrough)),
+                    if (ofe.dto == "0") ...{
+                      Text("\$",
+                          style: TextStyle(
+                              fontSize: 20.5,
+                              color: Colors.black54,
+                              decoration: TextDecoration.lineThrough))
+                    },
                     Text(
-                      "\$175000",
+                      "\$" + ofe.precio.toString(),
                       style: TextStyle(
                         fontSize: 25,
                         color: Colors.red,
@@ -105,7 +105,14 @@ class CardOfert extends StatelessWidget {
                             //fontSize: 25,
                             color: Colors.white,
                           )),
-                      onPressed: () {},
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Agregado a carrito'),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),

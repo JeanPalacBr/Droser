@@ -8,18 +8,19 @@ class SharedPrefs {
     }
   }
 
-  String get username => _sharedPrefs.getString(keyUsername) ?? "";
+  String get userid => _sharedPrefs.getString("userid") ?? "";
+  String get email => _sharedPrefs.getString("email") ?? "";
+  String get token => _sharedPrefs.getString("tokn") ?? "";
 
-  void setusername(String value) {
-    _sharedPrefs.setString(keyUsername, value);
-  }
+  // void setusername(String value) {
+  //   _sharedPrefs.setString(userid, value);
+  // }
 
-  Future<void> auth(String user, String token, String email) async {
-    _sharedPrefs.setString("usrname", username);
+  Future<void> auth(String userid, String token, String email) async {
+    _sharedPrefs.setString("userid", userid);
     _sharedPrefs.setString("email", email);
     _sharedPrefs.setString("tokn", token);
   }
 }
 
-const String keyUsername = "key_username";
 final sharedPrefs = SharedPrefs();

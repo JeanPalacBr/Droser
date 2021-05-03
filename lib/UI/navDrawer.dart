@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Catalog.dart';
 import 'login.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
-  String email = "Invitado";
+  String email = "Hola, Hubrt";
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -33,7 +34,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('Perfil'),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfessorDetails()))
+                  MaterialPageRoute(builder: (context) => UserProfile()))
             },
           ),
           ListTile(
@@ -50,9 +51,20 @@ class NavDrawer extends StatelessWidget {
             //  onTap: () => {sharedreflogoutset(context)},
           ),
           ListTile(
+            leading: Icon(Icons.list),
+            title: Text('Catalogo'),
+            onTap: () => {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Catalog()))
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.category),
             title: Text('Categorias'),
-            //  onTap: () => {sharedreflogoutset(context)},
+            onTap: () => {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Catalog()))
+            },
           ),
           ListTile(
             leading: Icon(Icons.chat),
@@ -84,7 +96,12 @@ class NavDrawer extends StatelessWidget {
     _sharedPrefs = await SharedPreferences.getInstance();
     _sharedPrefs.setString("email", "");
     _sharedPrefs.setString("tokn", "");
-    _sharedPrefs.setString("usrname", "");
+    _sharedPrefs.setString("userid", "");
+    _sharedPrefs.clear();
+    _sharedPrefs.remove("email");
+    _sharedPrefs.remove("tokn");
+    _sharedPrefs.remove("userid");
+    islogd = true;
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => Login()),

@@ -1,197 +1,192 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lease_drones/Models/userRegistered.dart';
+import 'package:lease_drones/UI/editProfile.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Login.dart';
+import 'package:lease_drones/Services/APIcon.dart';
 
-class ProfessorDetails extends StatefulWidget {
-  int profeid;
-  String username;
-  String token;
-  bool logged;
+class UserProfile extends StatefulWidget {
+  //UsuarioRegistrado usreg;
 
-  ProfessorDetails(
-      {Key key, this.profeid, this.username, this.token, this.logged})
-      : super(key: key);
+  UserProfile();
   @override
-  ProfessorDetailsstate createState() => ProfessorDetailsstate(
-      profeid: profeid, username: username, logged: logged, token: token);
+  UserProfilestate createState() => UserProfilestate();
 }
 
-class ProfessorDetailsstate extends State<ProfessorDetails> {
-  int profeid;
-  int profidcourse;
-  String emailed;
-  String usename;
-  String useemail;
-  String usephone;
-  String usecity;
-  //String country;
-  UsuarioRegistrado usuario;
-  String profbirthday;
-  String username;
-  String token;
-  bool logged = true;
-  ProfessorDetailsstate({this.profeid, this.username, this.token, this.logged});
-  //List<Student> studentsL = new List<Student>();
-  //final acState = Provider.of<AccountState>(contextsc);
+class UserProfilestate extends State<UserProfile> {
+  String emailed = "";
+  String userid = "";
+  UsuarioRegistradoProfile usuario = new UsuarioRegistradoProfile();
+  UserProfilestate();
   @override
   void initState() {
+    getuserprofile(context);
     loadFromShared();
     super.initState();
-    //FocusScope.of(context).requestFocus(new FocusNode());
-    usuario = UsuarioRegistrado(
-        direccion: "Cra 22 # 11-12",
-        documento: 11111,
-        email: "asd@un.com",
-        nombre: "Pedrinho",
-        telefono: "+57123123",
-        ciudad: "Soledad",
-        idperfilusuario: 1);
-    //if (logged) {
-    ProfessorDetailsstate();
-    //} else {
-    //   Islogged();
-    //}
+    UserProfilestate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("Droser"),
-          backgroundColor: Colors.indigo[700],
-          actions: <Widget>[
+    return MaterialApp(
+        home: Container(
+      decoration: new BoxDecoration(
+          gradient: LinearGradient(colors: [
+        Colors.blue[400],
+        Colors.blue[200],
+        Colors.white,
+      ], stops: [
+        0.4,
+        0.3,
+        0.3
+      ], begin: FractionalOffset.topRight, end: FractionalOffset.bottomLeft)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+            title: Text("Droser"),
+            backgroundColor: Colors.blue[400],
+            elevation: 0,
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
+                child: Text(
+                  emailed,
+                  style: TextStyle(fontSize: 19, color: Colors.white),
+                ),
+              ),
+            ]),
+        drawer: NavDrawer(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Center(
+                  child: new Container(
+                    margin: EdgeInsets.only(bottom: 5.0),
+                    height: 20.0,
+                    width: 80.0,
+                  ),
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.network(
+                    "https://scontent.fctg1-3.fna.fbcdn.net/v/t1.6435-9/37043851_10216044568609042_7828755675776811008_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=09cbfe&_nc_eui2=AeGY3V07QAhtuPHoxR0RqZwI8t6iWEKq69ry3qJYQqrr2kiDhhYYzPpd2XcLOPbRSP-VPFJulkG3pB_NBMuVyRuu&_nc_ohc=PR4xY9PS1V0AX8nmAuL&_nc_ht=scontent.fctg1-3.fna&oh=1f678cb1fac53cb33a86a362a79520f9&oe=60AF3BF5",
+                    width: 200,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                  child: Text(
+                    " " + usuario.nombre.toString(),
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
-              child: Text(
-                emailed,
-                style: TextStyle(fontSize: 19, color: Colors.white),
+              padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.confirmation_number),
+                  Text(
+                    "Documento ID: " + usuario.documento.toString(),
+                    style: TextStyle(fontSize: 21),
+                  )
+                ],
               ),
             ),
-          ]),
-      drawer: NavDrawer(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          headerWidget(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.confirmation_number),
-                Text(
-                  "Documento de identidad: " + usuario.documento.toString(),
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.alternate_email),
-                Text(
-                  "Email: " + emailed,
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.phone),
-                Text(
-                  "Teléfono: " + usuario.telefono,
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.location_on),
-                Text(
-                  "Dirección: " + usuario.direccion,
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.location_city),
-                Text(
-                  "Ciudad: " + usuario.ciudad.toString(),
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.date_range),
-                Text(
-                  "Birthday: 15/04/1999",
-                  style: TextStyle(fontSize: 21),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget headerWidget() {
-    return new Card(
-      elevation: 3,
-      color: Colors.indigo[700],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          new Center(
-            child: new Container(
-              margin: EdgeInsets.only(bottom: 5.0),
-              height: 20.0,
-              width: 80.0,
-            ),
-          ),
-          Text(
-            'Perfil de usuario',
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
-          Image.network(
-            "https://scontent.fctg1-3.fna.fbcdn.net/v/t1.6435-9/37043851_10216044568609042_7828755675776811008_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=09cbfe&_nc_eui2=AeGY3V07QAhtuPHoxR0RqZwI8t6iWEKq69ry3qJYQqrr2kiDhhYYzPpd2XcLOPbRSP-VPFJulkG3pB_NBMuVyRuu&_nc_ohc=PR4xY9PS1V0AX8nmAuL&_nc_ht=scontent.fctg1-3.fna&oh=1f678cb1fac53cb33a86a362a79520f9&oe=60AF3BF5",
-            width: 200,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
-            child: Text(
-              " " + usuario.nombre.toString(),
-              textAlign: TextAlign.center,
-              style: new TextStyle(
-                fontSize: 25,
-                color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.alternate_email),
+                  Text(
+                    "Email: " + emailed,
+                    style: TextStyle(fontSize: 21),
+                  )
+                ],
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.phone),
+                  Text(
+                    "Teléfono: " + usuario.telefono.toString(),
+                    style: TextStyle(fontSize: 21),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.location_on),
+                  Text(
+                    "Dirección: " + usuario.direccion.toString(),
+                    style: TextStyle(fontSize: 21),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.location_city),
+                  Text(
+                    "Ciudad: " + usuario.ciudad.toString(),
+                    style: TextStyle(fontSize: 21),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.star),
+                  Text(
+                    "Estado: Activo",
+                    style: TextStyle(fontSize: 21),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfile()));
+                      },
+                      child: Text(
+                        "Editar",
+                        style: TextStyle(fontSize: 20),
+                      )),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
-    );
-    //flex: 1,
+    ));
   }
 
   Future<void> loadFromShared() async {
@@ -199,15 +194,21 @@ class ProfessorDetailsstate extends State<ProfessorDetails> {
     _sharedPrefs = await SharedPreferences.getInstance();
 
     emailed = _sharedPrefs.getString("email");
+    userid = _sharedPrefs.getString("userid");
     if (emailed == null) {
       emailed = "esnull";
     }
   }
 
-  void sharedreflogoutset() async {
-    SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    sharedpref.setString("tokn", "");
-    sharedpref.setString("usrname", "");
-    sharedpref.setBool("isloggeda", false);
+  Future<void> getuserprofile(BuildContext context) async {
+    SharedPrefs shar = new SharedPrefs();
+    getUserInfo(context, shar.token, shar.userid).then((artic) {
+      setState(() {
+        usuario = artic;
+      });
+    }).catchError((error) {
+      return Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+    });
   }
 }

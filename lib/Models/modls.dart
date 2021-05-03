@@ -47,3 +47,31 @@ class City {
     );
   }
 }
+
+class Ofert {
+  String nombre;
+  String categoria;
+  String descripcion;
+  String dto;
+  int precio;
+  int cantidad;
+
+  Ofert(
+      {this.nombre,
+      this.categoria,
+      this.descripcion,
+      this.dto,
+      this.precio,
+      this.cantidad});
+
+  factory Ofert.fromJson(Map<dynamic, dynamic> json) {
+    return Ofert(
+      nombre: json['nombre'],
+      categoria: json['categoria'],
+      descripcion: json['descripcion'],
+      precio: json['precio'],
+      dto: json['dto'],
+      cantidad: json['cantidad'],
+    );
+  }
+}
