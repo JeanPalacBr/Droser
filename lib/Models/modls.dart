@@ -48,6 +48,13 @@ class City {
   }
 }
 
+class Category {
+  String nombre;
+  String imagen;
+
+  Category({this.nombre, this.imagen});
+}
+
 class Ofert {
   String nombre;
   String categoria;

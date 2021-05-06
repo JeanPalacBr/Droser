@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/cardOfert.dart';
+import 'package:lease_drones/UI/ofertCard.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
-
-var contexth;
 
 class Catalog extends StatefulWidget {
   @override
@@ -22,7 +20,6 @@ class _CatalogState extends State<Catalog> {
 
   @override
   Widget build(BuildContext context) {
-    contexth = context;
     return Scaffold(
       appBar:
           AppBar(title: Text("Droser"), backgroundColor: Colors.indigo[700]),

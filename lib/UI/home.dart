@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lease_drones/UI/detailOfert.dart';
+import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/UI/categories.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+
+List<Ofert> carrito = <Ofert>[];
 
 class Home extends StatefulWidget {
   @override
@@ -159,7 +162,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

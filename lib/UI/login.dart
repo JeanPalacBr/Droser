@@ -7,7 +7,7 @@ import 'package:string_validator/string_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var contextsc;
-bool islogd = true;
+bool islogd = false;
 String usrn;
 String tokn;
 
@@ -44,6 +44,7 @@ class Islogged extends StatefulWidget {
 class Isloggedstate extends State {
   @override
   void initState() {
+    islogd = false;
     loadFromShared();
     //islogd ? Home() : Login();
     super.initState();
@@ -108,8 +109,6 @@ class Isloggedstate extends State {
                     child: Text("Iniciar sesión",
                         style: TextStyle(color: Colors.black)),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Home()));
                       if (isEmail(_email.value.text)) {
                         onpressedlogin(context, _email.value.text,
                             _password.value.text, true);
@@ -159,10 +158,14 @@ class Isloggedstate extends State {
   void onpressedlogin(
       var context, String email, String _password, bool remember) {
     signIn(email: email, password: _password).then((user) {
-      SharedPrefs shar = new SharedPrefs();
-      shar.auth(user.id.toString(), user.token, user.email);
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Logged In')));
+      if (user != null) {
+        return Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('Bienvenido')));
+        SharedPrefs shar = new SharedPrefs();
+        shar.auth(user.id.toString(), user.token, user.email);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      }
     }).catchError((error) {
       return Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
@@ -192,6 +195,8 @@ class Isloggedstate extends State {
 
     if (emailed == null || emailed == "") {
       islogd = false;
+    } else {
+      islogd = true;
     }
   }
 

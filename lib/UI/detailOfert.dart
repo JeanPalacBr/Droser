@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 
 Ofert ofera;
@@ -189,6 +190,7 @@ class DetailOfertstate extends State<DetailOfert> {
                                 color: Colors.white,
                               )),
                           onPressed: () {
+                            carrito.add(ofer);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: const Text('Agregado a carrito'),

@@ -51,7 +51,7 @@ Future<bool> signUp(
 Future<UsuarioLog> signIn({String email, String password}) async {
   try {
     final http.Response response = await http.post(
-      'https://pfinal.eastus.cloudapp.azure.com/api/auth/login/',
+      'https://droser.tech/api/auth/login/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -139,12 +139,11 @@ Future<UsuarioRegistradoProfile> getUserInfo(
 
 Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
   try {
-    final http.Response response = await http.get(
-        "https://pfinal.eastus.cloudapp.azure.com/api/articulos",
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: "Bearer " + tokn,
-        });
+    final http.Response response = await http
+        .get("https://droser.tech/api/articulos", headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + tokn,
+    });
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {

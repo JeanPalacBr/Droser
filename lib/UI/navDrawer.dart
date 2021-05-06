@@ -3,6 +3,7 @@ import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Catalog.dart';
+import 'categories.dart';
 import 'login.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -62,8 +63,8 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.category),
             title: Text('Categorias'),
             onTap: () => {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Catalog()))
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Categories()))
             },
           ),
           ListTile(
