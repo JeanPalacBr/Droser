@@ -48,6 +48,22 @@ class City {
   }
 }
 
+class IDocument {
+  String nombre;
+  int idtipo;
+  int estado;
+
+  IDocument({this.nombre, this.idtipo, this.estado});
+
+  factory IDocument.fromJson(Map<dynamic, dynamic> json) {
+    return IDocument(
+      nombre: json['nombre'],
+      idtipo: json['idtipo_documento'],
+      estado: json['estado'],
+    );
+  }
+}
+
 class Category {
   String nombre;
   String imagen;

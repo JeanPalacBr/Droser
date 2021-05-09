@@ -31,7 +31,7 @@ class Login extends StatelessWidget {
             backgroundColor: Colors.transparent,
             //resizeToAvoidBottomPadding: false,
 
-            body: islogd ? Islogged() : Home(),
+            body: islogd ? Home() : Islogged(),
           )),
     );
   }
@@ -159,18 +159,19 @@ class Isloggedstate extends State {
       var context, String email, String _password, bool remember) {
     signIn(email: email, password: _password).then((user) {
       if (user != null) {
-        return Scaffold.of(context)
+        Scaffold.of(context)
             .showSnackBar(SnackBar(content: Text('Bienvenido')));
         SharedPrefs shar = new SharedPrefs();
         shar.auth(user.id.toString(), user.token, user.email);
+        islogd = true;
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Home()));
       }
     }).catchError((error) {
-      return Scaffold.of(context)
+      Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
     }).timeout(Duration(seconds: 20), onTimeout: () {
-      return Scaffold.of(context)
+      Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Timeout error")));
     });
   }
@@ -198,19 +199,5 @@ class Isloggedstate extends State {
     } else {
       islogd = true;
     }
-  }
-
-  void _onpressedlogin(
-      var context, String email, String _password, bool remember) {
-    signIn(email: email, password: _password).then((user) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Logged In')));
-    }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
-    }).timeout(Duration(seconds: 20), onTimeout: () {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Timeout error")));
-    });
   }
 }

@@ -55,7 +55,7 @@ class _CatalogState extends State<Catalog> {
         ofersList = artic;
       });
     }).catchError((error) {
-      return Scaffold.of(context)
+      Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
     });
   }

@@ -19,20 +19,20 @@ Future<bool> signUp(
   bool exito = false;
   try {
     final http.Response response = await http.post(
-      'https://pfinal.eastus.cloudapp.azure.com/api/auth/register',
+      'https://droser.tech/api/auth/register',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
+        'password_confirmation': passwdconfirm,
         'direccion': direccion,
         'name': name,
         'telefono': phone,
         'documento': documento,
-        'idperfil_usuario': "1",
-        'idciudad': "1",
-        'password_confirmation': passwdconfirm
+        'idciudad': city,
+        'tipo_documento': "1",
       }),
     );
     print('${response.body}');
@@ -44,8 +44,8 @@ Future<bool> signUp(
       print("signup failed");
       print('${response.body}');
     }
-    return exito;
   } catch (e) {}
+  return exito;
 }
 
 Future<UsuarioLog> signIn({String email, String password}) async {
@@ -76,7 +76,7 @@ Future<UsuarioLog> signIn({String email, String password}) async {
 Future<List<City>> getCities(BuildContext context) async {
   try {
     final http.Response response = await http.get(
-      "https://pfinal.eastus.cloudapp.azure.com/api/ciudades",
+      "https://droser.tech/api/ciudades",
     );
     print('${response.body}');
     print('${response.statusCode}');
@@ -104,11 +104,42 @@ Future<List<City>> getCities(BuildContext context) async {
   } catch (e) {}
 }
 
+Future<List<IDocument>> getIDtypes(BuildContext context) async {
+  try {
+    final http.Response response = await http.get(
+      "https://droser.tech/api/tdocumentos",
+    );
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      //"{"data":[{"idciudad":1,"nombre":"Barranquilla","estado":1}]}"
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      // List<dynamic> coursesList2 = jsonlist["data"];
+      print('${response.body}' + "okiiiiiiiiii");
+      List<IDocument> coursesList = <IDocument>[];
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        IDocument ciu = new IDocument(
+            estado: jsonlist["data"][i]["idtipo_documento"],
+            idtipo: jsonlist["data"][i]["estado"],
+            nombre: jsonlist["data"][i]["nombre"]);
+        coursesList.add(ciu);
+      }
+
+      return coursesList;
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
 Future<UsuarioRegistradoProfile> getUserInfo(
     BuildContext context, String tokn, String userid) async {
   try {
     final http.Response response = await http.get(
-        "https://pfinal.eastus.cloudapp.azure.com/api/user/" + userid,
+        "https://droser.tech/api/user/" + userid,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: "Bearer " + tokn,
@@ -138,6 +169,7 @@ Future<UsuarioRegistradoProfile> getUserInfo(
 }
 
 Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
+  List<Ofert> ofertList = <Ofert>[];
   try {
     final http.Response response = await http
         .get("https://droser.tech/api/articulos", headers: <String, String>{
@@ -150,22 +182,21 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
       print('${response.body}');
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-      List<Ofert> ofertList = <Ofert>[];
+
       for (var i = 0; i < jsonlist["data"].length; i++) {
         Ofert of = new Ofert(
             nombre: jsonlist["data"][i]["nombre"],
             categoria: jsonlist["data"][i]["categoria"],
             descripcion: jsonlist["data"][i]["descripcion"],
             precio: jsonlist["data"][i]["precio"],
-            dto: jsonlist["data"][i]["dto"],
+            dto: jsonlist["data"][i]["dto"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"]);
         ofertList.add(of);
       }
-
-      return ofertList;
     } else {
       print("request failed");
       print('${response.body}');
     }
   } catch (e) {}
+  return ofertList;
 }

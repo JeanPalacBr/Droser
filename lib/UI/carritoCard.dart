@@ -27,7 +27,7 @@ class CarritoCardState extends State<CarritoCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: Colors.red[400],
+        color: Colors.blue[400],
         elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -36,54 +36,83 @@ class CarritoCardState extends State<CarritoCard> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                padding(
-                    Text("Nombre: " + articulo.nombre,
-                        style: TextStyle(color: Colors.white, fontSize: 18.0)),
-                    1),
-                Text("Categoría: " + articulo.categoria,
-                    style: TextStyle(color: Colors.white, fontSize: 18.0)),
-                Text("Precio: " + articulo.precio.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 18.0)),
-                padding(
-                    Text("Subtotal: " + subtotal.toString(),
-                        style: TextStyle(color: Colors.black, fontSize: 18.0)),
-                    2),
-                Row(
-                  children: <Widget>[
-                    Text("Ingrese la cantidad: ",
-                        style: TextStyle(color: Colors.white, fontSize: 18.0)),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 2),
-                      child: Column(
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(
+                    "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
+                    width: 100,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: <Widget>[
+                      Text(articulo.nombre,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold)),
+                      Text("Categoría: " + articulo.categoria,
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 18.0)),
+                      Text(
+                          "Precio: " +
+                              (double.parse(articulo.precio.toString()) *
+                                      ((100 -
+                                              double.tryParse(
+                                                  articulo.dto.toString())) /
+                                          100))
+                                  .toString(),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 18.0)),
+                      Text("Subtotal: " + subtotal.toString(),
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 18.0)),
+                      Row(
                         children: <Widget>[
-                          SizedBox(
-                            width: 50,
-                            child: TextField(
-                              onChanged: (text) {
-                                setState(() {
-                                  if (text != null) {
-                                    sbtotal(articulo.precio.toDouble(),
-                                        int.parse(text));
-                                    subtotales[posx] = subtotal;
-                                    cantidades[posx] = text;
-                                  }
-                                });
-                              },
-                              controller: cantidade,
-                              decoration: InputDecoration(
-                                  fillColor: Colors.black,
-                                  border: OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.black))),
-                              style: Theme.of(context).textTheme.bodyText1,
+                          Text("Horas a rentar: ",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 18.0)),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 2, bottom: 10),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 80,
+                                  height: 40,
+                                  child: TextField(
+                                    onChanged: (text) {
+                                      setState(() {
+                                        if (text != null) {
+                                          sbtotal(articulo.precio.toDouble(),
+                                              int.parse(text));
+                                          subtotales[posx] = subtotal;
+                                          cantidades[posx] = text;
+                                          sumatoria();
+                                        }
+                                      });
+                                    },
+                                    controller: cantidade,
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                            borderSide: new BorderSide(
+                                                color: Colors.white))),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -95,19 +124,9 @@ class CarritoCardState extends State<CarritoCard> {
     subtotal = precio * cantidad;
   }
 
-  Widget padding(Widget widget, int t, [String typeTodo]) {
-    Widget pa;
-    switch (t) {
-      case 1:
-        pa =
-            Padding(padding: EdgeInsets.fromLTRB(10, 30, 10, 5), child: widget);
-        break;
-      case 2:
-        pa =
-            Padding(padding: EdgeInsets.fromLTRB(10, 5, 10, 30), child: widget);
-        break;
+  void sumatoria() {
+    for (var i = 0; i < subtotales.length; i++) {
+      apagar = apagar + subtotales[i];
     }
-
-    return pa;
   }
 }

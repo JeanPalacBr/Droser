@@ -13,47 +13,37 @@ class categoryCard extends StatelessWidget {
           //BUSQUEDA POR CATEGORIA
         },
         child: Card(
-          margin: EdgeInsets.all(5),
+          margin: EdgeInsets.all(0),
           shadowColor: Colors.black,
           color: Colors.indigo[50],
-          elevation: 40,
+          elevation: 20,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        cat.imagen,
-                        width: 400,
-                        alignment: Alignment.center,
-                      ),
-                    ],
+              Stack(
+                children: [
+                  Image.network(
+                    cat.imagen,
+                    fit: BoxFit.fill,
+                    width: 400,
+                    height: 210,
+                    alignment: Alignment.center,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(3, 175, 0, 0),
+                    child: Text(
                       cat.nombre,
                       style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                          backgroundColor: Colors.black45,
+                          fontSize: 30,
+                          color: Colors.white),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

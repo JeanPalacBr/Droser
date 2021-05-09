@@ -52,6 +52,11 @@ class NavDrawer extends StatelessWidget {
             //  onTap: () => {sharedreflogoutset(context)},
           ),
           ListTile(
+            leading: Icon(Icons.admin_panel_settings_outlined),
+            title: Text('Panel de control de renta'),
+            //  onTap: () => {sharedreflogoutset(context)},
+          ),
+          ListTile(
             leading: Icon(Icons.list),
             title: Text('Catalogo'),
             onTap: () => {

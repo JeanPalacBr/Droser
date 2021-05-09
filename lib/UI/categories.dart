@@ -18,7 +18,7 @@ class categoriesState extends State<Categories> {
     Category imagen = new Category(
         imagen:
             "https://www.dronethusiast.com/wp-content/uploads/2016/04/dji-phantom-3-outdoor-quadcopter-drone-with-camera.jpg",
-        nombre: "Imagenes");
+        nombre: "Imágenes");
     Category envios = new Category(
         imagen:
             "https://www.elheraldo.co/sites/default/files/articulo/2019/09/19/shutterstock_drone-1168x657.jpg",
@@ -34,7 +34,7 @@ class categoriesState extends State<Categories> {
     Category fumigacion = new Category(
         imagen:
             "https://omegadrone.com.mx/wp-content/uploads/2020/11/DRONESAGRICULTURA-OMEGADRONE-AGRAST20-1-750x300.jpg",
-        nombre: "Domicilios");
+        nombre: "Agricultura");
     cat.add(imagen);
     cat.add(envios);
     cat.add(topo);
@@ -47,8 +47,7 @@ class categoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: Text("Droser"), backgroundColor: Colors.indigo[700]),
+      appBar: AppBar(title: Text("Droser"), backgroundColor: Colors.blue[400]),
       drawer: NavDrawer(),
       body: Center(
         child: Column(

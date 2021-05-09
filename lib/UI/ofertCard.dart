@@ -69,56 +69,40 @@ class CardOfert extends StatelessWidget {
                           color: Colors.black),
                     ),
                     if (ofe.dto == "0") ...{
-                      Text("\$",
+                      Text(
+                        "\$" + ofe.precio.toString(),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.red,
+                        ),
+                      ),
+                    } else ...{
+                      Text("\$" + ofe.precio.toString(),
                           style: TextStyle(
                               fontSize: 20.5,
                               color: Colors.black54,
-                              decoration: TextDecoration.lineThrough))
-                    },
-                    Text(
-                      "\$" + ofe.precio.toString(),
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.red,
+                              decoration: TextDecoration.lineThrough)),
+                      Text(
+                        "\$" +
+                            ((double.tryParse(ofe.precio.toString()) *
+                                    ((100 - double.tryParse(ofe.dto)) / 100)))
+                                .toString(),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
+                    }
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
-                    child: ElevatedButton.icon(
-                      style:
-                          ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                      //color: Colors.white,
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                      ),
-                      label: Text("Agregar al carrito",
-                          style: TextStyle(
-                            // fontFamily: 'Product Sans',
-                            //fontSize: 25,
-                            color: Colors.white,
-                          )),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Agregado a carrito'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
         ));
   }
+  // void dcto(){
+  //   double dcto = ofe.dto;
+  //   String finals="";
+
+  // }
 }
