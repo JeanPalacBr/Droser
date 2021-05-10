@@ -33,8 +33,9 @@ class UsuarioRegistradoProfile {
   String documento;
   String direccion;
   String telefono;
-  String idperfilusuario;
+//  String idperfilusuario;
   String ciudad;
+  String tipodocu;
   String estado;
 
   UsuarioRegistradoProfile(
@@ -44,7 +45,7 @@ class UsuarioRegistradoProfile {
       this.direccion,
       this.telefono,
       this.ciudad,
-      this.idperfilusuario,
+      this.tipodocu,
       this.estado});
 
   factory UsuarioRegistradoProfile.fromJson(Map<String, dynamic> json) {

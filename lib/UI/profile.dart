@@ -59,131 +59,133 @@ class UserProfilestate extends State<UserProfile> {
               ),
             ]),
         drawer: NavDrawer(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Center(
-                  child: new Container(
-                    margin: EdgeInsets.only(bottom: 5.0),
-                    height: 20.0,
-                    width: 80.0,
-                  ),
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.network(
-                    "https://scontent.fctg1-3.fna.fbcdn.net/v/t1.6435-9/37043851_10216044568609042_7828755675776811008_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=09cbfe&_nc_eui2=AeGY3V07QAhtuPHoxR0RqZwI8t6iWEKq69ry3qJYQqrr2kiDhhYYzPpd2XcLOPbRSP-VPFJulkG3pB_NBMuVyRuu&_nc_ohc=PR4xY9PS1V0AX8nmAuL&_nc_ht=scontent.fctg1-3.fna&oh=1f678cb1fac53cb33a86a362a79520f9&oe=60AF3BF5",
-                    width: 200,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
-                  child: Text(
-                    " " + usuario.nombre.toString(),
-                    textAlign: TextAlign.center,
-                    style: new TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new Center(
+                    child: new Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      height: 20.0,
+                      width: 80.0,
                     ),
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.confirmation_number),
-                  Text(
-                    "Documento ID: " + usuario.documento.toString(),
-                    style: TextStyle(fontSize: 21),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.alternate_email),
-                  Text(
-                    "Email: " + emailed,
-                    style: TextStyle(fontSize: 21),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.phone),
-                  Text(
-                    "Teléfono: " + usuario.telefono.toString(),
-                    style: TextStyle(fontSize: 21),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.location_on),
-                  Text(
-                    "Dirección: " + usuario.direccion.toString(),
-                    style: TextStyle(fontSize: 21),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.location_city),
-                  Text(
-                    "Ciudad: " + usuario.ciudad.toString(),
-                    style: TextStyle(fontSize: 21),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.star),
-                  Text(
-                    "Estado: Activo",
-                    style: TextStyle(fontSize: 21),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      "https://scontent.fctg1-3.fna.fbcdn.net/v/t1.6435-9/37043851_10216044568609042_7828755675776811008_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=09cbfe&_nc_eui2=AeGY3V07QAhtuPHoxR0RqZwI8t6iWEKq69ry3qJYQqrr2kiDhhYYzPpd2XcLOPbRSP-VPFJulkG3pB_NBMuVyRuu&_nc_ohc=PR4xY9PS1V0AX8nmAuL&_nc_ht=scontent.fctg1-3.fna&oh=1f678cb1fac53cb33a86a362a79520f9&oe=60AF3BF5",
+                      width: 200,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                    child: Text(
+                      " " + usuario.nombre.toString(),
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfile()));
-                      },
-                      child: Text(
-                        "Editar",
-                        style: TextStyle(fontSize: 20),
-                      )),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.confirmation_number),
+                    Text(
+                      "Documento ID: " + usuario.documento.toString(),
+                      style: TextStyle(fontSize: 21),
+                    )
+                  ],
                 ),
-              ],
-            )
-          ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.alternate_email),
+                    Text(
+                      "Email: " + emailed,
+                      style: TextStyle(fontSize: 21),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.phone),
+                    Text(
+                      "Teléfono: " + usuario.telefono.toString(),
+                      style: TextStyle(fontSize: 21),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.location_on),
+                    Text(
+                      "Dirección: " + usuario.direccion.toString(),
+                      style: TextStyle(fontSize: 21),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.location_city),
+                    Text(
+                      "Ciudad: " + usuario.ciudad.toString(),
+                      style: TextStyle(fontSize: 21),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.star),
+                    Text(
+                      "Estado: Activo",
+                      style: TextStyle(fontSize: 21),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile(usuario)));
+                        },
+                        child: Text(
+                          "Editar",
+                          style: TextStyle(fontSize: 20),
+                        )),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ));

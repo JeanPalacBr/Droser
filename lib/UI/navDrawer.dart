@@ -9,6 +9,9 @@ import 'login.dart';
 class NavDrawer extends StatelessWidget {
   @override
   String email = "Hola, Hubrt";
+  final Shader linearGradient = LinearGradient(
+    colors: <Color>[Color(0xffDA44bb), Color(0xff8921aa)],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -26,9 +29,12 @@ class NavDrawer extends StatelessWidget {
                     style: TextStyle(fontSize: 25, color: Colors.white)),
               ],
             ),
-            decoration: BoxDecoration(
-              color: Colors.indigo[300],
-            ),
+            decoration: new BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.white, Colors.blue[200], Colors.blue[400]],
+                    stops: [0.1, 0.3, 0.7],
+                    begin: FractionalOffset.topRight,
+                    end: FractionalOffset.bottomLeft)),
           ),
           ListTile(
             leading: Icon(Icons.person),
@@ -75,6 +81,17 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.chat),
             title: Text('Mensajes'),
+            //  onTap: () => {sharedreflogoutset(context)},
+          ),
+          ListTile(
+            leading: Icon(Icons.card_giftcard),
+            title: Text(
+              'Cuponmania!!!',
+              style: new TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  foreground: Paint()..shader = linearGradient),
+            ),
             //  onTap: () => {sharedreflogoutset(context)},
           ),
           ListTile(

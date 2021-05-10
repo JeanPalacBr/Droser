@@ -5,12 +5,12 @@ import 'package:lease_drones/UI/categoryCard.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
-class Categories extends StatefulWidget {
+class Coupons extends StatefulWidget {
   @override
-  categoriesState createState() => categoriesState();
+  CouponsState createState() => CouponsState();
 }
 
-class categoriesState extends State<Categories> {
+class CouponsState extends State<Coupons> {
   List<Category> cat = <Category>[];
 
   @override

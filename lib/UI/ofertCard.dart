@@ -100,9 +100,4 @@ class CardOfert extends StatelessWidget {
           ),
         ));
   }
-  // void dcto(){
-  //   double dcto = ofe.dto;
-  //   String finals="";
-
-  // }
 }

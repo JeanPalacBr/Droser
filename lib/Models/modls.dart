@@ -67,8 +67,9 @@ class IDocument {
 class Category {
   String nombre;
   String imagen;
-
-  Category({this.nombre, this.imagen});
+  int estado;
+  int id;
+  Category({this.nombre, this.estado, this.id, this.imagen});
 }
 
 class Ofert {

@@ -157,10 +157,54 @@ Future<UsuarioRegistradoProfile> getUserInfo(
           direccion: jsonlist["data"][0]["direccion"],
           documento: jsonlist["data"][0]["documento"],
           email: jsonlist["data"][0]["email"],
-          idperfilusuario: jsonlist["data"][0]["perfil"],
           telefono: jsonlist["data"][0]["telefono"],
-          estado: jsonlist["data"][0]["estado"]);
+          tipodocu: jsonlist["data"][0]["tipo_documento"],
+          estado: jsonlist["data"][0]["estado"].toString());
       return us;
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<bool> putUserInfo(
+    String email,
+    String tipodocumento,
+    String direccion,
+    String name,
+    String city,
+    String phone,
+    String documento,
+    BuildContext context,
+    String tokn,
+    String userid) async {
+  try {
+    int estado = 1;
+    bool exito = false;
+    final http.Response response =
+        await http.put("https://droser.tech/api/user/" + userid,
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: "Bearer " + tokn,
+            },
+            body: jsonEncode(<String, String>{
+              'nombre': name,
+              'documento': documento,
+              'direccion': direccion,
+              'email': email,
+              'telefono': phone,
+              'estado': "1",
+              'tipo_documento': tipodocumento,
+              'ciudad': city,
+            }));
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      print('${response.body}');
+
+      return exito;
     } else {
       print("request failed");
       print('${response.body}');
@@ -191,6 +235,38 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
             precio: jsonlist["data"][i]["precio"],
             dto: jsonlist["data"][i]["dto"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"]);
+        ofertList.add(of);
+      }
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+  return ofertList;
+}
+
+Future<List<Category>> getCategories(BuildContext context, String tokn) async {
+  List<Category> ofertList = <Category>[];
+  try {
+    final http.Response response = await http
+        .get("https://droser.tech/api/categorias", headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + tokn,
+    });
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Category of = new Category(
+          imagen: "",
+          nombre: jsonlist["data"][i]["nombre"],
+          estado: jsonlist["data"][i]["categoria"],
+          id: jsonlist["data"][i]["descripcion"],
+        );
         ofertList.add(of);
       }
     } else {
