@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/UI/detailOfert.dart';
-import 'package:lease_drones/UI/home.dart';
 
-class CardOfert extends StatelessWidget {
+class RentCard extends StatelessWidget {
   Ofert ofe;
-  CardOfert(this.ofe);
+  RentCard(this.ofe);
 
   @override
   Widget build(BuildContext context) {
@@ -95,37 +94,6 @@ class CardOfert extends StatelessWidget {
                       ),
                     }
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
-                    child: ElevatedButton.icon(
-                      style:
-                          ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                      //color: Colors.white,
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                      ),
-                      label: Text("Agregar al carrito",
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
-                      onPressed: () {
-                        carrito.add(ofe);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Agregado a carrito'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                 ),
               ),
             ],

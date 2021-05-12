@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/Carrito.dart';
 import 'package:lease_drones/UI/categoryCard.dart';
+import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/searchResult.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class Categories extends StatefulWidget {
@@ -12,7 +15,9 @@ class Categories extends StatefulWidget {
 
 class categoriesState extends State<Categories> {
   List<Category> cat = <Category>[];
-
+  TextEditingController busqueda = new TextEditingController();
+  bool searching = false;
+  bool encontrado = false;
   @override
   void initState() {
     getCategoriesa(context);
@@ -48,7 +53,49 @@ class categoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Droser"), backgroundColor: Colors.blue[400]),
+      appBar: AppBar(
+        title: !searching
+            ? Text("Droser")
+            : TextField(
+                controller: busqueda,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                    hintText: "Busca drones, articulos y más...",
+                    hintStyle: TextStyle(color: Colors.white),
+                    fillColor: Colors.white),
+                onSubmitted: (busqueda) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchResult(busqueda)));
+                },
+              ),
+        actions: <Widget>[
+          Row(
+            children: [
+              IconButton(
+                  icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
+                  onPressed: () {
+                    setState(() {
+                      this.searching = !this.searching;
+                      busqueda.clear();
+                    });
+                  }),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Carrito(carrito)));
+                },
+                icon: Icon(Icons.shopping_cart),
+              )
+            ],
+          )
+        ],
+        backgroundColor: Colors.blue[400],
+        elevation: 0,
+      ),
       drawer: NavDrawer(),
       body: Center(
         child: Column(

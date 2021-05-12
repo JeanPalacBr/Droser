@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/carritoCard.dart';
+import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/login.dart';
+import 'package:lease_drones/UI/searchResult.dart';
 import 'navDrawer.dart';
 
 List<double> subtotales = <double>[];
 List<String> cantidades = <String>[];
-List<Map<String, String>> publicadosa = <Map<String, String>>[];
+List<String> fechainicio = <String>[];
+List<String> fechafin = <String>[];
+List<String> horainicio = <String>[];
+List<String> horafin = <String>[];
+List<Rent> publicadosa = <Rent>[];
 double apagar;
 
 class Carrito extends StatefulWidget {
@@ -17,91 +26,173 @@ class Carrito extends StatefulWidget {
 
 class _CarritoState extends State<Carrito> {
   List<Ofert> carri = <Ofert>[];
-
+  final cupon = TextEditingController();
+  Coupon valid = new Coupon();
+  int cupval = 0;
   TextEditingController busqueda = new TextEditingController();
+  bool searching = false;
+  bool encontrado = false;
+  void initState() {
+    super.initState();
+  }
+
   _CarritoState(this.carri);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavDrawer(),
-      appBar: AppBar(title: Text("Carrito"), backgroundColor: Colors.blue[400]),
-      body: Builder(
-        builder: (context) => Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                  icon: Icon(Icons.remove_shopping_cart),
-                  label: Text("Limpiar carrito"),
-                  onPressed: () {
-                    setState(() {
-                      carri.clear();
-                      subtotales.clear();
-                      cantidades.clear();
-                      apagar = 0;
-                    });
+    return MaterialApp(
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+      supportedLocales: [const Locale('en'), const Locale('es')],
+      home: Scaffold(
+        drawer: NavDrawer(),
+        appBar: AppBar(
+          title: !searching
+              ? Text("Droser")
+              : TextField(
+                  controller: busqueda,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                      hintText: "Busca drones, articulos y más...",
+                      hintStyle: TextStyle(color: Colors.white),
+                      fillColor: Colors.white),
+                  onSubmitted: (busqueda) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchResult(busqueda)));
                   },
                 ),
-                Text("Total a pagar: " + apagar.toString()),
-              ],
-            ),
-            Expanded(child: _listArticulos()),
+          actions: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: ElevatedButton.icon(
-                    icon: Icon(Icons.refresh),
-                    label: Text(
-                      "Actualizar carrito",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style:
-                        ElevatedButton.styleFrom(primary: Colors.indigo[700]),
+                IconButton(
+                    icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
                     onPressed: () {
                       setState(() {
-                        sumatoria();
+                        this.searching = !this.searching;
+                        busqueda.clear();
                       });
-                    },
-                  ),
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: ElevatedButton.icon(
-                    icon: Icon(Icons.monetization_on_outlined),
-                    label: Text(
-                      "Ir a pagar",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style:
-                        ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                    onPressed: () {
-                      // try{
-                      for (var i = 0; i < carri.length; i++) {
-                        Map<String, String> articulo = {
-                          "nombre": carri[i].nombre,
-                          "categoria": carri[i].categoria,
-                          "precio": carri[i].precio.toString(),
-                          "cantidad": cantidades[i]
-                        };
-                        setState(() {
-                          publicadosa.add(articulo);
-                        });
-                      }
-                      // }catch(e){}
-                    },
-                  ),
-                ),
+                    }),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Carrito(carrito)));
+                  },
+                  icon: Icon(Icons.shopping_cart),
+                )
               ],
-            ),
+            )
           ],
+          backgroundColor: Colors.blue[400],
+          elevation: 0,
+        ),
+        body: Builder(
+          builder: (context) => Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ElevatedButton.icon(
+                      style:
+                          ElevatedButton.styleFrom(primary: Colors.indigo[700]),
+                      icon: Icon(Icons.remove_shopping_cart),
+                      label: Text("Limpiar carrito"),
+                      onPressed: () {
+                        setState(() {
+                          carri.clear();
+                          subtotales.clear();
+                          cantidades.clear();
+                          fechainicio.clear();
+                          fechafin.clear();
+                          horainicio.clear();
+                          horafin.clear();
+                          subtotales.clear();
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('El carrito ha sido limpiado'),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Text("Redimir cupón: "),
+                  Flexible(
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      controller: cupon,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(child: _listArticulos()),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.monetization_on_outlined),
+                  label: Text(
+                    "Ir a pagar",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
+                  onPressed: () {
+                    // try{
+                    verificarcupon(cupon.value.text);
+                    if (valid.idcupon != null || valid.idcupon == 0) {
+                      cupval = valid.idcupon;
+                      double mayor = 0;
+                      int gi = 0;
+                      for (var i = 0; i < subtotales.length; i++) {
+                        if (subtotales[i] > mayor) {
+                          mayor = subtotales[i];
+                          gi = i;
+                        }
+                      }
+                      subtotales[gi] =
+                          subtotales[gi] * ((100 - valid.dcto) / 100);
+                    }
+                    for (var i = 0; i < carri.length; i++) {
+                      Rent articulo = new Rent(
+                          idarticulo: carri[i].idarticulo,
+                          cantidad: int.tryParse(cantidades[i]),
+                          direccionEntrega: usuario.direccion,
+                          fechaInicio: fechainicio[i],
+                          fechaFin: fechafin[i],
+                          horaInicio: horainicio[i],
+                          horaFin: horafin[i],
+                          idciudad: usuario.ciudad,
+                          idcupon: cupval,
+                          valor: subtotales[i].ceil());
+                      publicadosa.add(articulo);
+                    }
+                    setState(() {});
+                    // }catch(e){}
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  void verificarcupon(String cupon) {
+    verifyCoupon(cupon).then((cup) {
+      if (cup != null) {
+        valid = cup;
+      }
+    });
+  }
+
+  void disponibilidad() {}
 
   void sumatoria() {
     for (var i = 0; i < subtotales.length; i++) {
@@ -110,32 +201,34 @@ class _CarritoState extends State<Carrito> {
   }
 
   Widget _listArticulos() {
-    return ListView.builder(
-      itemCount: carri.length,
-      itemBuilder: (context, posicion) {
-        var element = carri[posicion];
-        return Dismissible(
-          key: UniqueKey(),
-          background: Container(
-              color: Colors.red,
-              alignment: AlignmentDirectional.centerStart,
-              child: Row(
-                children: [
-                  Icon(Icons.delete, color: Colors.white),
-                  Text(
-                    "Borrar articulo",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              )),
-          child: CarritoCard(carri[posicion], posicion),
-          onDismissed: (direction) {
-            setState(() {
-              carri.removeAt(posicion);
-            });
-          },
-        );
-      },
-    );
+    return carri.length >= 1
+        ? ListView.builder(
+            itemCount: carri.length,
+            itemBuilder: (context, posicion) {
+              var element = carri[posicion];
+              return Dismissible(
+                key: UniqueKey(),
+                background: Container(
+                    color: Colors.red,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, color: Colors.white),
+                        Text(
+                          "Borrar articulo",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    )),
+                child: CarritoCard(carri[posicion], posicion),
+                onDismissed: (direction) {
+                  setState(() {
+                    carri.removeAt(posicion);
+                  });
+                },
+              );
+            },
+          )
+        : Text("No se encontraron articulos en el carrito");
   }
 }

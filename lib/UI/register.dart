@@ -97,21 +97,16 @@ class RegistrarformState extends State {
             Padding(
               padding: const EdgeInsets.all(12),
               child: containerText(
-                Row(
-                  children: [
-                    TextFormField(
-                      autofocus: true,
-                      controller: _email,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: new InputDecoration(
-                        labelText: "Email",
-                        labelStyle: TextStyle(color: Colors.black),
-                        hintText: "example@ejemplo.com",
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    Icon(Icons.email),
-                  ],
+                TextFormField(
+                  autofocus: true,
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: new InputDecoration(
+                    labelText: "Email",
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintText: "example@ejemplo.com",
+                    hintStyle: TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
             ),

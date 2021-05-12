@@ -1,7 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/Carrito.dart';
 import 'package:lease_drones/UI/categories.dart';
+import 'package:lease_drones/UI/categoryCard.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/ofertCard.dart';
+import 'package:lease_drones/UI/searchResult.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 List<Ofert> carrito = <Ofert>[];
 
@@ -10,230 +19,240 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-TextEditingController busqueda = new TextEditingController();
-
 class _HomeState extends State<Home> {
+  TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
   int precio1;
+  var rng = new Random();
+  var rng2 = new Random();
   int precio2;
+  List<Ofert> ofersList = <Ofert>[];
+  List<Ofert> nofersList = <Ofert>[];
+  List<Category> cat = <Category>[];
+  void initState() {
+    getArticlesa(context);
+    getCategoriesa(context);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavDrawer(),
-      appBar: AppBar(
-        title: !searching
-            ? Text("Droser")
-            : TextField(
-                decoration: InputDecoration(
-                    hintText: "Busca drones, articulos y más...",
-                    hintStyle: TextStyle(color: Colors.white),
-                    fillColor: Colors.white),
-              ),
-        actions: <Widget>[
-          IconButton(
-              icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
-              onPressed: () {
-                setState(() {
-                  this.searching = !this.searching;
-                });
-              })
-        ],
-        backgroundColor: Colors.blue[400],
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: Column(
-            children: [
-              InkWell(
-                onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => DetailOfert(ofe)));
-                },
-                child: Card(
-                  margin: EdgeInsets.all(5),
-                  shadowColor: Colors.black,
-                  color: Colors.indigo[50],
-                  elevation: 40,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+    if (ofersList == null || ofersList.length == 0) {
+      return Container();
+    }
+    return MaterialApp(
+      home: Container(
+        decoration: new BoxDecoration(
+            gradient: LinearGradient(
+          colors: [Colors.white, Colors.blue[200], Colors.blue[400]],
+          stops: [0.1, 0.3, 0.7],
+          begin: FractionalOffset.bottomLeft,
+          end: FractionalOffset.topRight,
+        )),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          drawer: NavDrawer(),
+          appBar: AppBar(
+            title: !searching
+                ? Text("Droser")
+                : TextField(
+                    controller: busqueda,
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                        hintText: "Busca drones, articulos y más...",
+                        hintStyle: TextStyle(color: Colors.white),
+                        fillColor: Colors.white),
+                    onSubmitted: (busqueda) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchResult(busqueda)));
+                    },
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            actions: <Widget>[
+              Row(
+                children: [
+                  IconButton(
+                      icon:
+                          !searching ? Icon(Icons.search) : Icon(Icons.cancel),
+                      onPressed: () {
+                        setState(() {
+                          this.searching = !this.searching;
+                          busqueda.clear();
+                        });
+                      }),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Carrito(carrito)));
+                    },
+                    icon: Icon(Icons.shopping_cart),
+                  )
+                ],
+              )
+            ],
+            backgroundColor: Colors.blue[400],
+            elevation: 0,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Oferta relampago",
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                        Icon(Icons.flash_on, color: Colors.yellow)
+                      ],
+                    ),
+                  ),
+                  CardOfert(ofersList[rng2.nextInt(ofersList.length - 1)]),
+                  Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, top: 5),
-                        child: Text(
-                          "Oferta del día",
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              decoration: TextDecoration.underline),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.list),
+                              label: Text("Catalogo de productos")),
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.category),
+                              label: Text("Categorías")),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: Stack(
-                            children: [
-                              Image.network(
-                                "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
-                                width: 400,
-                                alignment: Alignment.center,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 10, 5, 5),
-                                child: Text(
-                                  "-30%",
-                                  style: TextStyle(
-                                      backgroundColor: Colors.red,
-                                      fontSize: 30,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.construction_outlined),
+                              label: Text("Panel de control")),
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.person),
+                              label: Text("Perfil")),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Drone quadcoptero DJI BoxMaster 5000",
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                            Text("\$250000",
-                                style: TextStyle(
-                                    fontSize: 20.5,
-                                    color: Colors.black54,
-                                    decoration: TextDecoration.lineThrough)),
-                            Text(
-                              "\$175000",
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.indigo[700]),
-                              //color: Colors.white,
-                              icon: Icon(
-                                Icons.shopping_cart_outlined,
-                                color: Colors.white,
-                              ),
-                              label: Text("Agregar al carrito",
-                                  style: TextStyle(
-                                    // fontFamily: 'Product Sans',
-                                    //fontSize: 25,
-                                    color: Colors.white,
-                                  )),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Home()));
-                              },
-                            ),
-                          ),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.receipt_long_outlined),
+                              label: Text("Mis rentas")),
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.message),
+                              label: Text("Mensajeria")),
+                        ],
                       ),
                     ],
                   ),
-                ),
+                  Divider(
+                    height: 20,
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Artículo recomendado",
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                        Icon(Icons.recommend, color: Colors.yellow)
+                      ],
+                    ),
+                  ),
+                  CardOfert(nofersList[rng.nextInt(nofersList.length - 1)]),
+                  Divider(
+                    height: 20,
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Es hora de la cuponmania!!, redime descuentos en tus articulos favoritos introduciendo los codigos promocionales, para reclamarlos presiona en el botón de la cuponmania.",
+                          style: TextStyle(color: Colors.black, fontSize: 19),
+                          textAlign: TextAlign.justify,
+                        ),
+                        ElevatedButton.icon(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.purple),
+                            icon: Icon(Icons.countertops_outlined),
+                            label: Text("Cupónmania!")),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void buscar(BuildContext context) {
-    // traerArticulos(busqueda.text, qery).then((resbq) {
-    //  resbusqueda = resbq;
-    // });
-    // if (resbusqueda.length < 1) {
-    // Scaffold.of(context).showSnackBar(SnackBar(
-    //    content: Text(
-    // 'No se encontraron artículos',
-    // style: TextStyle(fontSize: 20),
-    //  )));
+  Future<void> getArticlesa(BuildContext context) async {
+    SharedPrefs shar = new SharedPrefs();
+    getArticles(context, shar.token).then((artic) {
+      setState(() {
+        nofersList = artic;
+        for (var i = 0; i < artic.length; i++) {
+          if (artic[i].dto != "0") {
+            ofersList.add(artic[i]);
+          }
+        }
+      });
+    }).catchError((error) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+    });
   }
-}
 
-Widget _searchBar() {
-  return Column(
-    children: [
-      Container(
-          color: Colors.indigo[700],
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      child: TextField(
-                    controller: busqueda,
-                    decoration: InputDecoration(
-                        hintText: "Buscar drones, servicios y más",
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: InputBorder.none),
-                  )),
-                  FlatButton(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      onPressed: () {
-                        // setState(() {
-                        //   // resbusqueda.clear();
-                        //   buscar(context);
-                        // });
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.search),
-                          Text("Buscar"),
-                        ],
-                      )),
-                  IconButton(
-                    icon: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      //Navigator.push(
-                      //context,
-                      //MaterialPageRoute(builder: (context) => Carrito(carrito)));
-                    },
-                    // label: Text(""),
-                  ),
-                ],
-              ),
-            ],
-          )),
-      // Expanded(child: _listArticulos()),
-    ],
-  );
+  Widget _list() {
+    return cat.length > 1
+        ? ListView.builder(
+            itemCount: cat.length,
+            shrinkWrap: true,
+            //scrollDirection: Axis.horizontal,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: categoryCard(cat[posicion]),
+              );
+            })
+        : Text("");
+  }
+
+  Future<void> getCategoriesa(BuildContext context) async {
+    SharedPrefs shar = new SharedPrefs();
+    getCategories(context, shar.token).then((categ) {
+      setState(() {
+        cat = categ;
+      });
+    }).catchError((error) {
+      return Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+    });
+  }
 }

@@ -150,7 +150,6 @@ Future<UsuarioRegistradoProfile> getUserInfo(
       print('${response.body}');
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-      //List<UsuarioRegistrado> ofertList = <UsuarioRegistrado>[];
       UsuarioRegistradoProfile us = new UsuarioRegistradoProfile(
           nombre: jsonlist["data"][0]["nombre"],
           ciudad: jsonlist["data"][0]["ciudad"],
@@ -234,6 +233,7 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
             descripcion: jsonlist["data"][i]["descripcion"],
             precio: jsonlist["data"][i]["precio"],
             dto: jsonlist["data"][i]["dto"].toString(),
+            idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"]);
         ofertList.add(of);
       }
@@ -264,8 +264,8 @@ Future<List<Category>> getCategories(BuildContext context, String tokn) async {
         Category of = new Category(
           imagen: "",
           nombre: jsonlist["data"][i]["nombre"],
-          estado: jsonlist["data"][i]["categoria"],
-          id: jsonlist["data"][i]["descripcion"],
+          estado: jsonlist["data"][i]["estado"].toString(),
+          id: jsonlist["data"][i]["idcategoria_articulo"].toString(),
         );
         ofertList.add(of);
       }
@@ -275,4 +275,143 @@ Future<List<Category>> getCategories(BuildContext context, String tokn) async {
     }
   } catch (e) {}
   return ofertList;
+}
+
+Future<List<Coupon>> getCoupons(BuildContext context, String tokn) async {
+  List<Coupon> ofertList = <Coupon>[];
+  try {
+    final http.Response response = await http
+        .get("https://droser.tech/api/cupones", headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + tokn,
+    });
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Coupon of = new Coupon(
+          idcupon: jsonlist["data"][i]["idcupon"],
+          nombre: jsonlist["data"][i]["nombre"],
+          codigo: jsonlist["data"][i]["codigo"],
+          dcto: jsonlist["data"][i]["dcto"],
+          cantidad: jsonlist["data"][i]["cantidad"],
+          estado: jsonlist["data"][i]["estado"],
+        );
+        ofertList.add(of);
+      }
+    } else {
+      print("request failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+  return ofertList;
+}
+
+Future<List<Ofert>> searchByCategory(String idcat) async {
+  List<Ofert> ofertList = <Ofert>[];
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/articulos/idcategoria/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'idcategoria': idcat}),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Ofert of = new Ofert(
+            nombre: jsonlist["data"][i]["name"],
+            categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+            descripcion: jsonlist["data"][i]["descripcion"],
+            precio: jsonlist["data"][i]["precio"],
+            dto: jsonlist["data"][i]["dcto"].toString(),
+            idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
+            cantidad: jsonlist["data"][i]["cantidad"]);
+        ofertList.add(of);
+      }
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+  return ofertList;
+}
+
+Future<List<Ofert>> searchByName(String nombre) async {
+  List<Ofert> ofertList = <Ofert>[];
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/articulos/nombre/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'nombre': nombre}),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Ofert of = new Ofert(
+            nombre: jsonlist["data"][i]["name"],
+            categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+            descripcion: jsonlist["data"][i]["descripcion"],
+            precio: jsonlist["data"][i]["precio"],
+            dto: jsonlist["data"][i]["dcto"].toString(),
+            idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
+            cantidad: jsonlist["data"][i]["cantidad"]);
+        ofertList.add(of);
+      }
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+  return ofertList;
+}
+
+Future<Coupon> verifyCoupon(String cupon) async {
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/cupones/veri',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'codigo': cupon}),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      Coupon of = new Coupon(
+          idcupon: jsonlist["data"][0]["idcupon"],
+          nombre: jsonlist["data"][0]["nombre"],
+          codigo: jsonlist["data"][0]["codigo"],
+          dcto: jsonlist["data"][0]["dcto"],
+          cantidad: jsonlist["data"][0]["cantidad"],
+          estado: jsonlist["data"][0]["estado"]);
+      return of;
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
 }

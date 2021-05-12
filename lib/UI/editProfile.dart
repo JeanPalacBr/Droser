@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Models/userRegistered.dart';
 import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/searchResult.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 
@@ -29,6 +33,9 @@ class EditProfilestate extends State<EditProfile> {
   String selciuda = "Seleccione su ciudad";
   String selid = "Seleccione su tipo de documento";
   String selidocu = "Seleccione su tipo de documento";
+  TextEditingController busqueda = new TextEditingController();
+  bool searching = false;
+  bool encontrado = false;
   @override
   void initState() {
     _loadCities();
@@ -48,6 +55,53 @@ class EditProfilestate extends State<EditProfile> {
                     begin: FractionalOffset.topRight,
                     end: FractionalOffset.bottomLeft)),
             child: Scaffold(
+                drawer: NavDrawer(),
+                appBar: AppBar(
+                  title: !searching
+                      ? Text("Droser")
+                      : TextField(
+                          controller: busqueda,
+                          textInputAction: TextInputAction.search,
+                          decoration: InputDecoration(
+                              hintText: "Busca drones, articulos y más...",
+                              hintStyle: TextStyle(color: Colors.white),
+                              fillColor: Colors.white),
+                          onSubmitted: (busqueda) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SearchResult(busqueda)));
+                          },
+                        ),
+                  actions: <Widget>[
+                    Row(
+                      children: [
+                        IconButton(
+                            icon: !searching
+                                ? Icon(Icons.search)
+                                : Icon(Icons.cancel),
+                            onPressed: () {
+                              setState(() {
+                                this.searching = !this.searching;
+                                busqueda.clear();
+                              });
+                            }),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Carrito(carrito)));
+                          },
+                          icon: Icon(Icons.shopping_cart),
+                        )
+                      ],
+                    )
+                  ],
+                  backgroundColor: Colors.blue[400],
+                  elevation: 0,
+                ),
                 backgroundColor: Colors.transparent,
                 body: Form(
                     child: Center(

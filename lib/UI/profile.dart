@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lease_drones/Models/userRegistered.dart';
+import 'package:lease_drones/UI/Carrito.dart';
 import 'package:lease_drones/UI/editProfile.dart';
+import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/searchResult.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lease_drones/Services/APIcon.dart';
@@ -19,11 +23,14 @@ class UserProfile extends StatefulWidget {
 class UserProfilestate extends State<UserProfile> {
   String emailed = "";
   String userid = "";
-  UsuarioRegistradoProfile usuario = new UsuarioRegistradoProfile();
+  TextEditingController busqueda = new TextEditingController();
+  bool searching = false;
+  bool encontrado = false;
+  //UsuarioRegistradoProfile usuario = new UsuarioRegistradoProfile();
   UserProfilestate();
   @override
   void initState() {
-    getuserprofile(context);
+    // getuserprofile(context);
     loadFromShared();
     super.initState();
     UserProfilestate();
@@ -46,18 +53,48 @@ class UserProfilestate extends State<UserProfile> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-            title: Text("Droser"),
-            backgroundColor: Colors.blue[400],
-            elevation: 0,
-            actions: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
-                child: Text(
-                  emailed,
-                  style: TextStyle(fontSize: 19, color: Colors.white),
+          title: !searching
+              ? Text("Droser")
+              : TextField(
+                  controller: busqueda,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                      hintText: "Busca drones, articulos y más...",
+                      hintStyle: TextStyle(color: Colors.white),
+                      fillColor: Colors.white),
+                  onSubmitted: (busqueda) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchResult(busqueda)));
+                  },
                 ),
-              ),
-            ]),
+          actions: <Widget>[
+            Row(
+              children: [
+                IconButton(
+                    icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
+                    onPressed: () {
+                      setState(() {
+                        this.searching = !this.searching;
+                        busqueda.clear();
+                      });
+                    }),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Carrito(carrito)));
+                  },
+                  icon: Icon(Icons.shopping_cart),
+                )
+              ],
+            )
+          ],
+          backgroundColor: Colors.blue[400],
+          elevation: 0,
+        ),
         drawer: NavDrawer(),
         body: SingleChildScrollView(
           child: Column(
@@ -83,7 +120,7 @@ class UserProfilestate extends State<UserProfile> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
                     child: Text(
-                      " " + usuario.nombre.toString(),
+                      usuario.nombre.toString(),
                       textAlign: TextAlign.center,
                       style: new TextStyle(
                         fontSize: 25,
@@ -111,7 +148,7 @@ class UserProfilestate extends State<UserProfile> {
                   children: <Widget>[
                     Icon(Icons.alternate_email),
                     Text(
-                      "Email: " + emailed,
+                      "Email: " + usuario.email.toString(),
                       style: TextStyle(fontSize: 21),
                     )
                   ],
@@ -202,15 +239,15 @@ class UserProfilestate extends State<UserProfile> {
     }
   }
 
-  Future<void> getuserprofile(BuildContext context) async {
-    SharedPrefs shar = new SharedPrefs();
-    getUserInfo(context, shar.token, shar.userid).then((artic) {
-      setState(() {
-        usuario = artic;
-      });
-    }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
-    });
-  }
+  // Future<void> getuserprofile(BuildContext context) async {
+  //   SharedPrefs shar = new SharedPrefs();
+  //   getUserInfo(context, shar.token, shar.userid).then((artic) {
+  //     setState(() {
+  //       usuario = artic;
+  //     });
+  //   }).catchError((error) {
+  //     return Scaffold.of(context)
+  //         .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+  //   });
+  // }
 }

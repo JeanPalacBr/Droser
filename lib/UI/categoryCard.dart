@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/searchByCategory.dart';
 
 class categoryCard extends StatelessWidget {
   Category cat;
@@ -10,7 +12,10 @@ class categoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          //BUSQUEDA POR CATEGORIA
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchByCategory(cat.id.toString())));
         },
         child: Card(
           margin: EdgeInsets.all(0),

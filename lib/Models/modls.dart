@@ -67,8 +67,8 @@ class IDocument {
 class Category {
   String nombre;
   String imagen;
-  int estado;
-  int id;
+  String estado;
+  String id;
   Category({this.nombre, this.estado, this.id, this.imagen});
 }
 
@@ -79,6 +79,7 @@ class Ofert {
   String dto;
   int precio;
   int cantidad;
+  String idarticulo;
 
   Ofert(
       {this.nombre,
@@ -86,16 +87,57 @@ class Ofert {
       this.descripcion,
       this.dto,
       this.precio,
-      this.cantidad});
+      this.cantidad,
+      this.idarticulo});
 
   factory Ofert.fromJson(Map<dynamic, dynamic> json) {
     return Ofert(
-      nombre: json['nombre'],
-      categoria: json['categoria'],
-      descripcion: json['descripcion'],
-      precio: json['precio'],
-      dto: json['dto'],
-      cantidad: json['cantidad'],
-    );
+        nombre: json['nombre'],
+        categoria: json['categoria'],
+        descripcion: json['descripcion'],
+        precio: json['precio'],
+        dto: json['dto'],
+        cantidad: json['cantidad'],
+        idarticulo: json['idarticulo']);
   }
+}
+
+class Coupon {
+  String nombre;
+  String codigo;
+  int cantidad;
+  int dcto;
+  int estado;
+  int idcupon;
+  Coupon(
+      {this.nombre,
+      this.estado,
+      this.idcupon,
+      this.dcto,
+      this.cantidad,
+      this.codigo});
+}
+
+class Rent {
+  String idarticulo;
+  int cantidad;
+  String fechaInicio;
+  String horaInicio;
+  String fechaFin;
+  String horaFin;
+  String direccionEntrega;
+  int idcupon;
+  String idciudad;
+  int valor;
+  Rent(
+      {this.idarticulo,
+      this.cantidad,
+      this.fechaInicio,
+      this.horaInicio,
+      this.fechaFin,
+      this.horaFin,
+      this.direccionEntrega,
+      this.idcupon,
+      this.idciudad,
+      this.valor});
 }

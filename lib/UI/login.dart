@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lease_drones/Models/userRegistered.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/register.dart';
 import 'package:lease_drones/UI/home.dart';
@@ -10,6 +11,8 @@ var contextsc;
 bool islogd = false;
 String usrn;
 String tokn;
+bool invited = false;
+UsuarioRegistradoProfile usuario;
 
 class Login extends StatelessWidget {
   @override
@@ -31,7 +34,7 @@ class Login extends StatelessWidget {
             backgroundColor: Colors.transparent,
             //resizeToAvoidBottomPadding: false,
 
-            body: islogd ? Home() : Islogged(),
+            body: Islogged(),
           )),
     );
   }
@@ -44,9 +47,9 @@ class Islogged extends StatefulWidget {
 class Isloggedstate extends State {
   @override
   void initState() {
+    usuario = new UsuarioRegistradoProfile(nombre: "");
     islogd = false;
     loadFromShared();
-    //islogd ? Home() : Login();
     super.initState();
   }
 
@@ -112,12 +115,15 @@ class Isloggedstate extends State {
                       if (isEmail(_email.value.text)) {
                         onpressedlogin(context, _email.value.text,
                             _password.value.text, true);
+                        getuserprofile(context);
                       } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                          'Email o contraseña incorrectos',
-                          style: TextStyle(fontSize: 20),
-                        )));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                const Text('Email o contraseña incorrectos'),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
                       }
                     },
                   )
@@ -137,15 +143,19 @@ class Isloggedstate extends State {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.white),
                 //color: Colors.white,
-                child: Text("Entrar como Invitado",
+                child: Text("Ingresar como Invitado",
                     style: TextStyle(
                       // fontFamily: 'Product Sans',
                       //fontSize: 25,
                       color: Colors.black,
                     )),
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()));
+                  setState(() {
+                    invited = true;
+                    islogd = true;
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Home()));
+                  });
                 },
               ),
             )
@@ -159,20 +169,47 @@ class Isloggedstate extends State {
       var context, String email, String _password, bool remember) {
     signIn(email: email, password: _password).then((user) {
       if (user != null) {
-        Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('Bienvenido')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Bienvenido'),
+          duration: const Duration(seconds: 2),
+        ));
         SharedPrefs shar = new SharedPrefs();
         shar.auth(user.id.toString(), user.token, user.email);
-        islogd = true;
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+        setState(() {
+          islogd = true;
+          invited = false;
+        });
       }
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: const Duration(seconds: 2),
+      ));
     }).timeout(Duration(seconds: 20), onTimeout: () {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Timeout error")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Verifique su conexión a internet"),
+        duration: const Duration(seconds: 2),
+      ));
+    });
+  }
+
+  Future<void> getuserprofile(BuildContext context) async {
+    SharedPrefs shar = new SharedPrefs();
+    getUserInfo(context, shar.token, shar.userid).then((artic) {
+      setState(() {
+        if (artic != null) {
+          usuario = artic;
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home()));
+        } else {
+          usuario.nombre = "";
+        }
+      });
+    }).catchError((error) {
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: const Duration(seconds: 2),
+      ));
     });
   }
 
