@@ -77,9 +77,11 @@ class Ofert {
   String categoria;
   String descripcion;
   String dto;
-  int precio;
+  String precio;
   int cantidad;
+  String idcategoria;
   String idarticulo;
+  String disponible;
 
   Ofert(
       {this.nombre,
@@ -88,7 +90,9 @@ class Ofert {
       this.dto,
       this.precio,
       this.cantidad,
-      this.idarticulo});
+      this.idcategoria,
+      this.idarticulo,
+      this.disponible});
 
   factory Ofert.fromJson(Map<dynamic, dynamic> json) {
     return Ofert(
@@ -126,9 +130,10 @@ class Rent {
   String fechaFin;
   String horaFin;
   String direccionEntrega;
-  int idcupon;
+  String idusuario;
+  String idcupon;
   String idciudad;
-  int valor;
+  double valor;
   Rent(
       {this.idarticulo,
       this.cantidad,
@@ -137,6 +142,7 @@ class Rent {
       this.fechaFin,
       this.horaFin,
       this.direccionEntrega,
+      this.idusuario,
       this.idcupon,
       this.idciudad,
       this.valor});

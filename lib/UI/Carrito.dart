@@ -5,7 +5,9 @@ import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/carritoCard.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
+import 'package:lease_drones/UI/receipt.dart';
 import 'package:lease_drones/UI/searchResult.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'navDrawer.dart';
 
 List<double> subtotales = <double>[];
@@ -15,6 +17,8 @@ List<String> fechafin = <String>[];
 List<String> horainicio = <String>[];
 List<String> horafin = <String>[];
 List<Rent> publicadosa = <Rent>[];
+List<Rent> disponibles = <Rent>[];
+List<Rent> nodisponibles = <Rent>[];
 double apagar;
 
 class Carrito extends StatefulWidget {
@@ -29,6 +33,7 @@ class _CarritoState extends State<Carrito> {
   final cupon = TextEditingController();
   Coupon valid = new Coupon();
   int cupval = 0;
+  String res = "";
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
@@ -143,36 +148,90 @@ class _CarritoState extends State<Carrito> {
                   ),
                   style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
                   onPressed: () {
+                    disponibles.clear();
+                    nodisponibles.clear();
+
                     // try{
-                    verificarcupon(cupon.value.text);
-                    if (valid.idcupon != null || valid.idcupon == 0) {
-                      cupval = valid.idcupon;
-                      double mayor = 0;
-                      int gi = 0;
-                      for (var i = 0; i < subtotales.length; i++) {
-                        if (subtotales[i] > mayor) {
-                          mayor = subtotales[i];
-                          gi = i;
+                    SharedPrefs shar = new SharedPrefs();
+                    for (var i = 0; i < subtotales.length; i++) {
+                      if (subtotales[i] == 0.0) {
+                        subtotales.removeAt(i);
+                      }
+                    }
+
+                    verifyCoupon(cupon.value.text).then((cup) {
+                      if (cup != null) {
+                        valid = cup;
+                        if (valid.idcupon != null ||
+                            valid.nombre == "no" ||
+                            valid.idcupon == 0000) {
+                          cupval = valid.idcupon;
+                          double mayor = 0;
+                          int gi = 0;
+                          for (var i = 0; i < subtotales.length; i++) {
+                            if (subtotales[i] > mayor) {
+                              mayor = subtotales[i];
+                              gi = i;
+                            }
+                          }
+                          subtotales[gi] =
+                              subtotales[gi] * ((100 - valid.dcto) / 100);
+                        }
+                        for (var i = 0; i < carri.length; i++) {
+                          Rent articulo = new Rent(
+                              idarticulo: carri[i].idarticulo,
+                              cantidad: int.tryParse(cantidades[i]),
+                              direccionEntrega: usuario.direccion,
+                              fechaInicio: fechainicio[i].substring(0, 10),
+                              fechaFin: fechafin[i].substring(0, 10),
+                              horaInicio:
+                                  horainicio[i].substring(10, 15) + ":00",
+                              horaFin: horafin[i].substring(10, 15) + ":00",
+                              idciudad: usuario.ciudad,
+                              idcupon: cupval.toString(),
+                              idusuario: shar.userid,
+                              valor: subtotales[i]);
+                          setState(() {
+                            publicadosa.add(articulo);
+                          });
+                          availability(articulo).then((cup) {
+                            if (cup != null) {
+                              res = cup;
+                            }
+                            if (res != "" || res == null) {
+                              if (res == "Disponible") {
+                                disponibles.add(articulo);
+                              } else {
+                                if (res != null) {
+                                  nodisponibles.add(articulo);
+                                }
+                              }
+                              if (disponibles.length == carrito.length) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Receipt(disponibles)));
+                              } else {
+                                if (nodisponibles.length > 0) {
+                                  for (var i = 0; i < carrito.length; i++) {
+                                    for (var j = 0;
+                                        j < nodisponibles.length;
+                                        j++) {
+                                      if (carrito[i].idarticulo ==
+                                          nodisponibles[j].idarticulo) {
+                                        carrito[i].disponible = "No disponible";
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          });
                         }
                       }
-                      subtotales[gi] =
-                          subtotales[gi] * ((100 - valid.dcto) / 100);
-                    }
-                    for (var i = 0; i < carri.length; i++) {
-                      Rent articulo = new Rent(
-                          idarticulo: carri[i].idarticulo,
-                          cantidad: int.tryParse(cantidades[i]),
-                          direccionEntrega: usuario.direccion,
-                          fechaInicio: fechainicio[i],
-                          fechaFin: fechafin[i],
-                          horaInicio: horainicio[i],
-                          horaFin: horafin[i],
-                          idciudad: usuario.ciudad,
-                          idcupon: cupval,
-                          valor: subtotales[i].ceil());
-                      publicadosa.add(articulo);
-                    }
-                    setState(() {});
+                    });
+
                     // }catch(e){}
                   },
                 ),
@@ -184,15 +243,21 @@ class _CarritoState extends State<Carrito> {
     );
   }
 
-  void verificarcupon(String cupon) {
-    verifyCoupon(cupon).then((cup) {
-      if (cup != null) {
-        valid = cup;
-      }
-    });
-  }
+  // Future<void> verificarcupon(String cupon) async {
+  //   verifyCoupon(cupon).then((cup) {
+  //     if (cup != null) {
+  //       valid = cup;
+  //     }
+  //   });
+  // }
 
-  void disponibilidad() {}
+  // Future<void> disponibilidad(Rent r) async {
+  //   availability(r).then((cup) {
+  //     if (cup != null) {
+  //       res = cup;
+  //     }
+  //   });
+  // }
 
   void sumatoria() {
     for (var i = 0; i < subtotales.length; i++) {

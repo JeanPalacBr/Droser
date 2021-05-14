@@ -32,8 +32,8 @@ class CouponsState extends State<Coupons> {
             gradient: LinearGradient(
                 colors: [Colors.white, Colors.purple[500], Colors.purple[900]],
                 stops: [0.1, 0.3, 0.7],
-                begin: FractionalOffset.topRight,
-                end: FractionalOffset.bottomLeft)),
+                begin: FractionalOffset.bottomLeft,
+                end: FractionalOffset.topRight)),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -77,7 +77,7 @@ class CouponsState extends State<Coupons> {
                 ],
               )
             ],
-            backgroundColor: Colors.blue[400],
+            backgroundColor: Colors.transparent,
             elevation: 0,
           ),
           drawer: NavDrawer(),

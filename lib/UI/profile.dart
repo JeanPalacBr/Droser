@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lease_drones/Models/userRegistered.dart';
 import 'package:lease_drones/UI/Carrito.dart';
 import 'package:lease_drones/UI/editProfile.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/searchResult.dart';
-import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lease_drones/Services/APIcon.dart';
 
 class UserProfile extends StatefulWidget {
   //UsuarioRegistrado usreg;

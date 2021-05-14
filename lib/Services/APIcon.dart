@@ -230,11 +230,13 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
         Ofert of = new Ofert(
             nombre: jsonlist["data"][i]["nombre"],
             categoria: jsonlist["data"][i]["categoria"],
+            idcategoria: jsonlist["data"][i]["idcategoria"].toString(),
             descripcion: jsonlist["data"][i]["descripcion"],
-            precio: jsonlist["data"][i]["precio"],
+            precio: jsonlist["data"][i]["precio"].toString(),
             dto: jsonlist["data"][i]["dto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
-            cantidad: jsonlist["data"][i]["cantidad"]);
+            cantidad: jsonlist["data"][i]["cantidad"],
+            disponible: "");
         ofertList.add(of);
       }
     } else {
@@ -337,7 +339,8 @@ Future<List<Ofert>> searchByCategory(String idcat) async {
             precio: jsonlist["data"][i]["precio"],
             dto: jsonlist["data"][i]["dcto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
-            cantidad: jsonlist["data"][i]["cantidad"]);
+            cantidad: jsonlist["data"][i]["cantidad"],
+            disponible: "");
         ofertList.add(of);
       }
     } else {
@@ -374,7 +377,8 @@ Future<List<Ofert>> searchByName(String nombre) async {
             precio: jsonlist["data"][i]["precio"],
             dto: jsonlist["data"][i]["dcto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
-            cantidad: jsonlist["data"][i]["cantidad"]);
+            cantidad: jsonlist["data"][i]["cantidad"],
+            disponible: "");
         ofertList.add(of);
       }
     } else {
@@ -386,6 +390,7 @@ Future<List<Ofert>> searchByName(String nombre) async {
 }
 
 Future<Coupon> verifyCoupon(String cupon) async {
+  String res = "";
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/cupones/veri',
@@ -410,8 +415,130 @@ Future<Coupon> verifyCoupon(String cupon) async {
           estado: jsonlist["data"][0]["estado"]);
       return of;
     } else {
+      if (response.statusCode == 404) {
+        Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+        res = jsonlist["data"];
+        Coupon of = new Coupon(
+            idcupon: 0000,
+            nombre: "no",
+            codigo: "no",
+            dcto: 0,
+            cantidad: 0,
+            estado: 0);
+        return of;
+      }
       print("signup failed");
       print('${response.body}');
     }
   } catch (e) {}
+}
+
+Future<String> availability(Rent renta) async {
+  List<Ofert> ofertList = <Ofert>[];
+  String res;
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/renta/disponibilidad',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'idarticulo': renta.idarticulo,
+        'cantidad': renta.cantidad.toString(),
+        'fecha_fin': renta.fechaFin,
+        'fecha_inicio': renta.fechaInicio,
+        'hora_inicio': renta.horaInicio,
+        'hora_fin': renta.horaFin,
+        'direccion_entrega': renta.direccionEntrega,
+        'idciudad': renta.idciudad,
+        'idusuario': renta.idusuario.toString(),
+        'idcupon': renta.idcupon,
+        'valor': renta.valor.toString(),
+      }),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      res = jsonlist["data"];
+      //       nombre: jsonlist["data"][i]["name"],
+      //       categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+      //       descripcion: jsonlist["data"][i]["descripcion"],
+      //       precio: jsonlist["data"][i]["precio"],
+      //       dto: jsonlist["data"][i]["dcto"].toString(),
+      //       idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
+      //       cantidad: jsonlist["data"][i]["cantidad"]);
+      //   ofertList.add(of);
+      // }
+
+    } else {
+      if (response.statusCode == 404) {
+        print('${response.body}');
+        Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+        res = jsonlist["data"];
+      } else {
+        print("signup failed");
+        print('${response.body}');
+      }
+    }
+  } catch (e) {}
+  return res;
+}
+
+Future<String> rent(Rent renta) async {
+  List<Ofert> ofertList = <Ofert>[];
+  String res;
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/renta',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'idarticulo': renta.idarticulo,
+        'cantidad': renta.cantidad.toString(),
+        'fecha_fin': renta.fechaFin,
+        'fecha_inicio': renta.fechaInicio,
+        'hora_inicio': renta.horaInicio,
+        'hora_fin': renta.horaFin,
+        'direccion_entrega': renta.direccionEntrega,
+        'idciudad': renta.idciudad,
+        'idusuario': renta.idusuario.toString(),
+        'idcupon': renta.idcupon,
+        'valor': renta.valor.toString(),
+      }),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      res = jsonlist["data"];
+      //       nombre: jsonlist["data"][i]["name"],
+      //       categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+      //       descripcion: jsonlist["data"][i]["descripcion"],
+      //       precio: jsonlist["data"][i]["precio"],
+      //       dto: jsonlist["data"][i]["dcto"].toString(),
+      //       idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
+      //       cantidad: jsonlist["data"][i]["cantidad"]);
+      //   ofertList.add(of);
+      // }
+
+    } else {
+      if (response.statusCode == 404) {
+        print('${response.body}');
+        Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+        res = jsonlist["data"];
+      } else {
+        print("signup failed");
+        print('${response.body}');
+      }
+    }
+  } catch (e) {}
+  return res;
 }

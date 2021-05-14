@@ -44,7 +44,7 @@ class CardOfert extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
                           child: Text(
-                            "-" + ofe.dto.toString() + "%",
+                            "-" + ofe.dto + "%",
                             style: TextStyle(
                                 backgroundColor: Colors.red,
                                 fontSize: 30,
@@ -71,21 +71,21 @@ class CardOfert extends StatelessWidget {
                     ),
                     if (ofe.dto == "0") ...{
                       Text(
-                        "\$" + ofe.precio.toString(),
+                        "\$" + ofe.precio,
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.red,
                         ),
                       ),
                     } else ...{
-                      Text("\$" + ofe.precio.toString(),
+                      Text("\$" + ofe.precio,
                           style: TextStyle(
                               fontSize: 15,
                               color: Colors.black54,
                               decoration: TextDecoration.lineThrough)),
                       Text(
                         "\$" +
-                            ((double.tryParse(ofe.precio.toString()) *
+                            ((double.tryParse(ofe.precio) *
                                     ((100 - double.tryParse(ofe.dto)) / 100)))
                                 .toString(),
                         style: TextStyle(

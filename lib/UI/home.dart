@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/Catalog.dart';
 import 'package:lease_drones/UI/categories.dart';
 import 'package:lease_drones/UI/categoryCard.dart';
-import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
+import 'package:lease_drones/UI/profile.dart';
 import 'package:lease_drones/UI/searchResult.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
@@ -31,17 +32,15 @@ class _HomeState extends State<Home> {
   List<Ofert> nofersList = <Ofert>[];
   List<Category> cat = <Category>[];
   void initState() {
-    getArticlesa(context);
-    getCategoriesa(context);
+    setState(() {
+      getArticlesa(context);
+    });
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ofersList == null || ofersList.length == 0) {
-      return Container();
-    }
     return MaterialApp(
       home: Container(
         decoration: new BoxDecoration(
@@ -103,62 +102,114 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(top: 12),
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Oferta relampago",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                      Icon(Icons.flash_on, color: Colors.yellow)
+                    ],
+                  ),
+                  ofersList.length != 0 ? CardOfert(ofersList[0]) : Container(),
+                  Divider(
+                    height: 20,
+                    thickness: 1,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.all(15),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Oferta relampago",
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Catalog()));
+                                },
+                                icon: Icon(
+                                  Icons.list,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Catalogo de articulos",
+                                    style: TextStyle(color: Colors.black))),
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UserProfile()));
+                                },
+                                icon: Icon(
+                                  Icons.person,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Perfil de usuario",
+                                    style: TextStyle(color: Colors.black))),
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.construction_outlined,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Panel de control",
+                                    style: TextStyle(color: Colors.black))),
+                          ],
                         ),
-                        Icon(Icons.flash_on, color: Colors.yellow)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Categories()));
+                                },
+                                icon: Icon(
+                                  Icons.category,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Categorías",
+                                    style: TextStyle(color: Colors.black))),
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.receipt_long_outlined,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Mis rentas",
+                                    style: TextStyle(color: Colors.black))),
+                            ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.white),
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.message,
+                                  color: Colors.black,
+                                ),
+                                label: Text("Mensajeria",
+                                    style: TextStyle(color: Colors.black))),
+                          ],
+                        ),
                       ],
                     ),
-                  ),
-                  CardOfert(ofersList[rng2.nextInt(ofersList.length - 1)]),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.list),
-                              label: Text("Catalogo de productos")),
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.category),
-                              label: Text("Categorías")),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.construction_outlined),
-                              label: Text("Panel de control")),
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.person),
-                              label: Text("Perfil")),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.receipt_long_outlined),
-                              label: Text("Mis rentas")),
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.message),
-                              label: Text("Mensajeria")),
-                        ],
-                      ),
-                    ],
                   ),
                   Divider(
                     height: 20,
@@ -177,7 +228,9 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  CardOfert(nofersList[rng.nextInt(nofersList.length - 1)]),
+                  nofersList.length != 0
+                      ? CardOfert(nofersList[0])
+                      : Container(),
                   Divider(
                     height: 20,
                     thickness: 1,
@@ -211,21 +264,27 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> getArticlesa(BuildContext context) async {
+  void getArticlesa(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    getArticles(context, shar.token).then((artic) {
-      setState(() {
-        nofersList = artic;
-        for (var i = 0; i < artic.length; i++) {
-          if (artic[i].dto != "0") {
-            ofersList.add(artic[i]);
-          }
+    try {
+      getArticles(context, shar.token).then((artic) {
+        if (artic != null || artic.length > 0) {
+          setState(() {
+            //nofersList = artic;
+            for (var i = 0; i < artic.length; i++) {
+              if (artic[i].dto != "0") {
+                ofersList.add(artic[i]);
+              } else {
+                nofersList.add(artic[i]);
+              }
+            }
+          });
         }
+      }).catchError((error) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
       });
-    }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
-    });
+    } catch (e) {}
   }
 
   Widget _list() {

@@ -13,6 +13,7 @@ String usrn;
 String tokn;
 bool invited = false;
 UsuarioRegistradoProfile usuario;
+int userid;
 
 class Login extends StatelessWidget {
   @override
@@ -153,8 +154,11 @@ class Isloggedstate extends State {
                   setState(() {
                     invited = true;
                     islogd = true;
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Home()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                      (Route<dynamic> route) => false,
+                    );
                   });
                 },
               ),
@@ -169,6 +173,7 @@ class Isloggedstate extends State {
       var context, String email, String _password, bool remember) {
     signIn(email: email, password: _password).then((user) {
       if (user != null) {
+        userid = user.id;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Bienvenido'),
           duration: const Duration(seconds: 2),
@@ -199,8 +204,11 @@ class Isloggedstate extends State {
       setState(() {
         if (artic != null) {
           usuario = artic;
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Home()));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            (Route<dynamic> route) => false,
+          );
         } else {
           usuario.nombre = "";
         }
