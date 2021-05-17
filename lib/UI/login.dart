@@ -108,59 +108,68 @@ class Isloggedstate extends State {
                       ),
                     )),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    child: Text("Iniciar sesión",
-                        style: TextStyle(color: Colors.black)),
-                    onPressed: () {
-                      if (isEmail(_email.value.text)) {
-                        onpressedlogin(context, _email.value.text,
-                            _password.value.text, true);
-                        getuserprofile(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                const Text('Email o contraseña incorrectos'),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.white),
+                      child: Text("Iniciar sesión",
+                          style: TextStyle(color: Colors.black)),
+                      onPressed: () {
+                        if (isEmail(_email.value.text)) {
+                          onpressedlogin(context, _email.value.text,
+                              _password.value.text, true);
+                          getuserprofile(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  const Text('Email o contraseña incorrectos'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   )
                 ],
               ),
             )),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.white),
-              child: Text("Registrate", style: TextStyle(color: Colors.black)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Registrar()));
-              },
-            ),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  child: Text("Registrarse",
+                      style: TextStyle(color: Colors.black)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Registrar()));
+                  },
+                )),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.white),
-                //color: Colors.white,
-                child: Text("Ingresar como Invitado",
-                    style: TextStyle(
-                      // fontFamily: 'Product Sans',
-                      //fontSize: 25,
-                      color: Colors.black,
-                    )),
-                onPressed: () {
-                  setState(() {
-                    invited = true;
-                    islogd = true;
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
-                      (Route<dynamic> route) => false,
-                    );
-                  });
-                },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  //color: Colors.white,
+                  child: Text("Ingresar como Invitado",
+                      style: TextStyle(
+                        // fontFamily: 'Product Sans',
+                        //fontSize: 25,
+                        color: Colors.black,
+                      )),
+                  onPressed: () {
+                    setState(() {
+                      invited = true;
+                      islogd = true;
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
+                  },
+                ),
               ),
             )
           ],
@@ -204,6 +213,7 @@ class Isloggedstate extends State {
       setState(() {
         if (artic != null) {
           usuario = artic;
+          invited = false;
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Home()),

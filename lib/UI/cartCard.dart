@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 
 class CarritoCard extends StatefulWidget {
   final Ofert articulo;

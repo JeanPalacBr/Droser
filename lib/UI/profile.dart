@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/editProfile.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
@@ -56,7 +56,7 @@ class UserProfilestate extends State<UserProfile> {
                   controller: busqueda,
                   textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
-                      hintText: "Busca drones, articulos y más...",
+                      hintText: "Busca drones, artículos y más...",
                       hintStyle: TextStyle(color: Colors.white),
                       fillColor: Colors.white),
                   onSubmitted: (busqueda) {

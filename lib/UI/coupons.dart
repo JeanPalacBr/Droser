@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/couponCard.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
@@ -43,7 +43,7 @@ class CouponsState extends State<Coupons> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {
@@ -95,15 +95,17 @@ class CouponsState extends State<Coupons> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: cupons.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: couponCard(cupons[posicion]),
-          );
-        });
+    return cupons.length > 0
+        ? ListView.builder(
+            itemCount: cupons.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: couponCard(cupons[posicion]),
+              );
+            })
+        : Text("No se encontraron cupones, vuelve más tarde");
   }
 
   Future<void> getCouponsa(BuildContext context) async {

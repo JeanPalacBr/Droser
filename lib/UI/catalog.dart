@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
@@ -45,7 +45,7 @@ class _CatalogState extends State<Catalog> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {
@@ -97,16 +97,18 @@ class _CatalogState extends State<Catalog> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: ofersList.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: CardOfert(ofersList[posicion]),
-          );
-          //Icon(Icons.delete, color: Colors.white)),
-        });
+    return ofersList.length > 0
+        ? ListView.builder(
+            itemCount: ofersList.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: CardOfert(ofersList[posicion]),
+              );
+              //Icon(Icons.delete, color: Colors.white)),
+            })
+        : Text("No se encontraron articulos, revise su conexión a internet");
   }
 
   Future<void> getArticlesa(BuildContext context) async {

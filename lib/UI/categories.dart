@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/categoryCard.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
@@ -60,7 +60,7 @@ class categoriesState extends State<Categories> {
                 controller: busqueda,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                    hintText: "Busca drones, articulos y más...",
+                    hintText: "Busca drones, artículos y más...",
                     hintStyle: TextStyle(color: Colors.white),
                     fillColor: Colors.white),
                 onSubmitted: (busqueda) {
@@ -109,15 +109,17 @@ class categoriesState extends State<Categories> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: cat.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: categoryCard(cat[posicion]),
-          );
-        });
+    return cat.length > 0
+        ? ListView.builder(
+            itemCount: cat.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: categoryCard(cat[posicion]),
+              );
+            })
+        : Text("No se encontraron categorías, revise su conexión a internet");
   }
 
   Future<void> getCategoriesa(BuildContext context) async {

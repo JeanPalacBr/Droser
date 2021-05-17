@@ -3,13 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/Catalog.dart';
 import 'package:lease_drones/UI/categories.dart';
 import 'package:lease_drones/UI/categoryCard.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
 import 'package:lease_drones/UI/profile.dart';
+import 'package:lease_drones/UI/rentsActive.dart';
+import 'package:lease_drones/UI/rentsHistory.dart';
 import 'package:lease_drones/UI/searchResult.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
@@ -60,7 +63,7 @@ class _HomeState extends State<Home> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {
@@ -105,7 +108,7 @@ class _HomeState extends State<Home> {
                   Row(
                     children: [
                       Text(
-                        "Oferta relampago",
+                        "Oferta relámpago",
                         style: TextStyle(color: Colors.white, fontSize: 25),
                       ),
                       Icon(Icons.flash_on, color: Colors.yellow)
@@ -138,33 +141,42 @@ class _HomeState extends State<Home> {
                                   Icons.list,
                                   color: Colors.black,
                                 ),
-                                label: Text("Catalogo de articulos",
+                                label: Text("Catálogo de artículos",
                                     style: TextStyle(color: Colors.black))),
-                            ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => UserProfile()));
-                                },
-                                icon: Icon(
-                                  Icons.person,
-                                  color: Colors.black,
-                                ),
-                                label: Text("Perfil de usuario",
-                                    style: TextStyle(color: Colors.black))),
-                            ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white),
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.construction_outlined,
-                                  color: Colors.black,
-                                ),
-                                label: Text("Panel de control",
-                                    style: TextStyle(color: Colors.black))),
+                            if (invited == false) ...{
+                              ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.white),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserProfile()));
+                                  },
+                                  icon: Icon(
+                                    Icons.person,
+                                    color: Colors.black,
+                                  ),
+                                  label: Text("Perfil de usuario",
+                                      style: TextStyle(color: Colors.black))),
+                              ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.white),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RentsActive()));
+                                  },
+                                  icon: Icon(
+                                    Icons.construction_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  label: Text("Panel de control",
+                                      style: TextStyle(color: Colors.black))),
+                            }
                           ],
                         ),
                         Column(
@@ -186,26 +198,34 @@ class _HomeState extends State<Home> {
                                 ),
                                 label: Text("Categorías",
                                     style: TextStyle(color: Colors.black))),
-                            ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white),
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.receipt_long_outlined,
-                                  color: Colors.black,
-                                ),
-                                label: Text("Mis rentas",
-                                    style: TextStyle(color: Colors.black))),
-                            ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white),
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.message,
-                                  color: Colors.black,
-                                ),
-                                label: Text("Mensajeria",
-                                    style: TextStyle(color: Colors.black))),
+                            if (invited == false) ...{
+                              ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.white),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RentsHistory()));
+                                  },
+                                  icon: Icon(
+                                    Icons.receipt_long_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  label: Text("Mis rentas",
+                                      style: TextStyle(color: Colors.black))),
+                              ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.white),
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.message,
+                                    color: Colors.black,
+                                  ),
+                                  label: Text("Mensajería",
+                                      style: TextStyle(color: Colors.black))),
+                            }
                           ],
                         ),
                       ],
@@ -224,7 +244,7 @@ class _HomeState extends State<Home> {
                           "Artículo recomendado",
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
-                        Icon(Icons.recommend, color: Colors.yellow)
+                        Icon(Icons.recommend, color: Colors.white)
                       ],
                     ),
                   ),
@@ -235,26 +255,28 @@ class _HomeState extends State<Home> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Es hora de la cuponmania!!, redime descuentos en tus articulos favoritos introduciendo los codigos promocionales, para reclamarlos presiona en el botón de la cuponmania.",
-                          style: TextStyle(color: Colors.black, fontSize: 19),
-                          textAlign: TextAlign.justify,
-                        ),
-                        ElevatedButton.icon(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.purple),
-                            icon: Icon(Icons.countertops_outlined),
-                            label: Text("Cupónmania!")),
-                      ],
+                  if (invited == false) ...{
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "Es hora de la cuponmanía!!, redime descuentos en tus artículos favoritos introduciendo los códigos promocionales, para reclamarlos presiona en el botón de la cuponmanía.",
+                            style: TextStyle(color: Colors.black, fontSize: 19),
+                            textAlign: TextAlign.justify,
+                          ),
+                          ElevatedButton.icon(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.purple),
+                              icon: Icon(Icons.countertops_outlined),
+                              label: Text("Cuponmanía!")),
+                        ],
+                      ),
                     ),
-                  ),
+                  }
                 ],
               ),
             ),

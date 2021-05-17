@@ -374,10 +374,12 @@ Future<List<Ofert>> searchByName(String nombre) async {
             nombre: jsonlist["data"][i]["name"],
             categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
             descripcion: jsonlist["data"][i]["descripcion"],
-            precio: jsonlist["data"][i]["precio"],
+            idcategoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+            precio: jsonlist["data"][i]["precio"].toString(),
             dto: jsonlist["data"][i]["dcto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
+            imagen: jsonlist["data"][i]["imagen"],
             disponible: "");
         ofertList.add(of);
       }
@@ -541,4 +543,129 @@ Future<String> rent(Rent renta) async {
     }
   } catch (e) {}
   return res;
+}
+
+Future<List<Rented>> userRentsList(String idusuario) async {
+  List<Rented> rentss = <Rented>[];
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/rentas/idusuario/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'idusuario': idusuario}),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+
+      for (var i = 0; i < jsonlist["data"].length; i++) {
+        Rented of = new Rented(
+          idrenta: jsonlist["data"][i]["idrenta"].toString(),
+          fechaInicio: jsonlist["data"][i]["fecha_inicio"].toString(),
+          fechaFin: jsonlist["data"][i]["fecha_fin"],
+          horaInicio: jsonlist["data"][i]["hora_inicio"],
+          horaFin: jsonlist["data"][i]["hora_fin"].toString(),
+          cantidad: jsonlist["data"][i]["cantidad"],
+          direccionEntrega: jsonlist["data"][i]["direccion_entrega"],
+          estado: jsonlist["data"][i]["estado"].toString(),
+          valor: jsonlist["data"][i]["valor"].toString(),
+          idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
+          idusuario: jsonlist["data"][i]["idusuario"].toString(),
+          idciudad: jsonlist["data"][i]["idciudad"].toString(),
+          created: jsonlist["data"][i]["created_at"].toString(),
+        );
+        rentss.add(of);
+      }
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+  return rentss;
+}
+
+Future<UsuarioLog> logout({String email, String password}) async {
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/auth/logout/',
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      Map<dynamic, dynamic> res = json.decode(response.body);
+      UsuarioLog usrl = new UsuarioLog(
+          email: email, token: res["data"]["token"], id: res["data"]["id"]);
+      return usrl;
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<void> droserBot(String mensaje) async {
+  try {
+    final http.Response response = await http.post(
+      "https://api.telegram.org/bot1876251513:AAEXm_fFYtKnXw7GOJer8Qw3krfSgWB_9GE/sendMessage?chat_id=-589991124&text=" +
+          mensaje.replaceAll(" ", "+"),
+    );
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<void> droserBotCS(String mensaje) async {
+  try {
+    final http.Response response = await http.post(
+      "https://api.telegram.org/bot1876251513:AAEXm_fFYtKnXw7GOJer8Qw3krfSgWB_9GE/sendMessage?chat_id=-596685864&text=" +
+          mensaje.replaceAll(" ", "+"),
+    );
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
+}
+
+Future<ImageProvider<Object>> searchImage(String image) async {
+  List<Ofert> ofertList = <Ofert>[];
+  //img;
+  try {
+    final http.Response response = await http.post(
+      'https://droser.tech/api/imagenes/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'image': image}),
+    );
+    ImageProvider<Object> img = Image.memory(response.bodyBytes).image;
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      // Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+      print('${response.body}');
+      return img;
+    } else {
+      print("signup failed");
+      print('${response.body}');
+    }
+  } catch (e) {}
 }

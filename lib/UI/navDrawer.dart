@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/Messengers.dart';
+import 'package:lease_drones/UI/cart.dart';
+import 'package:lease_drones/UI/about.dart';
+import 'package:lease_drones/UI/chat.dart';
 import 'package:lease_drones/UI/coupons.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/profile.dart';
+import 'package:lease_drones/UI/rentsActive.dart';
+import 'package:lease_drones/UI/rentsHistory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Catalog.dart';
 import 'categories.dart';
 import 'login.dart';
 
 class NavDrawer extends StatelessWidget {
-  
-
   final Shader linearGradient = LinearGradient(
     colors: <Color>[Color(0xffDA44bb), Color(0xff8921aa)],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-@override
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -29,7 +32,9 @@ class NavDrawer extends StatelessWidget {
                   image: AssetImage("assets/images/DroneLeaser.png"),
                 ),
                 Text(
-                    usuario.nombre != null || usuario.nombre == ""
+                    usuario.nombre != null ||
+                            usuario.nombre == "" ||
+                            invited == false
                         ? "Hola, " + usuario.nombre.split(" ")[0]
                         : "Hola, invitado",
                     style: TextStyle(fontSize: 25, color: Colors.white)),
@@ -53,7 +58,7 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.list),
-              title: Text('Catalogo'),
+              title: Text('Catálogo'),
               onTap: () => {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Catalog()))
@@ -61,7 +66,7 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.category),
-              title: Text('Categorias'),
+              title: Text('Categorías'),
               onTap: () => {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Categories()))
@@ -74,7 +79,10 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               title: Text('Acerca de Droser'),
-              //  onTap: () => {sharedreflogoutset(context)},
+              onTap: () => {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => About()))
+              },
             ),
           } else ...{
             ListTile(
@@ -96,16 +104,22 @@ class NavDrawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.shopping_bag),
               title: Text('Mis rentas'),
-              //  onTap: () => {sharedreflogoutset(context)},
+              onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RentsHistory()))
+              },
             ),
             ListTile(
               leading: Icon(Icons.admin_panel_settings),
               title: Text('Panel de control de renta'),
-              //  onTap: () => {sharedreflogoutset(context)},
+              onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RentsActive()))
+              },
             ),
             ListTile(
               leading: Icon(Icons.list),
-              title: Text('Catalogo'),
+              title: Text('Catálogo'),
               onTap: () => {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Catalog()))
@@ -121,7 +135,7 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.category),
-              title: Text('Categorias'),
+              title: Text('Categorías'),
               onTap: () => {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Categories()))
@@ -129,13 +143,16 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.chat),
-              title: Text('Mensajes'),
-              //  onTap: () => {sharedreflogoutset(context)},
+              title: Text('Mensajería'),
+              onTap: () => {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Chat()))
+              },
             ),
             ListTile(
               leading: Icon(Icons.card_giftcard),
               title: Text(
-                'Cuponmania!!!',
+                'Cuponmanía!!!',
                 style: new TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -153,7 +170,10 @@ class NavDrawer extends StatelessWidget {
             ),
             ListTile(
               title: Text('Acerca de Droser'),
-              //  onTap: () => {sharedreflogoutset(context)},
+              onTap: () => {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => About()))
+              },
             ),
           },
         ],

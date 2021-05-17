@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/ofertCard.dart';
+import 'package:lease_drones/UI/listTileRents.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/rentCard.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class RentsHistory extends StatefulWidget {
-  String busqueda;
-  RentsHistory(this.busqueda);
+  RentsHistory();
   @override
-  RentsHistoryState createState() => RentsHistoryState(this.busqueda);
+  RentsHistoryState createState() => RentsHistoryState();
 }
 
 class RentsHistoryState extends State<RentsHistory> {
-  String busqueda;
-  List<Ofert> ofersList = <Ofert>[];
-  RentsHistoryState(this.busqueda);
+  List<Rented> rentsList = <Rented>[];
+  RentsHistoryState();
   @override
   void initState() {
-    getArticlesa(context);
+    getRented(context);
     super.initState();
   }
 
@@ -56,23 +55,25 @@ class RentsHistoryState extends State<RentsHistory> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: ofersList.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: CardOfert(ofersList[posicion]),
-          );
-          //Icon(Icons.delete, color: Colors.white)),
-        });
+    return rentsList.length > 0
+        ? ListView.builder(
+            itemCount: rentsList.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: ListTileRents(rentsList[posicion]),
+              );
+              //Icon(Icons.delete, color: Colors.white)),
+            })
+        : Text("No se encontraron rentas");
   }
 
-  Future<void> getArticlesa(BuildContext context) async {
+  Future<void> getRented(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    searchByName(busqueda).then((artic) {
+    userRentsList(shar.userid).then((artic) {
       setState(() {
-        ofersList = artic;
+        rentsList = artic;
       });
     }).catchError((error) {
       Scaffold.of(context)

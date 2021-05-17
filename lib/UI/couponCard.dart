@@ -18,7 +18,7 @@ class couponCard extends StatelessWidget {
           color: Colors.indigo[50],
           elevation: 20,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
             child: Column(
@@ -40,7 +40,7 @@ class couponCard extends StatelessWidget {
                   child: Text(
                     "Redime este cupón y obten " +
                         cou.dcto.toString() +
-                        "% de descuento en el producto mas costoso de tu renta. Escribe el codigo al momento de realizar el pago de tus articulos.",
+                        "% de descuento en el producto mas costoso de tu renta. Escribe el codigo al momento de realizar el pago de tus artículos.",
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.black,

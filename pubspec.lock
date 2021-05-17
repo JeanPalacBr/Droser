@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  circular_countdown_timer:
+    dependency: "direct dev"
+    description:
+      name: circular_countdown_timer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   clock:
     dependency: transitive
     description:
@@ -83,16 +90,37 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_countdown_timer:
+    dependency: "direct dev"
+    description:
+      name: flutter_countdown_timer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_open_whatsapp:
+    dependency: "direct dev"
+    description:
+      name: flutter_open_whatsapp
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_vector_icons:
+    dependency: "direct main"
+    description:
+      name: flutter_vector_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter

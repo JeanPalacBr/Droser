@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/searchResult.dart';
@@ -49,7 +49,7 @@ class DetailOfertstate extends State<DetailOfert> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {
@@ -104,7 +104,7 @@ class DetailOfertstate extends State<DetailOfert> {
                   Padding(
                     padding: const EdgeInsets.all(5),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(10),
                       child: Stack(
                         children: [
                           Image.network(
@@ -232,7 +232,7 @@ class DetailOfertstate extends State<DetailOfert> {
                 child: Align(
                   alignment: Alignment.center,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton.icon(
                       style:
                           ElevatedButton.styleFrom(primary: Colors.indigo[700]),

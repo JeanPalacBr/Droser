@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/ofertCard.dart';
+import 'package:lease_drones/UI/listTileRentsPanel.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class RentsActive extends StatefulWidget {
-  String busqueda;
-  RentsActive(this.busqueda);
+  RentsActive();
   @override
-  RentsActiveState createState() => RentsActiveState(this.busqueda);
+  RentsActiveState createState() => RentsActiveState();
 }
 
 class RentsActiveState extends State<RentsActive> {
-  String busqueda;
-  List<Ofert> ofersList = <Ofert>[];
-  RentsActiveState(this.busqueda);
+  List<Rented> rentsList = <Rented>[];
+  RentsActiveState();
   @override
   void initState() {
-    getArticlesa(context);
+    getRented(context);
     super.initState();
   }
 
@@ -56,24 +54,30 @@ class RentsActiveState extends State<RentsActive> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: ofersList.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: CardOfert(ofersList[posicion]),
-          );
-          //Icon(Icons.delete, color: Colors.white)),
-        });
+    return rentsList.length > 0
+        ? ListView.builder(
+            itemCount: rentsList.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: ListTileRentspanel(rentsList[posicion]),
+              );
+              //Icon(Icons.delete, color: Colors.white)),
+            })
+        : Text("No se encontraron rentas");
   }
 
-  Future<void> getArticlesa(BuildContext context) async {
+  Future<void> getRented(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    searchByName(busqueda).then((artic) {
-      setState(() {
-        ofersList = artic;
-      });
+    userRentsList(shar.userid).then((artic) {
+      for (var i = 0; i < artic.length; i++) {
+        if (artic[i].estado == "1" || artic[i].estado == "2") {
+          setState(() {
+            rentsList.add(artic[i]);
+          });
+        }
+      }
     }).catchError((error) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
-import 'package:lease_drones/UI/carritoCard.dart';
+import 'package:lease_drones/UI/cartCard.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/receipt.dart';
@@ -57,7 +57,7 @@ class _CarritoState extends State<Carrito> {
                   controller: busqueda,
                   textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
-                      hintText: "Busca drones, articulos y más...",
+                      hintText: "Busca drones, artículos y más...",
                       hintStyle: TextStyle(color: Colors.white),
                       fillColor: Colors.white),
                   onSubmitted: (busqueda) {
@@ -139,7 +139,7 @@ class _CarritoState extends State<Carrito> {
               ),
               Expanded(child: _listArticulos()),
               ClipRRect(
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(10),
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.monetization_on_outlined),
                   label: Text(
@@ -150,88 +150,95 @@ class _CarritoState extends State<Carrito> {
                   onPressed: () {
                     disponibles.clear();
                     nodisponibles.clear();
-
-                    // try{
-                    SharedPrefs shar = new SharedPrefs();
-                    for (var i = 0; i < subtotales.length; i++) {
-                      if (subtotales[i] == 0.0) {
-                        subtotales.removeAt(i);
-                      }
-                    }
-
-                    verifyCoupon(cupon.value.text).then((cup) {
-                      if (cup != null) {
-                        valid = cup;
-                        if (valid.idcupon != null ||
-                            valid.nombre == "no" ||
-                            valid.idcupon == 0000) {
-                          cupval = valid.idcupon;
-                          double mayor = 0;
-                          int gi = 0;
-                          for (var i = 0; i < subtotales.length; i++) {
-                            if (subtotales[i] > mayor) {
-                              mayor = subtotales[i];
-                              gi = i;
-                            }
-                          }
-                          subtotales[gi] =
-                              subtotales[gi] * ((100 - valid.dcto) / 100);
+                    if (invited == false) {
+                      // try{
+                      SharedPrefs shar = new SharedPrefs();
+                      for (var i = 0; i < subtotales.length; i++) {
+                        if (subtotales[i] == 0.0) {
+                          subtotales.removeAt(i);
                         }
-                        for (var i = 0; i < carri.length; i++) {
-                          Rent articulo = new Rent(
-                              idarticulo: carri[i].idarticulo,
-                              cantidad: int.tryParse(cantidades[i]),
-                              direccionEntrega: usuario.direccion,
-                              fechaInicio: fechainicio[i].substring(0, 10),
-                              fechaFin: fechafin[i].substring(0, 10),
-                              horaInicio:
-                                  horainicio[i].substring(10, 15) + ":00",
-                              horaFin: horafin[i].substring(10, 15) + ":00",
-                              idciudad: usuario.ciudad,
-                              idcupon: cupval.toString(),
-                              idusuario: shar.userid,
-                              valor: subtotales[i]);
-                          setState(() {
-                            publicadosa.add(articulo);
-                          });
-                          availability(articulo).then((cup) {
-                            if (cup != null) {
-                              res = cup;
-                            }
-                            if (res != "" || res == null) {
-                              if (res == "Disponible") {
-                                disponibles.add(articulo);
-                              } else {
-                                if (res != null) {
-                                  nodisponibles.add(articulo);
-                                }
+                      }
+
+                      verifyCoupon(cupon.value.text).then((cup) {
+                        if (cup != null) {
+                          valid = cup;
+                          if (valid.idcupon != null ||
+                              valid.nombre == "no" ||
+                              valid.idcupon == 0000) {
+                            cupval = valid.idcupon;
+                            double mayor = 0;
+                            int gi = 0;
+                            for (var i = 0; i < subtotales.length; i++) {
+                              if (subtotales[i] > mayor) {
+                                mayor = subtotales[i];
+                                gi = i;
                               }
-                              if (disponibles.length == carrito.length) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            Receipt(disponibles)));
-                              } else {
-                                if (nodisponibles.length > 0) {
-                                  for (var i = 0; i < carrito.length; i++) {
-                                    for (var j = 0;
-                                        j < nodisponibles.length;
-                                        j++) {
-                                      if (carrito[i].idarticulo ==
-                                          nodisponibles[j].idarticulo) {
-                                        carrito[i].disponible = "No disponible";
+                            }
+                            subtotales[gi] =
+                                subtotales[gi] * ((100 - valid.dcto) / 100);
+                          }
+                          for (var i = 0; i < carri.length; i++) {
+                            Rent articulo = new Rent(
+                                idarticulo: carri[i].idarticulo,
+                                cantidad: int.tryParse(cantidades[i]),
+                                direccionEntrega: usuario.direccion,
+                                fechaInicio: fechainicio[i].substring(0, 10),
+                                fechaFin: fechafin[i].substring(0, 10),
+                                horaInicio:
+                                    horainicio[i].substring(10, 15) + ":00",
+                                horaFin: horafin[i].substring(10, 15) + ":00",
+                                idciudad: usuario.ciudad,
+                                idcupon: cupval.toString(),
+                                idusuario: shar.userid,
+                                valor: subtotales[i]);
+                            setState(() {
+                              publicadosa.add(articulo);
+                            });
+                            availability(articulo).then((cup) {
+                              if (cup != null) {
+                                res = cup;
+                              }
+                              if (res != "" || res == null) {
+                                if (res == "Disponible") {
+                                  disponibles.add(articulo);
+                                } else {
+                                  if (res != null) {
+                                    nodisponibles.add(articulo);
+                                  }
+                                }
+                                if (disponibles.length == carrito.length) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Receipt(disponibles)));
+                                } else {
+                                  if (nodisponibles.length > 0) {
+                                    for (var i = 0; i < carrito.length; i++) {
+                                      for (var j = 0;
+                                          j < nodisponibles.length;
+                                          j++) {
+                                        if (carrito[i].idarticulo ==
+                                            nodisponibles[j].idarticulo) {
+                                          carrito[i].disponible =
+                                              "No disponible";
+                                        }
                                       }
                                     }
                                   }
                                 }
                               }
-                            }
-                          });
+                            });
+                          }
                         }
-                      }
-                    });
-
+                      });
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                        (Route<dynamic> route) => false,
+                      );
+                    }
                     // }catch(e){}
                   },
                 ),
@@ -294,6 +301,6 @@ class _CarritoState extends State<Carrito> {
               );
             },
           )
-        : Text("No se encontraron articulos en el carrito");
+        : Text("No se encontraron artículos en el carrito");
   }
 }

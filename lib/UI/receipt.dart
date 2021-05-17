@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
@@ -52,7 +52,7 @@ class Receiptstate extends State<Receipt> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {

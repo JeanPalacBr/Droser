@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
@@ -6,6 +9,7 @@ import 'package:lease_drones/UI/home.dart';
 
 class CardOfert extends StatelessWidget {
   Ofert ofe;
+
   CardOfert(this.ofe);
 
   @override
@@ -30,14 +34,19 @@ class CardOfert extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 5),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                   child: Stack(
                     children: [
-                      Image.network(
-                        "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
-                        width: 400,
-                        alignment: Alignment.center,
-                      ),
+                      ofe.image == null
+                          ? Image.network(
+                              "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
+                              width: 400,
+                              alignment: Alignment.center,
+                            )
+                          : Image(
+                              image: ofe.image,
+                              width: 400,
+                            ),
                       if (ofe.dto == "0")
                         ...{}
                       else ...{
@@ -102,7 +111,7 @@ class CardOfert extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton.icon(
                       style:
                           ElevatedButton.styleFrom(primary: Colors.indigo[700]),
@@ -120,7 +129,7 @@ class CardOfert extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text('Agregado a carrito'),
-                            duration: const Duration(seconds: 1),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
                       },

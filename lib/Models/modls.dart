@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class UserInfo {
   final String token;
   final String username;
@@ -82,6 +84,8 @@ class Ofert {
   String idcategoria;
   String idarticulo;
   String disponible;
+  String imagen;
+  ImageProvider<Object> image;
 
   Ofert(
       {this.nombre,
@@ -92,7 +96,8 @@ class Ofert {
       this.cantidad,
       this.idcategoria,
       this.idarticulo,
-      this.disponible});
+      this.disponible,
+      this.imagen});
 
   factory Ofert.fromJson(Map<dynamic, dynamic> json) {
     return Ofert(
@@ -146,4 +151,34 @@ class Rent {
       this.idcupon,
       this.idciudad,
       this.valor});
+}
+
+class Rented {
+  String idrenta;
+  String fechaInicio;
+  String horaInicio;
+  String fechaFin;
+  String horaFin;
+  int cantidad;
+  String direccionEntrega;
+  String estado;
+  String valor;
+  String idciudad;
+  String idusuario;
+  String idarticulo;
+  String created;
+  Rented(
+      {this.estado,
+      this.idrenta,
+      this.idarticulo,
+      this.cantidad,
+      this.fechaInicio,
+      this.horaInicio,
+      this.fechaFin,
+      this.horaFin,
+      this.direccionEntrega,
+      this.idusuario,
+      this.idciudad,
+      this.valor,
+      this.created});
 }

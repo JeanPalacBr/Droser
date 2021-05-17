@@ -1,28 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/UI/Carrito.dart';
+import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/searchResult.dart';
-
-Ofert ofera;
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 
 class ControlPanelRent extends StatefulWidget {
-  Ofert ofer = new Ofert();
-  ControlPanelRent(this.ofer);
+  Rented ren = new Rented();
+  ControlPanelRent(this.ren);
   @override
-  ControlPanelRentstate createState() => ControlPanelRentstate(this.ofer);
+  ControlPanelRentstate createState() => ControlPanelRentstate(this.ren);
 }
 
 class ControlPanelRentstate extends State<ControlPanelRent> {
-  Ofert ofer = new Ofert();
+  Rented ren = new Rented();
+  CountDownController controller = new CountDownController();
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
+  int diffRenta = 1000;
+  int diffCon = 1000;
 
-  ControlPanelRentstate(this.ofer);
+  ControlPanelRentstate(this.ren);
   @override
   void initState() {
+    if (ren.estado == "2") {
+      final fechainicio = DateTime(
+          int.tryParse(ren.fechaInicio.substring(0, 4)),
+          int.tryParse(ren.fechaInicio.substring(5, 6)),
+          int.tryParse(ren.fechaInicio.substring(8, 9)),
+          int.tryParse(ren.horaInicio.substring(0, 1)),
+          int.tryParse(ren.horaInicio.substring(3, 4)),
+          int.tryParse(ren.horaInicio.substring(6, 7)));
+      final fechafin = DateTime(
+          int.tryParse(ren.fechaFin.substring(0, 4)),
+          int.tryParse(ren.fechaFin.substring(5, 6)),
+          int.tryParse(ren.fechaFin.substring(8, 9)),
+          int.tryParse(ren.horaFin.substring(0, 1)),
+          int.tryParse(ren.horaFin.substring(3, 4)),
+          int.tryParse(ren.horaFin.substring(6, 7)));
+      final fechactual = DateTime.now();
+      diffRenta = fechafin.difference(fechainicio).inSeconds;
+      diffCon = fechactual.difference(fechafin).inSeconds;
+    } else {
+      if (ren.estado == "1") {
+        final fechainicio = DateTime(
+            int.tryParse(ren.fechaInicio.substring(0, 4)),
+            int.tryParse(ren.fechaInicio.substring(5, 6)),
+            int.tryParse(ren.fechaInicio.substring(8, 9)),
+            int.tryParse(ren.horaInicio.substring(0, 1)),
+            int.tryParse(ren.horaInicio.substring(3, 4)),
+            int.tryParse(ren.horaInicio.substring(6, 7)));
+        final fechafin = DateTime(
+            int.tryParse(ren.fechaFin.substring(0, 4)),
+            int.tryParse(ren.fechaFin.substring(5, 6)),
+            int.tryParse(ren.fechaFin.substring(8, 9)),
+            int.tryParse(ren.horaFin.substring(0, 1)),
+            int.tryParse(ren.horaFin.substring(3, 4)),
+            int.tryParse(ren.horaFin.substring(6, 7)));
+        final fechactual = DateTime.now();
+        final created = DateTime.tryParse(ren.created);
+        diffRenta = fechactual.difference(fechainicio).inSeconds;
+
+        diffCon = fechactual.difference(created).inSeconds;
+      }
+    }
+    diffRenta;
     super.initState();
   }
 
@@ -49,7 +96,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                     controller: busqueda,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                        hintText: "Busca drones, articulos y más...",
+                        hintText: "Busca drones, artículos y más...",
                         hintStyle: TextStyle(color: Colors.white),
                         fillColor: Colors.white),
                     onSubmitted: (busqueda) {
@@ -89,7 +136,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
           drawer: NavDrawer(),
           body: SingleChildScrollView(
             child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: <
                     Widget>[
               new Column(
                 mainAxisSize: MainAxisSize.min,
@@ -102,46 +149,61 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
-                            width: 300,
-                            alignment: Alignment.center,
-                          ),
-                          if (ofer.dto == "0")
-                            ...{}
-                          else ...{
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
-                              child: Text(
-                                "-" + ofer.dto.toString() + "%",
-                                style: TextStyle(
-                                    backgroundColor: Colors.red,
-                                    fontSize: 30,
-                                    color: Colors.white),
-                              ),
-                            )
-                          },
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                     child: Text(
-                      " " + ofer.nombre,
+                      ren.estado == "2"
+                          ? "Tiempo transcurrido de renta"
+                          : "Tiempo restante para comienzo de renta",
                       textAlign: TextAlign.center,
                       style: new TextStyle(
                           fontSize: 25,
-                          color: Colors.black,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
+                  CircularCountDownTimer(
+                    duration: diffRenta,
+                    initialDuration: diffCon,
+                    controller: CountDownController(),
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 2,
+                    ringColor: Colors.white,
+                    ringGradient: null,
+                    fillColor: Colors.blue[100],
+                    fillGradient: null,
+                    backgroundColor: Colors.blue[400],
+                    backgroundGradient: null,
+                    strokeWidth: 30,
+                    strokeCap: StrokeCap.round,
+                    textStyle: TextStyle(
+                        fontSize: 33.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                    textFormat: CountdownTextFormat.HH_MM_SS,
+                    isReverse: true,
+                    isReverseAnimation: false,
+                    isTimerTextShown: true,
+                    autoStart: true,
+                    onStart: () {
+                      print('Countdown Started');
+                    },
+                    onComplete: () {
+                      print('Countdown Ended');
+                    },
+                  ),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.date_range),
+                    Text(
+                      "Fecha y hora de creación: \n" + ren.created,
+                      style: TextStyle(fontSize: 21),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -149,48 +211,13 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (ofer.dto == "0") ...{
-                      Text(
-                        "\$" + ofer.precio.toString(),
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.red,
-                        ),
-                      ),
-                    } else ...{
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("\$" + ofer.precio.toString(),
-                                style: TextStyle(
-                                    fontSize: 21,
-                                    color: Colors.black54,
-                                    decoration: TextDecoration.lineThrough)),
-                            Text(
-                              "\$" +
-                                  ((double.tryParse(ofer.precio.toString()) *
-                                          ((100 - double.tryParse(ofer.dto)) /
-                                              100)))
-                                      .toString(),
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    },
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
                           Icon(Icons.category),
                           Text(
-                            "Categoria: " + ofer.categoria,
+                            "Cantidad: " + ren.cantidad.toString(),
                             style: TextStyle(fontSize: 21),
                           )
                         ],
@@ -200,62 +227,126 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
-                          Icon(Icons.description),
+                          Icon(Icons.date_range),
                           Text(
-                            "Descripción: ",
+                            "Fecha de inicio: " + ren.fechaInicio,
                             style: TextStyle(fontSize: 21),
                           ),
                         ],
                       ),
                     ),
-                    Text(
-                      "" + ofer.descripcion,
-                      style: TextStyle(fontSize: 21),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.date_range),
+                          Text(
+                            "Fecha de fin: " + ren.fechaInicio,
+                            style: TextStyle(fontSize: 21),
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
-                          Icon(Icons.event_available),
+                          Icon(Icons.hourglass_bottom),
                           Text(
-                            "Disponibilidad: " + ofer.cantidad.toString(),
+                            "Hora de inicio: " + ren.horaInicio,
+                            style: TextStyle(fontSize: 21),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.hourglass_bottom),
+                          Text(
+                            "Hora de fin: " + ren.horaFin,
+                            style: TextStyle(fontSize: 21),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.star),
+                          Text(
+                            "Estado: " +
+                                (ren.estado == "1"
+                                    ? "Pendiente"
+                                    : ren.estado == "2"
+                                        ? "En curso"
+                                        : ren.estado == "3"
+                                            ? "Terminado"
+                                            : "Cancelado"),
                             style: TextStyle(fontSize: 21),
                           )
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
-                    child: ElevatedButton.icon(
+                    Divider(
+                      thickness: 3,
+                    ),
+                    Center(
+                        child: ElevatedButton.icon(
+                      icon: Icon(Icons.send),
                       style:
-                          ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                      //color: Colors.white,
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.white,
-                      ),
-                      label: Text("Agregar al carrito",
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
+                          ElevatedButton.styleFrom(primary: Colors.green[500]),
                       onPressed: () {
-                        carrito.add(ofer);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Agregado a carrito'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
+                        FlutterOpenWhatsapp.sendSingleMessage(
+                            "+573007482244",
+                            "Solicito atención, renta numero: " +
+                                ren.idrenta +
+                                ", producto numero: " +
+                                ren.idarticulo +
+                                ", usuario: " +
+                                usuario.nombre);
                       },
+                      label: Text("Enviar mensaje por Whatsapp"),
+                    )),
+                    Divider(
+                      thickness: 3,
                     ),
-                  ),
+                    Center(
+                      child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(primary: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                      "Se ha enviado un mensaje urgente a servicio al cliente, nos contactaremos inmediatamente con usted"),
+                                  duration: const Duration(seconds: 7),
+                                ),
+                              );
+                            });
+                            droserBot("SOLICITO AYUDA URGENTE! \n Nombre:" +
+                                usuario.nombre +
+                                "\n Telefono:" +
+                                usuario.telefono +
+                                "\n Renta:" +
+                                ren.idrenta +
+                                "\n Entregado en: " +
+                                ren.direccionEntrega +
+                                "\n en: " +
+                                usuario.ciudad);
+                          },
+                          icon: Icon(
+                            Icons.adjust,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Botón de pánico",
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          )),
+                    )
+                  ],
                 ),
               ),
             ]),

@@ -23,7 +23,7 @@ class categoryCard extends StatelessWidget {
           color: Colors.indigo[50],
           elevation: 20,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
