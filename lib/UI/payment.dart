@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lease_drones/UI/payDialog.dart';
+import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/payCardDialog.dart';
+import 'package:lease_drones/UI/payTransferDialog.dart';
 
 class Pay extends StatelessWidget {
 // This widget is the root of your application.
@@ -10,14 +12,13 @@ class Pay extends StatelessWidget {
       theme: ThemeData(primaryColor: Colors.blue),
       title: 'Flutterwave',
       debugShowCheckedModeBanner: false,
-      home: Payment(title: 'Metodos de pago'),
+      home: Payment(),
     );
   }
 }
 
 class Payment extends StatefulWidget {
-  Payment({Key key, this.title}) : super(key: key);
-  final String title;
+  Payment();
   @override
   _PaymentState createState() => _PaymentState();
 }
@@ -27,7 +28,12 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home())),
+        ),
+        title: Text("Metodos de pago"),
         centerTitle: true,
       ),
       body: Center(
@@ -42,12 +48,7 @@ class _PaymentState extends State<Payment> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return CustomDialogBox(
-                            title: "Custom Dialog Demo",
-                            descriptions:
-                                "Hii all this is a custom dialog in flutter and  you will be use in your flutter applications",
-                            text: "Yes",
-                          );
+                          return PayCardDialog();
                         },
                       );
                     },
@@ -87,7 +88,14 @@ class _PaymentState extends State<Payment> {
                   padding:
                       const EdgeInsets.only(top: 10, left: 10.0, right: 10),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PayTransferDialog();
+                        },
+                      );
+                    },
                     child: Card(
                       color: Colors.blue,
                       elevation: 15,
@@ -95,25 +103,28 @@ class _PaymentState extends State<Payment> {
                         height: 250,
                         width: MediaQuery.of(context).size.width,
                         child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "pagar con transferencia electrónica",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.money,
-                                color: Colors.black,
-                                size: 30,
-                              )
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "pagar con transferencia \nelectrónica",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.money,
+                                  color: Colors.black,
+                                  size: 30,
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -220,11 +220,14 @@ class _CarritoState extends State<Carrito> {
                                           j++) {
                                         if (carrito[i].idarticulo ==
                                             nodisponibles[j].idarticulo) {
-                                          carrito[i].disponible =
-                                              "No disponible";
+                                          setState(() {
+                                            carrito[i].disponible =
+                                                "No disponible";
+                                          });
                                         }
                                       }
                                     }
+                                    _showMyDialog(context);
                                   }
                                 }
                               }
@@ -270,6 +273,29 @@ class _CarritoState extends State<Carrito> {
     for (var i = 0; i < subtotales.length; i++) {
       apagar = apagar + subtotales[i];
     }
+  }
+
+  Widget _buildAlertDialog() {
+    return AlertDialog(
+      title: Text('Articulos no disponibles'),
+      content: Text(
+          "Se encontraron articulos no disponibles en las fechas o cantidades especificadas, verifique la información e intente nuevamente. los articulos no disponibles han sido señalados con color rojo."),
+      actions: [
+        FlatButton(
+            child: Text("Aceptar"),
+            textColor: Colors.blue,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ],
+    );
+  }
+
+  Future _showMyDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (_) => _buildAlertDialog(),
+    );
   }
 
   Widget _listArticulos() {
