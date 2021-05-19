@@ -107,11 +107,18 @@ class DetailOfertstate extends State<DetailOfert> {
                       borderRadius: BorderRadius.circular(10),
                       child: Stack(
                         children: [
-                          Image.network(
-                            "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
-                            width: 300,
-                            alignment: Alignment.center,
-                          ),
+                          ofer.image == null
+                              ? Image.network(
+                                  "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
+                                  width: 250,
+                                  alignment: Alignment.center,
+                                )
+                              : Image(
+                                  image: ofer.image,
+                                  width: 250,
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.fill,
+                                ),
                           if (ofer.dto == "0")
                             ...{}
                           else ...{
@@ -184,6 +191,7 @@ class DetailOfertstate extends State<DetailOfert> {
                         ),
                       ),
                     },
+                    Divider(thickness: 3),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -196,22 +204,29 @@ class DetailOfertstate extends State<DetailOfert> {
                         ],
                       ),
                     ),
+                    Divider(thickness: 3),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
                           Icon(Icons.description),
                           Text(
-                            "Descripción: ",
-                            style: TextStyle(fontSize: 21),
+                            "Descripción:",
+                            style: TextStyle(
+                                fontSize: 21, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                     ),
-                    Text(
-                      "" + ofer.descripcion,
-                      style: TextStyle(fontSize: 21),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        ofer.descripcion,
+                        style: TextStyle(fontSize: 21),
+                        textAlign: TextAlign.justify,
+                      ),
                     ),
+                    Divider(thickness: 3),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(

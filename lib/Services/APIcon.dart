@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Models/userRegistered.dart';
@@ -15,7 +16,8 @@ Future<bool> signUp(
     String city,
     String phone,
     String documento,
-    String passwdconfirm}) async {
+    String passwdconfirm,
+    String tipodocumento}) async {
   bool exito = false;
   try {
     final http.Response response = await http.post(
@@ -25,14 +27,15 @@ Future<bool> signUp(
       },
       body: jsonEncode(<String, String>{
         'email': email,
+        'name': name,
+        'idciudad': city,
+        'direccion': direccion,
+        'telefono': phone,
+        'tipo_documento': tipodocumento,
+        'documento': documento,
         'password': password,
         'password_confirmation': passwdconfirm,
-        'direccion': direccion,
-        'name': name,
-        'telefono': phone,
-        'documento': documento,
-        'idciudad': city,
-        'tipo_documento': "1",
+        'imagen:': ""
       }),
     );
     print('${response.body}');
@@ -48,7 +51,8 @@ Future<bool> signUp(
   return exito;
 }
 
-Future<UsuarioLog> signIn({String email, String password}) async {
+Future<UsuarioLog> signIn(
+    {String email, String password, BuildContext context}) async {
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/auth/login/',
@@ -68,6 +72,10 @@ Future<UsuarioLog> signIn({String email, String password}) async {
       return usrl;
     } else {
       print("signup failed");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.body}'),
+        duration: Duration(seconds: 5),
+      ));
       print('${response.body}');
     }
   } catch (e) {}
@@ -151,14 +159,16 @@ Future<UsuarioRegistradoProfile> getUserInfo(
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
       UsuarioRegistradoProfile us = new UsuarioRegistradoProfile(
-          nombre: jsonlist["data"][0]["nombre"],
-          ciudad: jsonlist["data"][0]["ciudad"],
-          direccion: jsonlist["data"][0]["direccion"],
-          documento: jsonlist["data"][0]["documento"],
-          email: jsonlist["data"][0]["email"],
-          telefono: jsonlist["data"][0]["telefono"],
-          tipodocu: jsonlist["data"][0]["tipo_documento"],
-          estado: jsonlist["data"][0]["estado"].toString());
+        nombre: jsonlist["data"][0]["nombre"],
+        ciudad: jsonlist["data"][0]["ciudad"],
+        direccion: jsonlist["data"][0]["direccion"],
+        documento: jsonlist["data"][0]["documento"],
+        email: jsonlist["data"][0]["email"],
+        telefono: jsonlist["data"][0]["telefono"],
+        tipodocu: jsonlist["data"][0]["tipo_documento"],
+        estado: jsonlist["data"][0]["estado"].toString(),
+        imagen: jsonlist["data"][0]["imagen"],
+      );
       return us;
     } else {
       print("request failed");
@@ -214,11 +224,8 @@ Future<bool> putUserInfo(
 Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
   List<Ofert> ofertList = <Ofert>[];
   try {
-    final http.Response response = await http
-        .get("https://droser.tech/api/articulos", headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: "Bearer " + tokn,
-    });
+    final http.Response response =
+        await http.get("https://droser.tech/api/articulos");
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -229,13 +236,14 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
       for (var i = 0; i < jsonlist["data"].length; i++) {
         Ofert of = new Ofert(
             nombre: jsonlist["data"][i]["nombre"],
-            categoria: jsonlist["data"][i]["categoria"],
-            idcategoria: jsonlist["data"][i]["idcategoria"].toString(),
+            categoria: jsonlist["data"][i]["categoria"].toString(),
             descripcion: jsonlist["data"][i]["descripcion"],
+            idcategoria: jsonlist["data"][i]["idcategoria"].toString(),
             precio: jsonlist["data"][i]["precio"].toString(),
             dto: jsonlist["data"][i]["dto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
+            imagen: jsonlist["data"][i]["imagen"],
             disponible: "");
         ofertList.add(of);
       }
@@ -250,11 +258,8 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
 Future<List<Category>> getCategories(BuildContext context, String tokn) async {
   List<Category> ofertList = <Category>[];
   try {
-    final http.Response response = await http
-        .get("https://droser.tech/api/categorias", headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: "Bearer " + tokn,
-    });
+    final http.Response response =
+        await http.get("https://droser.tech/api/categorias");
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -282,11 +287,8 @@ Future<List<Category>> getCategories(BuildContext context, String tokn) async {
 Future<List<Coupon>> getCoupons(BuildContext context, String tokn) async {
   List<Coupon> ofertList = <Coupon>[];
   try {
-    final http.Response response = await http
-        .get("https://droser.tech/api/cupones", headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: "Bearer " + tokn,
-    });
+    final http.Response response =
+        await http.get("https://droser.tech/api/cupones");
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -330,16 +332,17 @@ Future<List<Ofert>> searchByCategory(String idcat) async {
       print('${response.body}');
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-
       for (var i = 0; i < jsonlist["data"].length; i++) {
         Ofert of = new Ofert(
             nombre: jsonlist["data"][i]["name"],
             categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
             descripcion: jsonlist["data"][i]["descripcion"],
-            precio: jsonlist["data"][i]["precio"],
+            idcategoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
+            precio: jsonlist["data"][i]["precio"].toString(),
             dto: jsonlist["data"][i]["dcto"].toString(),
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
+            imagen: jsonlist["data"][i]["imagen"],
             disponible: "");
         ofertList.add(of);
       }
@@ -356,9 +359,6 @@ Future<List<Ofert>> searchByName(String nombre) async {
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/articulos/nombre/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
       body: jsonEncode(<String, String>{'nombre': nombre}),
     );
 
@@ -409,24 +409,25 @@ Future<Coupon> verifyCoupon(String cupon) async {
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
       Coupon of = new Coupon(
-          idcupon: jsonlist["data"][0]["idcupon"],
-          nombre: jsonlist["data"][0]["nombre"],
-          codigo: jsonlist["data"][0]["codigo"],
-          dcto: jsonlist["data"][0]["dcto"],
-          cantidad: jsonlist["data"][0]["cantidad"],
-          estado: jsonlist["data"][0]["estado"]);
+        idcupon: jsonlist["data"]["idcupon"].toString(),
+        nombre: jsonlist["data"]["nombre"].toString(),
+        codigo: jsonlist["data"]["codigo"].toString(),
+        dcto: jsonlist["data"]["dcto"].toString(),
+        cantidad: jsonlist["data"]["cantidad"].toString(),
+        estado: jsonlist["data"]["estado"].toString(),
+      );
       return of;
     } else {
       if (response.statusCode == 404) {
         Map<dynamic, dynamic> jsonlist = json.decode(response.body);
         res = jsonlist["data"];
         Coupon of = new Coupon(
-            idcupon: 0000,
+            idcupon: "0000",
             nombre: "no",
             codigo: "no",
-            dcto: 0,
-            cantidad: 0,
-            estado: 0);
+            dcto: "0",
+            cantidad: "0",
+            estado: "0");
         return of;
       }
       print("signup failed");
@@ -507,7 +508,7 @@ Future<String> rent(Rent renta) async {
         'hora_inicio': renta.horaInicio,
         'hora_fin': renta.horaFin,
         'direccion_entrega': renta.direccionEntrega,
-        'idciudad': renta.idciudad,
+        'idciudad': "1",
         'idusuario': renta.idusuario.toString(),
         'idcupon': renta.idcupon,
         'valor': renta.valor.toString(),

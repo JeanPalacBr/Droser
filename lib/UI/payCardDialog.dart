@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/UI/ConfirmRentDialog.dart';
 import 'package:lease_drones/UI/cart.dart';
+import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 
 class PayCardDialog extends StatefulWidget {
@@ -117,6 +118,9 @@ class _PayCardDialogState extends State<PayCardDialog> {
                                     }
                                   });
                                   finn++;
+                                }
+                                if (contad == disponibles.length) {
+                                  // carrito.clear();
                                 }
                                 Navigator.of(context).pop();
                                 if (disponibles.length == contad &&

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class UsuarioRegistrado {
   String nombre;
   String email;
@@ -37,6 +39,8 @@ class UsuarioRegistradoProfile {
   String ciudad;
   String tipodocu;
   String estado;
+  String imagen;
+  ImageProvider<Object> image;
 
   UsuarioRegistradoProfile(
       {this.documento,
@@ -46,7 +50,9 @@ class UsuarioRegistradoProfile {
       this.telefono,
       this.ciudad,
       this.tipodocu,
-      this.estado});
+      this.estado,
+      this.imagen,
+      this.image});
 
   factory UsuarioRegistradoProfile.fromJson(Map<String, dynamic> json) {
     return UsuarioRegistradoProfile(

@@ -46,6 +46,8 @@ class CardOfert extends StatelessWidget {
                           : Image(
                               image: ofe.image,
                               width: 400,
+                              alignment: Alignment.center,
+                              fit: BoxFit.fill,
                             ),
                       if (ofe.dto == "0")
                         ...{}

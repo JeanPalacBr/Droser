@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/editProfile.dart';
 import 'package:lease_drones/UI/home.dart';
@@ -28,6 +29,14 @@ class UserProfilestate extends State<UserProfile> {
   @override
   void initState() {
     // getuserprofile(context);
+    if (usuario.imagen != null) {
+      searchImage(usuario.imagen).then((aim) {
+        setState(() {
+          usuario.image = aim;
+        });
+      });
+    }
+
     loadFromShared();
     super.initState();
     UserProfilestate();
@@ -109,10 +118,18 @@ class UserProfilestate extends State<UserProfile> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: Image.network(
-                      "https://scontent.fctg1-3.fna.fbcdn.net/v/t1.6435-9/37043851_10216044568609042_7828755675776811008_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=09cbfe&_nc_eui2=AeGY3V07QAhtuPHoxR0RqZwI8t6iWEKq69ry3qJYQqrr2kiDhhYYzPpd2XcLOPbRSP-VPFJulkG3pB_NBMuVyRuu&_nc_ohc=PR4xY9PS1V0AX8nmAuL&_nc_ht=scontent.fctg1-3.fna&oh=1f678cb1fac53cb33a86a362a79520f9&oe=60AF3BF5",
-                      width: 200,
-                    ),
+                    child: usuario.image == null
+                        ? Image.network(
+                            "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
+                            width: 200,
+                            alignment: Alignment.center,
+                          )
+                        : Image(
+                            image: usuario.image,
+                            width: 200,
+                            alignment: Alignment.center,
+                            fit: BoxFit.fill,
+                          ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),

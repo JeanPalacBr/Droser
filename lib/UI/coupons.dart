@@ -105,7 +105,14 @@ class CouponsState extends State<Coupons> {
                 child: couponCard(cupons[posicion]),
               );
             })
-        : Text("No se encontraron cupones, vuelve más tarde");
+        : Column(
+            children: [
+              Text(
+                "No se encontraron cupones, vuelve más tarde",
+              ),
+              new CircularProgressIndicator(),
+            ],
+          );
   }
 
   Future<void> getCouponsa(BuildContext context) async {

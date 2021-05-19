@@ -193,7 +193,9 @@ class NavDrawer extends StatelessWidget {
     _sharedPrefs.remove("userid");
     islogd = false;
     invited = false;
+    carrito.clear();
     usuario.nombre = "";
+    usuario.email = "";
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => Login()),

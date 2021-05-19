@@ -119,7 +119,13 @@ class categoriesState extends State<Categories> {
                 child: categoryCard(cat[posicion]),
               );
             })
-        : Text("No se encontraron categorías, revise su conexión a internet");
+        : Column(
+            children: [
+              Text(
+                  "No se encontraron categorías, revise su conexión a internet"),
+              new CircularProgressIndicator(),
+            ],
+          );
   }
 
   Future<void> getCategoriesa(BuildContext context) async {

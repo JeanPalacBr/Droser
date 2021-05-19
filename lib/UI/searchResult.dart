@@ -112,7 +112,12 @@ class SearchResultState extends State<SearchResult> {
               );
               //Icon(Icons.delete, color: Colors.white)),
             })
-        : Text("No se encontraron resultados de su busqueda");
+        : Column(
+            children: [
+              Text("No se encontraron resultados de su busqueda"),
+              new CircularProgressIndicator(),
+            ],
+          );
   }
 
   Future<void> getArticlesa(BuildContext context) async {

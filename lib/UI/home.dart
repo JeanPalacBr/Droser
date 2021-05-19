@@ -292,12 +292,27 @@ class _HomeState extends State<Home> {
       getArticles(context, shar.token).then((artic) {
         if (artic != null || artic.length > 0) {
           setState(() {
-            //nofersList = artic;
             for (var i = 0; i < artic.length; i++) {
               if (artic[i].dto != "0") {
                 ofersList.add(artic[i]);
+                if (artic[i].imagen != null) {
+                  print(i);
+                  searchImage(artic[i].imagen).then((aim) {
+                    setState(() {
+                      ofersList[ofersList.length - 1].image = aim;
+                    });
+                  });
+                }
               } else {
                 nofersList.add(artic[i]);
+                if (artic[i].imagen != null) {
+                  print(i);
+                  searchImage(artic[i].imagen).then((aim) {
+                    setState(() {
+                      nofersList[nofersList.length - 1].image = aim;
+                    });
+                  });
+                }
               }
             }
           });
@@ -322,7 +337,12 @@ class _HomeState extends State<Home> {
                 child: categoryCard(cat[posicion]),
               );
             })
-        : Text("");
+        : Column(
+            children: [
+              Text(""),
+              new CircularProgressIndicator(),
+            ],
+          );
   }
 
   Future<void> getCategoriesa(BuildContext context) async {

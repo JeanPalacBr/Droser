@@ -114,10 +114,10 @@ class Ofert {
 class Coupon {
   String nombre;
   String codigo;
-  int cantidad;
-  int dcto;
-  int estado;
-  int idcupon;
+  String cantidad;
+  String dcto;
+  String estado;
+  String idcupon;
   Coupon(
       {this.nombre,
       this.estado,

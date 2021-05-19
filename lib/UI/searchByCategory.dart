@@ -100,24 +100,39 @@ class SearchByCategoryState extends State<SearchByCategory> {
   }
 
   Widget _list() {
-    return ListView.builder(
-        itemCount: ofersList.length,
-        itemBuilder: (context, posicion) {
-          return Container(
-            color: Colors.white10,
-            alignment: AlignmentDirectional.centerStart,
-            child: CardOfert(ofersList[posicion]),
+    return ofersList.length > 0
+        ? ListView.builder(
+            itemCount: ofersList.length,
+            itemBuilder: (context, posicion) {
+              return Container(
+                color: Colors.white10,
+                alignment: AlignmentDirectional.centerStart,
+                child: CardOfert(ofersList[posicion]),
+              );
+              //Icon(Icons.delete, color: Colors.white)),
+            })
+        : Column(
+            children: [
+              Text("La busqueda no ha arrojado resultados"),
+              new CircularProgressIndicator(),
+            ],
           );
-          //Icon(Icons.delete, color: Colors.white)),
-        });
   }
 
   Future<void> getArticlesa(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
     searchByCategory(idcat).then((artic) {
-      setState(() {
-        ofersList = artic;
-      });
+      ofersList = artic;
+      for (var v = 0; v < artic.length; v++) {
+        if (artic[v].imagen != null) {
+          print(v);
+          searchImage(artic[v].imagen).then((aim) {
+            setState(() {
+              ofersList[v].image = aim;
+            });
+          });
+        }
+      }
     }).catchError((error) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));

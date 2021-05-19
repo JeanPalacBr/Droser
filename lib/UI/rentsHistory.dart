@@ -66,7 +66,12 @@ class RentsHistoryState extends State<RentsHistory> {
               );
               //Icon(Icons.delete, color: Colors.white)),
             })
-        : Text("No se encontraron rentas");
+        : Column(
+            children: [
+              Text("No se encontraron rentas"),
+              new CircularProgressIndicator(),
+            ],
+          );
   }
 
   Future<void> getRented(BuildContext context) async {

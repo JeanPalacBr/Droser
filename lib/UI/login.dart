@@ -9,11 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 var contextsc;
 bool islogd = false;
-String usrn;
-String tokn;
+String usrn = "Invitado";
+String tokn = "";
 bool invited = false;
 UsuarioRegistradoProfile usuario;
-int userid;
+int userid = 0;
 
 class Login extends StatelessWidget {
   @override
@@ -27,8 +27,8 @@ class Login extends StatelessWidget {
       home: Container(
           decoration: new BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.white, Colors.blue[200], Colors.blue[400]],
-                  stops: [0.1, 0.3, 0.7],
+                  colors: [Colors.white, Colors.cyanAccent, Colors.blue[500]],
+                  stops: [0.05, 0.4, 0.7],
                   begin: FractionalOffset.topRight,
                   end: FractionalOffset.bottomLeft)),
           child: Scaffold(
@@ -50,6 +50,10 @@ class Isloggedstate extends State {
   void initState() {
     usuario = new UsuarioRegistradoProfile(nombre: "");
     islogd = false;
+    usrn = "Invitado";
+    tokn = "";
+    invited = false;
+    userid = 0;
     loadFromShared();
     super.initState();
   }
@@ -180,12 +184,12 @@ class Isloggedstate extends State {
 
   void onpressedlogin(
       var context, String email, String _password, bool remember) {
-    signIn(email: email, password: _password).then((user) {
+    signIn(email: email, password: _password, context: context).then((user) {
       if (user != null) {
         userid = user.id;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Bienvenido'),
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 3),
         ));
         SharedPrefs shar = new SharedPrefs();
         shar.auth(user.id.toString(), user.token, user.email);
@@ -214,6 +218,7 @@ class Isloggedstate extends State {
         if (artic != null) {
           usuario = artic;
           invited = false;
+
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Home()),

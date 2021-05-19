@@ -108,15 +108,33 @@ class _CatalogState extends State<Catalog> {
               );
               //Icon(Icons.delete, color: Colors.white)),
             })
-        : Text("No se encontraron articulos, revise su conexión a internet");
+        : Column(
+            children: [
+              Text(
+                  "No se encontraron articulos, revise su conexión a internet"),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
+            ],
+          );
   }
 
   Future<void> getArticlesa(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
     getArticles(context, shar.token).then((artic) {
-      setState(() {
-        ofersList = artic;
-      });
+      ofersList = artic;
+      for (var v = 0; v < artic.length; v++) {
+        if (artic[v].imagen != null) {
+          print(v);
+          searchImage(artic[v].imagen).then((aim) {
+            setState(() {
+              ofersList[v].image = aim;
+            });
+          });
+        }
+      }
     }).catchError((error) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Error" + error.toString())));

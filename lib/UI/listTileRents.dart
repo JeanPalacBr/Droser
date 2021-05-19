@@ -20,8 +20,16 @@ class ListTileRents extends StatelessWidget {
             ren.cantidad.toString() +
             "\n Fecha: " +
             ren.created),
-        trailing:
-            Text("\$" + ren.valor.toString() + "\n" + ren.estado.toString()),
+        trailing: Text("\$" +
+            ren.valor.toString() +
+            "\n" +
+            (ren.estado == "1"
+                ? "Pendiente"
+                : ren.estado == "2"
+                    ? "En curso"
+                    : ren.estado == "3"
+                        ? "Terminado"
+                        : "Cancelado")),
       ),
     );
   }

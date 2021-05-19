@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cartCard.dart';
+import 'package:lease_drones/UI/cityaddress.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/receipt.dart';
@@ -32,7 +33,7 @@ class _CarritoState extends State<Carrito> {
   List<Ofert> carri = <Ofert>[];
   final cupon = TextEditingController();
   Coupon valid = new Coupon();
-  int cupval = 0;
+  String cupval = "0";
   String res = "";
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
@@ -148,9 +149,14 @@ class _CarritoState extends State<Carrito> {
                   ),
                   style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
                   onPressed: () {
+                    publicadosa.clear();
                     disponibles.clear();
                     nodisponibles.clear();
                     if (invited == false) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CityAddress()));
                       // try{
                       SharedPrefs shar = new SharedPrefs();
                       for (var i = 0; i < subtotales.length; i++) {
@@ -163,8 +169,8 @@ class _CarritoState extends State<Carrito> {
                         if (cup != null) {
                           valid = cup;
                           if (valid.idcupon != null ||
-                              valid.nombre == "no" ||
-                              valid.idcupon == 0000) {
+                              valid.nombre != "no" ||
+                              valid.idcupon != "0000") {
                             cupval = valid.idcupon;
                             double mayor = 0;
                             int gi = 0;
@@ -174,8 +180,8 @@ class _CarritoState extends State<Carrito> {
                                 gi = i;
                               }
                             }
-                            subtotales[gi] =
-                                subtotales[gi] * ((100 - valid.dcto) / 100);
+                            subtotales[gi] = subtotales[gi] *
+                                ((100 - double.tryParse(valid.dcto)) / 100);
                           }
                           for (var i = 0; i < carri.length; i++) {
                             Rent articulo = new Rent(
@@ -322,6 +328,8 @@ class _CarritoState extends State<Carrito> {
                 onDismissed: (direction) {
                   setState(() {
                     carri.removeAt(posicion);
+                    subtotales.removeAt(posicion);
+                    cantidades.removeAt(posicion);
                   });
                 },
               );
