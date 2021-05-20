@@ -156,91 +156,10 @@ class _CarritoState extends State<Carrito> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CityAddress()));
+                              builder: (context) =>
+                                  CityAddress(cupon.value.text)));
                       // try{
-                      SharedPrefs shar = new SharedPrefs();
-                      for (var i = 0; i < subtotales.length; i++) {
-                        if (subtotales[i] == 0.0) {
-                          subtotales.removeAt(i);
-                        }
-                      }
 
-                      verifyCoupon(cupon.value.text).then((cup) {
-                        if (cup != null) {
-                          valid = cup;
-                          if (valid.idcupon != null ||
-                              valid.nombre != "no" ||
-                              valid.idcupon != "0000") {
-                            cupval = valid.idcupon;
-                            double mayor = 0;
-                            int gi = 0;
-                            for (var i = 0; i < subtotales.length; i++) {
-                              if (subtotales[i] > mayor) {
-                                mayor = subtotales[i];
-                                gi = i;
-                              }
-                            }
-                            subtotales[gi] = subtotales[gi] *
-                                ((100 - double.tryParse(valid.dcto)) / 100);
-                          }
-                          for (var i = 0; i < carri.length; i++) {
-                            Rent articulo = new Rent(
-                                idarticulo: carri[i].idarticulo,
-                                cantidad: int.tryParse(cantidades[i]),
-                                direccionEntrega: usuario.direccion,
-                                fechaInicio: fechainicio[i].substring(0, 10),
-                                fechaFin: fechafin[i].substring(0, 10),
-                                horaInicio:
-                                    horainicio[i].substring(10, 15) + ":00",
-                                horaFin: horafin[i].substring(10, 15) + ":00",
-                                idciudad: usuario.ciudad,
-                                idcupon: cupval.toString(),
-                                idusuario: shar.userid,
-                                valor: subtotales[i]);
-                            setState(() {
-                              publicadosa.add(articulo);
-                            });
-                            availability(articulo).then((cup) {
-                              if (cup != null) {
-                                res = cup;
-                              }
-                              if (res != "" || res == null) {
-                                if (res == "Disponible") {
-                                  disponibles.add(articulo);
-                                } else {
-                                  if (res != null) {
-                                    nodisponibles.add(articulo);
-                                  }
-                                }
-                                if (disponibles.length == carrito.length) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Receipt(disponibles)));
-                                } else {
-                                  if (nodisponibles.length > 0) {
-                                    for (var i = 0; i < carrito.length; i++) {
-                                      for (var j = 0;
-                                          j < nodisponibles.length;
-                                          j++) {
-                                        if (carrito[i].idarticulo ==
-                                            nodisponibles[j].idarticulo) {
-                                          setState(() {
-                                            carrito[i].disponible =
-                                                "No disponible";
-                                          });
-                                        }
-                                      }
-                                    }
-                                    _showMyDialog(context);
-                                  }
-                                }
-                              }
-                            });
-                          }
-                        }
-                      });
                     } else {
                       Navigator.pushAndRemoveUntil(
                         context,

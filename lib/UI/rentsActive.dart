@@ -75,7 +75,7 @@ class RentsActiveState extends State<RentsActive> {
 
   Future<void> getRented(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    userRentsList(shar.userid).then((artic) {
+    userRentsList(shar.userid, shar.token).then((artic) {
       for (var i = 0; i < artic.length; i++) {
         if (artic[i].estado == "1" || artic[i].estado == "2") {
           setState(() {

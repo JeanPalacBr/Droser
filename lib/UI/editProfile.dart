@@ -5,10 +5,12 @@ import 'package:lease_drones/Models/userRegistered.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
+import 'package:lease_drones/UI/profile.dart';
 import 'package:lease_drones/UI/searchResult.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:string_validator/string_validator.dart';
 
 class EditProfile extends StatefulWidget {
   UsuarioRegistradoProfile user = new UsuarioRegistradoProfile();
@@ -103,196 +105,208 @@ class EditProfilestate extends State<EditProfile> {
                   elevation: 0,
                 ),
                 backgroundColor: Colors.transparent,
-                body: Form(
-                    child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Editar usuario",
-                            style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                        Image(
-                            image: AssetImage("assets/images/DroneLeaser.png")),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            TextFormField(
-                              autofocus: true,
-                              controller: _email,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: new InputDecoration(
-                                labelText: "Email",
-                                labelStyle: TextStyle(color: Colors.black),
-                                hintText: user.email,
-                                hintStyle: TextStyle(color: Colors.black),
+                body: Builder(
+                  builder: (context) => Form(
+                      child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Editar usuario",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          Image(
+                              image:
+                                  AssetImage("assets/images/DroneLeaser.png")),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              TextFormField(
+                                autofocus: true,
+                                controller: _email,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: new InputDecoration(
+                                  labelText: "Email",
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  hintText: user.email,
+                                  hintStyle: TextStyle(color: Colors.black),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            TextFormField(
-                              autofocus: true,
-                              controller: _name,
-                              decoration: new InputDecoration(
-                                labelText: "Nombre completo",
-                                labelStyle: TextStyle(color: Colors.black),
-                                hintText: user.nombre,
-                                hintStyle: TextStyle(color: Colors.black),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              TextFormField(
+                                autofocus: true,
+                                controller: _name,
+                                decoration: new InputDecoration(
+                                  labelText: "Nombre completo",
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  hintText: user.nombre,
+                                  hintStyle: TextStyle(color: Colors.black),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                              hint: new Text(selciuda),
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  ciudad = newValue;
-                                });
-                                print(ciudad);
-                              },
-                              items: citiesL.map((data) {
-                                return DropdownMenuItem(
-                                  value: data.idciudad.toString(),
-                                  onTap: () {
-                                    selciuda = data.nombre;
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      data.nombre,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            )),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            TextFormField(
-                              autofocus: true,
-                              controller: _direccion,
-                              decoration: new InputDecoration(
-                                labelText: "Dirección",
-                                labelStyle: TextStyle(color: Colors.black),
-                                hintText: user.direccion,
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            TextFormField(
-                              autofocus: true,
-                              controller: _phone,
-                              keyboardType: TextInputType.number,
-                              decoration: new InputDecoration(
-                                labelText: "Teléfono",
-                                labelStyle: TextStyle(color: Colors.black),
-                                hintText: user.telefono,
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                              hint: new Text(selidocu),
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  selid = newValue;
-                                });
-                                print(selid);
-                              },
-                              items: documentsL.map((data) {
-                                return DropdownMenuItem(
-                                  value: data.idtipo.toString(),
-                                  onTap: () {
-                                    selidocu = data.nombre;
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      data.nombre,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            )),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: containerText(
-                            TextFormField(
-                              autofocus: true,
-                              controller: _documento,
-                              decoration: new InputDecoration(
-                                labelText: "Documento de identidad",
-                                labelStyle: TextStyle(color: Colors.black),
-                                hintText: user.documento,
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.indigo[700]),
-                              child: Text("Guardar cambios"),
-                              onPressed: () {
-                                _onpressedSave(
-                                  context,
-                                  _name.value.text,
-                                  _documento.value.text,
-                                  _direccion.value.text,
-                                  _email.value.text,
-                                  _phone.value.text,
-                                  "1",
-                                  ciudad,
-                                );
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              DropdownButtonHideUnderline(
+                                  child: new DropdownButton<String>(
+                                hint: new Text(selciuda),
+                                isDense: true,
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    ciudad = newValue;
+                                  });
+                                  print(ciudad);
                                 },
-                                child: Text("Atrás"))
-                          ],
-                        )
-                      ],
+                                items: citiesL.map((data) {
+                                  return DropdownMenuItem(
+                                    value: data.idciudad.toString(),
+                                    onTap: () {
+                                      selciuda = data.nombre;
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        data.nombre,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              )),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              TextFormField(
+                                autofocus: true,
+                                controller: _direccion,
+                                decoration: new InputDecoration(
+                                  labelText: "Dirección",
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  hintText: user.direccion,
+                                  hintStyle: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              TextFormField(
+                                autofocus: true,
+                                controller: _phone,
+                                keyboardType: TextInputType.number,
+                                decoration: new InputDecoration(
+                                  labelText: "Teléfono",
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  hintText: user.telefono,
+                                  hintStyle: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              DropdownButtonHideUnderline(
+                                  child: new DropdownButton<String>(
+                                hint: new Text(selidocu),
+                                isDense: true,
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    selid = newValue;
+                                  });
+                                  print(selid);
+                                },
+                                items: documentsL.map((data) {
+                                  return DropdownMenuItem(
+                                    value: data.idtipo.toString(),
+                                    onTap: () {
+                                      selidocu = data.nombre;
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        data.nombre,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              )),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: containerText(
+                              TextFormField(
+                                autofocus: true,
+                                controller: _documento,
+                                decoration: new InputDecoration(
+                                  labelText: "Documento de identidad",
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  hintText: user.documento,
+                                  hintStyle: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.indigo[700]),
+                                child: Text("Guardar cambios"),
+                                onPressed: () {
+                                  _onpressedSave(
+                                    context,
+                                    _name.value.text,
+                                    _documento.value.text,
+                                    _direccion.value.text,
+                                    _email.value.text,
+                                    _phone.value.text,
+                                    "1",
+                                    ciudad,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content:
+                                        Text("Los cambios han sido guardados"),
+                                    duration: const Duration(seconds: 3),
+                                  ));
+                                  getuserprofile(context);
+                                  // Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Atrás"))
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )))));
+                  )),
+                ))));
   }
 
   _loadCities() {
@@ -316,15 +330,42 @@ class EditProfilestate extends State<EditProfile> {
   }
 
   Widget containerText(Widget widg) {
-    return Container(
-      margin: const EdgeInsets.all(3),
-      padding: const EdgeInsets.all(1),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.indigo[700], width: 3.0),
-        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Container(
+        margin: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.indigo[700], width: 3.0),
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        ),
+        child: widg,
       ),
-      child: widg,
     );
+  }
+
+  Future<void> getuserprofile(BuildContext context) async {
+    SharedPrefs shar = new SharedPrefs();
+    getUserInfo(context, shar.token, shar.userid).then((artic) {
+      setState(() {
+        if (artic != null) {
+          usuario = artic;
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => UserProfile()),
+            (Route<dynamic> route) => false,
+          );
+        } else {
+          usuario.nombre = "";
+        }
+      });
+    }).catchError((error) {
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: const Duration(seconds: 2),
+      ));
+    });
   }
 
   Future<void> _onpressedSave(
@@ -366,14 +407,20 @@ class EditProfilestate extends State<EditProfile> {
     putUserInfo(email, tipodocu, direccion, nam, city, phone, docu, context,
             tkn, userid)
         .then((user) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Registered')));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Los cambios han sido guardados"),
+        duration: const Duration(seconds: 3),
+      ));
     }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: const Duration(seconds: 3),
+      ));
     }).timeout(Duration(seconds: 10), onTimeout: () {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Timeout error")));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Timeout error"),
+        duration: const Duration(seconds: 3),
+      ));
     });
   }
 }

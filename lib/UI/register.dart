@@ -20,6 +20,15 @@ class Registrar extends StatelessWidget {
                     begin: FractionalOffset.topRight,
                     end: FractionalOffset.bottomLeft)),
             child: Scaffold(
+              appBar: AppBar(
+                actions: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(globalContext);
+                      },
+                      child: Text("Atrás"))
+                ],
+              ),
               backgroundColor: Colors.transparent,
               // resizeToAvoidBottomPadding: false,
               body: Registrarform(),
@@ -34,26 +43,45 @@ class Registrarform extends StatefulWidget {
   }
 }
 
-void _onpressedSignUp(var context, String email, String _password,
-    String direccion, String nam, String city, String phone, String docu) {
+void _onpressedSignUp(
+    var context,
+    String email,
+    String _password,
+    String _passwordconfir,
+    String direccion,
+    String nam,
+    String city,
+    String phone,
+    String docu,
+    String tipodocum) {
   signUp(
-          email: email,
-          password: _password,
-          direccion: direccion,
-          city: city,
-          phone: phone,
-          documento: docu,
-          name: nam,
-          passwdconfirm: _password)
-      .then((user) {
-    return Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text('Registered')));
+    email: email,
+    password: _password,
+    direccion: direccion,
+    city: city,
+    phone: phone,
+    documento: docu,
+    name: nam,
+    passwdconfirm: _passwordconfir,
+    tipodocumento: tipodocum,
+  ).then((user) {
+    if (user.contains("Success")) {
+      Navigator.pop(globalContext);
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Usuario registrado"),
+        duration: const Duration(seconds: 3),
+      ));
+    }
   }).catchError((error) {
-    return Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Error" + error.toString()),
+      duration: const Duration(seconds: 3),
+    ));
   }).timeout(Duration(seconds: 10), onTimeout: () {
-    return Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text("Timeout error")));
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Timeout error"),
+      duration: const Duration(seconds: 3),
+    ));
   });
 }
 
@@ -62,6 +90,7 @@ class RegistrarformState extends State {
 
   final _email = new TextEditingController();
   final _password = new TextEditingController();
+  final _passwordconf = new TextEditingController();
   final _name = new TextEditingController();
   final _direccion = new TextEditingController();
   final _documento = new TextEditingController();
@@ -81,234 +110,239 @@ class RegistrarformState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        //key: MultipleKeys.signUpFormKey,
-        child: Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text("Registro de usuario",
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-            Image(image: AssetImage("assets/images/DroneLeaser.png")),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                TextFormField(
-                  autofocus: true,
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: new InputDecoration(
-                    labelText: "Email",
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintText: "example@ejemplo.com",
-                    hintStyle: TextStyle(color: Colors.black),
+    return Builder(
+      builder: (context) => Form(
+          //key: MultipleKeys.signUpFormKey,
+          child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text("Registro de usuario",
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              Image(image: AssetImage("assets/images/DroneLeaser.png")),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  TextFormField(
+                    autofocus: true,
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: new InputDecoration(
+                      labelText: "Email",
+                      labelStyle: TextStyle(color: Colors.black),
+                      hintText: "example@ejemplo.com",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                TextFormField(
-                  autofocus: true,
-                  controller: _name,
-                  decoration: new InputDecoration(
-                    labelText: "Nombre completo",
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintText: "ej. Pedro Valega Ortiz",
-                    hintStyle: TextStyle(color: Colors.black),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  TextFormField(
+                    autofocus: true,
+                    controller: _name,
+                    decoration: new InputDecoration(
+                      labelText: "Nombre completo",
+                      labelStyle: TextStyle(color: Colors.black),
+                      hintText: "ej. Pedro Valega Ortiz",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                DropdownButtonHideUnderline(
-                    child: new DropdownButton<String>(
-                  hint: new Text(selciuda),
-                  isDense: true,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      ciudad = newValue;
-                    });
-                    print(ciudad);
-                  },
-                  items: citiesL.map((data) {
-                    return DropdownMenuItem(
-                      value: data.idciudad.toString(),
-                      onTap: () {
-                        selciuda = data.nombre;
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          data.nombre,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  DropdownButtonHideUnderline(
+                      child: new DropdownButton<String>(
+                    hint: new Text(selciuda),
+                    isDense: true,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        ciudad = newValue;
+                      });
+                      print(ciudad);
+                    },
+                    items: citiesL.map((data) {
+                      return DropdownMenuItem(
+                        value: data.idciudad.toString(),
+                        onTap: () {
+                          selciuda = data.nombre;
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            data.nombre,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                )),
+                      );
+                    }).toList(),
+                  )),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                TextFormField(
-                  autofocus: true,
-                  controller: _direccion,
-                  decoration: new InputDecoration(
-                    labelText: "Dirección",
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintText: "Carrera 1#10-11",
-                    hintStyle: TextStyle(color: Colors.black),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  TextFormField(
+                    autofocus: true,
+                    controller: _direccion,
+                    decoration: new InputDecoration(
+                      labelText: "Dirección",
+                      labelStyle: TextStyle(color: Colors.black),
+                      hintText: "Carrera 1#10-11",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                TextFormField(
-                  autofocus: true,
-                  controller: _phone,
-                  keyboardType: TextInputType.number,
-                  decoration: new InputDecoration(
-                    labelText: "Teléfono",
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintText: "1152552",
-                    hintStyle: TextStyle(color: Colors.black),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  TextFormField(
+                    autofocus: true,
+                    controller: _phone,
+                    keyboardType: TextInputType.number,
+                    decoration: new InputDecoration(
+                      labelText: "Teléfono",
+                      labelStyle: TextStyle(color: Colors.black),
+                      hintText: "1152552",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                DropdownButtonHideUnderline(
-                    child: new DropdownButton<String>(
-                  hint: new Text(selidocu),
-                  isDense: true,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      selid = newValue;
-                    });
-                    print(selid);
-                  },
-                  items: documentsL.map((data) {
-                    return DropdownMenuItem(
-                      value: data.idtipo.toString(),
-                      onTap: () {
-                        selidocu = data.nombre;
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          data.nombre,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  DropdownButtonHideUnderline(
+                      child: new DropdownButton<String>(
+                    hint: new Text(selidocu),
+                    isDense: true,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        selid = newValue;
+                      });
+                      print(selid);
+                    },
+                    items: documentsL.map((data) {
+                      return DropdownMenuItem(
+                        value: data.idtipo.toString(),
+                        onTap: () {
+                          selidocu = data.nombre;
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            data.nombre,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                )),
+                      );
+                    }).toList(),
+                  )),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(
-                TextFormField(
-                  autofocus: true,
-                  controller: _documento,
-                  decoration: new InputDecoration(
-                    labelText: "Documento de identidad",
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintText: "1123143121",
-                    hintStyle: TextStyle(color: Colors.black),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(
+                  TextFormField(
+                    autofocus: true,
+                    controller: _documento,
+                    decoration: new InputDecoration(
+                      labelText: "Documento de identidad",
+                      labelStyle: TextStyle(color: Colors.black),
+                      hintText: "1123143121",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(TextFormField(
-                // key: MultipleKeys.signUpFormKey,
-                autofocus: true,
-                controller: _password,
-                decoration: new InputDecoration(
-                    labelText: "Contraseña",
-                    labelStyle: TextStyle(color: Colors.black)),
-                obscureText: true,
-              )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: containerText(TextFormField(
-                // key: MultipleKeys.signUpFormKey,
-                autofocus: true,
-                controller: _password,
-                decoration: new InputDecoration(
-                    labelText: "Confirmar contraseña",
-                    labelStyle: TextStyle(color: Colors.black)),
-                obscureText: true,
-              )),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                  child: Text("Registrar!"),
-                  onPressed: () {
-                    if (isEmail(_email.value.text)) {
-                      if (_password.text.length >= 6) {
-                        _onpressedSignUp(
-                            context,
-                            _email.value.text,
-                            _password.value.text,
-                            _direccion.value.text,
-                            _name.value.text,
-                            ciudad,
-                            _phone.value.text,
-                            _documento.value.text);
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(TextFormField(
+                  // key: MultipleKeys.signUpFormKey,
+                  autofocus: true,
+                  controller: _password,
+                  decoration: new InputDecoration(
+                      labelText: "Contraseña",
+                      labelStyle: TextStyle(color: Colors.black)),
+                  obscureText: true,
+                )),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: containerText(TextFormField(
+                  // key: MultipleKeys.signUpFormKey,
+                  autofocus: true,
+                  controller: _passwordconf,
+                  decoration: new InputDecoration(
+                      labelText: "Confirmar contraseña",
+                      labelStyle: TextStyle(color: Colors.black)),
+                  obscureText: true,
+                )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(primary: Colors.indigo[700]),
+                    child: Text("Registrar!"),
+                    onPressed: () {
+                      if (isEmail(_email.value.text)) {
+                        if (_password.text.length >= 8) {
+                          if (_direccion.value.text.isNotEmpty &&
+                              _name.value.text.isNotEmpty &&
+                              _phone.value.text.isNotEmpty &&
+                              _documento.value.text.isNotEmpty &&
+                              _direccion.value.text.isNotEmpty) {
+                            _onpressedSignUp(
+                                context,
+                                _email.value.text,
+                                _password.value.text,
+                                _passwordconf.value.text,
+                                _direccion.value.text,
+                                _name.value.text,
+                                ciudad,
+                                _phone.value.text,
+                                _documento.value.text,
+                                selid);
+                          }
+                        } else {
+                          Scaffold.of(globalContext).showSnackBar(SnackBar(
+                              content: Text(
+                            'contraseña demasiado corta',
+                            style: TextStyle(fontSize: 20),
+                          )));
+                        }
                       } else {
                         Scaffold.of(globalContext).showSnackBar(SnackBar(
                             content: Text(
-                          'contraseña demasiado corta',
+                          'Email invalido',
                           style: TextStyle(fontSize: 20),
                         )));
                       }
-                    } else {
-                      Scaffold.of(globalContext).showSnackBar(SnackBar(
-                          content: Text(
-                        'Email invalido',
-                        style: TextStyle(fontSize: 20),
-                      )));
-                    }
-                    Navigator.pop(globalContext);
-                  },
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(globalContext);
                     },
-                    child: Text("Atrás"))
-              ],
-            )
-          ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   _loadCities() {

@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Models/userRegistered.dart';
+import 'package:lease_drones/UI/ConfirmRentDialog.dart';
 
 import '../Models/userRegistered.dart';
 
-Future<bool> signUp(
+Future<String> signUp(
     {String email,
     String password,
     String direccion,
@@ -18,7 +19,7 @@ Future<bool> signUp(
     String documento,
     String passwdconfirm,
     String tipodocumento}) async {
-  bool exito = false;
+  String exito;
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/auth/register',
@@ -35,17 +36,24 @@ Future<bool> signUp(
         'documento': documento,
         'password': password,
         'password_confirmation': passwdconfirm,
-        'imagen:': ""
+        'idperfil_usuario': "1",
       }),
     );
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
-      exito = true;
+      Map<dynamic, dynamic> jsonlist = json.decode(response.body);
+
+      exito = jsonlist.toString();
+      print(exito);
+      print(exito);
+      print(exito);
+      print(exito);
       print('${response.body}');
     } else {
       print("signup failed");
       print('${response.body}');
+      print(exito);
     }
   } catch (e) {}
   return exito;
@@ -436,14 +444,14 @@ Future<Coupon> verifyCoupon(String cupon) async {
   } catch (e) {}
 }
 
-Future<String> availability(Rent renta) async {
-  List<Ofert> ofertList = <Ofert>[];
+Future<String> availability(Rent renta, String tokn) async {
   String res;
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/renta/disponibilidad',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer " + tokn,
       },
       body: jsonEncode(<String, String>{
         'idarticulo': renta.idarticulo,
@@ -459,7 +467,7 @@ Future<String> availability(Rent renta) async {
         'valor': renta.valor.toString(),
       }),
     );
-
+    print(tokn);
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -491,7 +499,7 @@ Future<String> availability(Rent renta) async {
   return res;
 }
 
-Future<String> rent(Rent renta) async {
+Stream<dynamic> rent(Rent renta, String tokn, BuildContext context) async* {
   List<Ofert> ofertList = <Ofert>[];
   String res;
   try {
@@ -499,6 +507,7 @@ Future<String> rent(Rent renta) async {
       'https://droser.tech/api/renta',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer " + tokn,
       },
       body: jsonEncode(<String, String>{
         'idarticulo': renta.idarticulo,
@@ -521,7 +530,7 @@ Future<String> rent(Rent renta) async {
       print('${response.body}');
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-      res = jsonlist["data"];
+      yield res = jsonlist["data"];
       //       nombre: jsonlist["data"][i]["name"],
       //       categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
       //       descripcion: jsonlist["data"][i]["descripcion"],
@@ -537,26 +546,39 @@ Future<String> rent(Rent renta) async {
         print('${response.body}');
         Map<dynamic, dynamic> jsonlist = json.decode(response.body);
         res = jsonlist["data"];
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmRentDialog(false);
+          },
+        );
+        yield res;
       } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmRentDialog(false);
+          },
+        );
         print("signup failed");
         print('${response.body}');
       }
     }
   } catch (e) {}
-  return res;
 }
 
-Future<List<Rented>> userRentsList(String idusuario) async {
+Future<List<Rented>> userRentsList(String idusuario, String tokn) async {
   List<Rented> rentss = <Rented>[];
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/rentas/idusuario/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: "Bearer " + tokn,
       },
       body: jsonEncode(<String, String>{'idusuario': idusuario}),
     );
-
+    print(tokn);
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
@@ -583,6 +605,7 @@ Future<List<Rented>> userRentsList(String idusuario) async {
         rentss.add(of);
       }
     } else {
+      print(tokn);
       print("signup failed");
       print('${response.body}');
     }

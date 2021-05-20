@@ -76,7 +76,7 @@ class RentsHistoryState extends State<RentsHistory> {
 
   Future<void> getRented(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    userRentsList(shar.userid).then((artic) {
+    userRentsList(shar.userid, shar.token).then((artic) {
       setState(() {
         rentsList = artic;
       });

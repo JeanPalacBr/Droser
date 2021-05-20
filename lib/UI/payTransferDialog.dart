@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class PayTransferDialog extends StatefulWidget {
   const PayTransferDialog();
@@ -102,17 +103,18 @@ class _PayTransferDialogState extends State<PayTransferDialog> {
                               )),
                           TextButton(
                               onPressed: () {
-                                String r = "";
-                                int contad = 0;
-                                for (var i = 0; i < disponibles.length; i++) {
-                                  rent(disponibles[i]).then((ren) {
-                                    r = ren;
-                                    if (r == "Renta creado") {
-                                      contad++;
-                                    }
-                                  });
-                                }
-                                Navigator.of(context).pop();
+                                // SharedPrefs shar = new SharedPrefs();
+                                // String r = "";
+                                // int contad = 0;
+                                // for (var i = 0; i < disponibles.length; i++) {
+                                //   rent(disponibles[i], shar.token).then((ren) {
+                                //     r = ren;
+                                //     if (r == "Renta creado") {
+                                //       contad++;
+                                //     }
+                                //   });
+                                // }
+                                // Navigator.of(context).pop();
                               },
                               child: Text(
                                 "Aceptar",

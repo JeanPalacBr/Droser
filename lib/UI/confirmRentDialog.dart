@@ -13,10 +13,6 @@ class ConfirmRentDialog extends StatefulWidget {
 
 class _ConfirmRentDialogState extends State<ConfirmRentDialog> {
   bool rentado = false;
-  final cvc = new TextEditingController();
-  final fe = new TextEditingController();
-  final nt = new TextEditingController();
-  String hin = "Seleccione tipo de tarjeta";
   @override
   _ConfirmRentDialogState(this.rentado);
   @override

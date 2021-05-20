@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:lease_drones/UI/ConfirmRentDialog.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class PayCardDialog extends StatefulWidget {
   const PayCardDialog();
@@ -106,41 +108,36 @@ class _PayCardDialogState extends State<PayCardDialog> {
                                 style: TextStyle(fontSize: 18),
                               )),
                           TextButton(
-                              onPressed: () {
-                                String r = "";
+                              onPressed: () async {
+                                SharedPrefs shar = new SharedPrefs();
                                 int contad = 0;
                                 int finn = 0;
                                 for (var i = 0; i < disponibles.length; i++) {
-                                  rent(disponibles[i]).then((ren) {
-                                    r = ren;
-                                    if (r == "Renta creado") {
+                                  await for (String res in rent(
+                                      disponibles[i], shar.token, context)) {
+                                    // sleep(new Duration(seconds: 5));
+                                    if (res == "Renta creado") {
                                       contad++;
+                                    } else {
+                                      if (res != null) {
+                                        contad--;
+                                      }
                                     }
-                                  });
+                                  }
+
                                   finn++;
                                 }
-                                if (contad == disponibles.length) {
-                                  // carrito.clear();
-                                }
-                                Navigator.of(context).pop();
-                                if (disponibles.length == contad &&
-                                    finn == disponibles.length) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ConfirmRentDialog(true);
-                                    },
-                                  );
-                                } else {
-                                  if (finn == disponibles.length) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ConfirmRentDialog(false);
-                                      },
-                                    );
-                                  }
-                                }
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()));
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ConfirmRentDialog(true);
+                                  },
+                                );
+                                //Navigator.of(context).pop();
                               },
                               child: Text(
                                 "Aceptar",

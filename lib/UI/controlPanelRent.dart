@@ -10,7 +10,8 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 
 class ControlPanelRent extends StatefulWidget {
-  Rented ren = new Rented();
+  Rented ren;
+  //= new Rented();
   ControlPanelRent(this.ren);
   @override
   ControlPanelRentstate createState() => ControlPanelRentstate(this.ren);
@@ -22,54 +23,45 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
-  int diffRenta = 1000;
-  int diffCon = 1000;
+  int diffRenta = 0;
+  int diffCon = 0;
+  int estado = 0;
 
   ControlPanelRentstate(this.ren);
+  final fechactual = DateTime.now();
+
   @override
   void initState() {
-    if (ren.estado == "2") {
-      final fechainicio = DateTime(
-          int.tryParse(ren.fechaInicio.substring(0, 4)),
-          int.tryParse(ren.fechaInicio.substring(5, 6)),
-          int.tryParse(ren.fechaInicio.substring(8, 9)),
-          int.tryParse(ren.horaInicio.substring(0, 1)),
-          int.tryParse(ren.horaInicio.substring(3, 4)),
-          int.tryParse(ren.horaInicio.substring(6, 7)));
-      final fechafin = DateTime(
-          int.tryParse(ren.fechaFin.substring(0, 4)),
-          int.tryParse(ren.fechaFin.substring(5, 6)),
-          int.tryParse(ren.fechaFin.substring(8, 9)),
-          int.tryParse(ren.horaFin.substring(0, 1)),
-          int.tryParse(ren.horaFin.substring(3, 4)),
-          int.tryParse(ren.horaFin.substring(6, 7)));
-      final fechactual = DateTime.now();
+    final fechainicio = DateTime(
+        int.tryParse(ren.fechaInicio.substring(0, 4)),
+        int.tryParse(ren.fechaInicio.substring(5, 7)),
+        int.tryParse(ren.fechaInicio.substring(8, 10)),
+        int.tryParse(ren.horaInicio.substring(0, 2)),
+        int.tryParse(ren.horaInicio.substring(3, 5)),
+        int.tryParse(ren.horaInicio.substring(6, 8)));
+    final fechafin = DateTime(
+        int.tryParse(ren.fechaFin.substring(0, 4)),
+        int.tryParse(ren.fechaFin.substring(5, 7)),
+        int.tryParse(ren.fechaFin.substring(8, 10)),
+        int.tryParse(ren.horaFin.substring(0, 2)),
+        int.tryParse(ren.horaFin.substring(3, 5)),
+        int.tryParse(ren.horaFin.substring(6, 8)));
+
+    if (ren.estado == "2" ||
+        fechactual.isAfter(fechainicio) ||
+        !fechactual.isAfter(fechafin)) {
       diffRenta = fechafin.difference(fechainicio).inSeconds;
-      diffCon = fechactual.difference(fechafin).inSeconds;
+      diffCon = fechactual.difference(fechainicio).inSeconds;
     } else {
-      if (ren.estado == "1") {
-        final fechainicio = DateTime(
-            int.tryParse(ren.fechaInicio.substring(0, 4)),
-            int.tryParse(ren.fechaInicio.substring(5, 6)),
-            int.tryParse(ren.fechaInicio.substring(8, 9)),
-            int.tryParse(ren.horaInicio.substring(0, 1)),
-            int.tryParse(ren.horaInicio.substring(3, 4)),
-            int.tryParse(ren.horaInicio.substring(6, 7)));
-        final fechafin = DateTime(
-            int.tryParse(ren.fechaFin.substring(0, 4)),
-            int.tryParse(ren.fechaFin.substring(5, 6)),
-            int.tryParse(ren.fechaFin.substring(8, 9)),
-            int.tryParse(ren.horaFin.substring(0, 1)),
-            int.tryParse(ren.horaFin.substring(3, 4)),
-            int.tryParse(ren.horaFin.substring(6, 7)));
+      if (ren.estado == "1" || fechainicio.isAfter(fechactual)) {
         final fechactual = DateTime.now();
         final created = DateTime.tryParse(ren.created);
         diffRenta = fechactual.difference(fechainicio).inSeconds;
 
-        diffCon = fechactual.difference(created).inSeconds;
+        diffCon = created.difference(fechactual).inSeconds;
       }
     }
-    diffRenta;
+    //diffRenta;
     super.initState();
   }
 
@@ -169,7 +161,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                     height: MediaQuery.of(context).size.height / 2,
                     ringColor: Colors.white,
                     ringGradient: null,
-                    fillColor: Colors.blue[100],
+                    fillColor: Colors.green[300],
                     fillGradient: null,
                     backgroundColor: Colors.blue[400],
                     backgroundGradient: null,
@@ -241,7 +233,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                         children: <Widget>[
                           Icon(Icons.date_range),
                           Text(
-                            "Fecha de fin: " + ren.fechaInicio,
+                            "Fecha de fin: " + ren.fechaFin,
                             style: TextStyle(fontSize: 21),
                           ),
                         ],

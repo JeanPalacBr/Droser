@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/home.dart';
+import 'package:lease_drones/UI/login.dart';
+import 'package:lease_drones/UI/receipt.dart';
+import 'package:lease_drones/ViewModels/sharedPrefs.dart';
+import 'package:lease_drones/Services/APIcon.dart';
 
-class cityAddress extends StatefulWidget {
-  cityAddress();
+class CityAddress extends StatefulWidget {
+  String cuponazo = "";
+  CityAddress(this.cuponazo);
   @override
-  _cityAddressState createState() => _cityAddressState();
+  _cityAddressState createState() => _cityAddressState(this.cuponazo);
 }
 
-class _cityAddressState extends State<cityAddress> {
-  final cvc = new TextEditingController();
-  final fe = new TextEditingController();
-  final nt = new TextEditingController();
+class _cityAddressState extends State<CityAddress> {
+  final dir = new TextEditingController();
   String hin = "Seleccione tipo de tarjeta";
+  Coupon valid = new Coupon();
+  String cupval = "0";
+  String cuponazo = "";
+  String res = "";
+  List<City> citiesL = <City>[];
+  String ciudad = "Seleccione su ciudad";
+  String selciuda = "Seleccione su ciudad";
+  @override
+  void initState() {
+    _loadCities();
+    super.initState();
+  }
+
+  _cityAddressState(this.cuponazo);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,94 +46,232 @@ class _cityAddressState extends State<cityAddress> {
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Home())),
           ),
-          title: Text("Metodos de pago"),
+          title: Text("Envío"),
           centerTitle: true,
         ),
         body: Center(
           child: Builder(
             builder: (context) => SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      "Pago con tarjeta",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "Opciones de envío",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
-                  new DropdownButton<String>(
-                    hint: Text(hin),
-                    items: <String>['Credito', 'Débito'].map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        hin = value.toString();
-                      });
-                    },
-                  ),
-                  TextField(
-                      cursorColor: Colors.white,
-                      controller: nt,
-                      maxLength: 16,
-                      keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                        labelText: "Número de tarjeta",
-                        labelStyle: TextStyle(color: Colors.black),
-                        hintText: "Número de tarjeta",
-                        hintStyle: TextStyle(color: Colors.black),
-                      )),
-                  TextField(
-                      cursorColor: Colors.white,
-                      controller: cvc,
-                      maxLength: 4,
-                      keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                        labelText: "CVC",
-                        labelStyle: TextStyle(color: Colors.black),
-                        hintText: "CVC",
-                        hintStyle: TextStyle(color: Colors.black),
-                      )),
-                  TextField(
-                      cursorColor: Colors.white,
-                      controller: fe,
-                      maxLength: 10,
-                      keyboardType: TextInputType.datetime,
-                      decoration: new InputDecoration(
-                        labelText: "Fecha de expiración",
-                        labelStyle: TextStyle(color: Colors.black),
-                        hintText: "Fecha de expiración",
-                        hintStyle: TextStyle(color: Colors.black),
-                      )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: containerText(
+                        DropdownButtonHideUnderline(
+                            child: new DropdownButton<String>(
+                          hint: new Text(selciuda),
+                          isDense: true,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              ciudad = newValue;
+                            });
+                            print(ciudad);
                           },
-                          child: Text(
-                            "Cancelar",
-                            style: TextStyle(fontSize: 18),
+                          items: citiesL.map((data) {
+                            return DropdownMenuItem(
+                              value: data.idciudad.toString(),
+                              onTap: () {
+                                selciuda = data.nombre;
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  data.nombre,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        )),
+                      ),
+                    ),
+                    containerText(Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                          cursorColor: Colors.white,
+                          controller: dir,
+                          keyboardType: TextInputType.streetAddress,
+                          decoration: new InputDecoration(
+                            labelText: "Dirección",
+                            labelStyle: TextStyle(color: Colors.black),
+                            hintText: "Dirección",
+                            hintStyle: TextStyle(color: Colors.black),
                           )),
-                      TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Aceptar",
-                            style: TextStyle(fontSize: 18),
-                          )),
-                    ],
-                  ),
-                ],
+                    )),
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.monetization_on_outlined),
+                      label: Text(
+                        "Ir a pagar",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style:
+                          ElevatedButton.styleFrom(primary: Colors.indigo[700]),
+                      onPressed: () {
+                        publicadosa.clear();
+                        disponibles.clear();
+                        nodisponibles.clear();
+                        if (invited == false) {
+                          // try{
+                          SharedPrefs shar = new SharedPrefs();
+                          for (var i = 0; i < subtotales.length; i++) {
+                            if (subtotales[i] == 0.0) {
+                              subtotales.removeAt(i);
+                            }
+                          }
+
+                          verifyCoupon(cuponazo).then((cup) {
+                            if (cup != null) {
+                              valid = cup;
+                              if (valid.idcupon != null ||
+                                  valid.nombre != "no" ||
+                                  valid.idcupon != "0000") {
+                                cupval = valid.idcupon;
+                                double mayor = 0;
+                                int gi = 0;
+                                for (var i = 0; i < subtotales.length; i++) {
+                                  if (subtotales[i] > mayor) {
+                                    mayor = subtotales[i];
+                                    gi = i;
+                                  }
+                                }
+                                subtotales[gi] = subtotales[gi] *
+                                    ((100 - double.tryParse(valid.dcto)) / 100);
+                              }
+                              for (var i = 0; i < carrito.length; i++) {
+                                Rent articulo = new Rent(
+                                    idarticulo: carrito[i].idarticulo,
+                                    cantidad: int.tryParse(cantidades[i]),
+                                    direccionEntrega: dir.value.text,
+                                    fechaInicio:
+                                        fechainicio[i].substring(0, 10),
+                                    fechaFin: fechafin[i].substring(0, 10),
+                                    horaInicio:
+                                        horainicio[i].substring(10, 15) + ":00",
+                                    horaFin:
+                                        horafin[i].substring(10, 15) + ":00",
+                                    idciudad: ciudad,
+                                    idcupon: cupval.toString(),
+                                    idusuario: shar.userid,
+                                    valor: subtotales[i]);
+                                setState(() {
+                                  publicadosa.add(articulo);
+                                });
+                                availability(articulo, shar.token).then((cup) {
+                                  if (cup != null) {
+                                    res = cup;
+                                  }
+                                  if (res != "" || res == null) {
+                                    if (res == "Disponible") {
+                                      disponibles.add(articulo);
+                                    } else {
+                                      if (res != null) {
+                                        nodisponibles.add(articulo);
+                                      }
+                                    }
+                                    if (disponibles.length == carrito.length) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Receipt(disponibles)));
+                                    } else {
+                                      if (nodisponibles.length > 0) {
+                                        for (var i = 0;
+                                            i < carrito.length;
+                                            i++) {
+                                          for (var j = 0;
+                                              j < nodisponibles.length;
+                                              j++) {
+                                            if (carrito[i].idarticulo ==
+                                                nodisponibles[j].idarticulo) {
+                                              setState(() {
+                                                carrito[i].disponible =
+                                                    "No disponible";
+                                              });
+                                            }
+                                          }
+                                        }
+                                        _showMyDialog(context);
+                                      }
+                                    }
+                                  }
+                                });
+                              }
+                            }
+                          });
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
+                        // }catch(e){}
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  _loadCities() {
+    getCities(context).then((cities) {
+      setState(() {
+        citiesL = cities;
+      });
+    });
+  }
+
+  Widget containerText(Widget widg) {
+    return Container(
+      margin: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(1),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.indigo[700], width: 3.0),
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
+      child: widg,
+    );
+  }
+
+  Widget _buildAlertDialog() {
+    return AlertDialog(
+      title: Text('Articulos no disponibles'),
+      content: Text(
+          "Se encontraron articulos no disponibles en las fechas o cantidades especificadas, verifique la información e intente nuevamente. los articulos no disponibles han sido señalados con color rojo."),
+      actions: [
+        FlatButton(
+            child: Text("Aceptar"),
+            textColor: Colors.blue,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ],
+    );
+  }
+
+  Future _showMyDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (_) => _buildAlertDialog(),
     );
   }
 }
