@@ -22,6 +22,10 @@ class CarritoCardState extends State<CarritoCard> {
   String _timefinString = "HH:MM";
   String _dateString = "AAAA-MM-DD";
   String _datefinString = "AAAA-MM-DD";
+  var fechainiciosub = DateTime.now();
+  var fechafinsub = DateTime.now();
+  var diffRenta = 1;
+  String txcant = "";
   CarritoCardState(this.articulo, this.posx);
   @override
   void initState() {
@@ -30,6 +34,21 @@ class CarritoCardState extends State<CarritoCard> {
     _dateString = DateTime.now().toLocal().toString();
     _timefinString = DateTime.now().toString();
     _datefinString = DateTime.now().toLocal().toString();
+
+    final fechainiciosub = DateTime(
+        int.tryParse("2021"),
+        int.tryParse("01"),
+        int.tryParse("01"),
+        int.tryParse("03"),
+        int.tryParse("03"),
+        int.tryParse("00"));
+    final fechafinsub = DateTime(
+        int.tryParse("2021"),
+        int.tryParse("01"),
+        int.tryParse("01"),
+        int.tryParse("03"),
+        int.tryParse("03"),
+        int.tryParse("00"));
 
     subtotales.add(0);
     cantidades.add("1");
@@ -104,6 +123,7 @@ class CarritoCardState extends State<CarritoCard> {
                                         onChanged: (text) {
                                           setState(() {
                                             if (text != null) {
+                                              txcant = text;
                                               sbtotal(
                                                   double.tryParse((double.parse(
                                                               articulo.precio
@@ -242,6 +262,16 @@ class CarritoCardState extends State<CarritoCard> {
                                 setState(() {
                                   _timeString = selectedTime.toString();
                                   horainicio[posx] = _timeString;
+                                  fechainiciosub = DateTime(
+                                      int.tryParse(_dateString.substring(0, 4)),
+                                      int.tryParse(_dateString.substring(5, 7)),
+                                      int.tryParse(
+                                          _dateString.substring(8, 10)),
+                                      int.tryParse(
+                                          _timeString.substring(10, 12)),
+                                      int.tryParse(
+                                          _timeString.substring(13, 15)),
+                                      int.tryParse("00"));
                                 });
                               }
                             },
@@ -326,6 +356,33 @@ class CarritoCardState extends State<CarritoCard> {
                                     setState(() {
                                       _timefinString = selectedTime.toString();
                                       horafin[posx] = _timefinString;
+                                      fechafinsub = DateTime(
+                                          int.tryParse(
+                                              _datefinString.substring(0, 4)),
+                                          int.tryParse(
+                                              _datefinString.substring(5, 7)),
+                                          int.tryParse(
+                                              _datefinString.substring(8, 10)),
+                                          int.tryParse(
+                                              _timefinString.substring(10, 12)),
+                                          int.tryParse(
+                                              _timefinString.substring(13, 15)),
+                                          int.tryParse("00"));
+                                      diffRenta = fechafinsub
+                                          .difference(fechainiciosub)
+                                          .inHours;
+                                      sbtotal(
+                                          double.tryParse((double.parse(articulo
+                                                      .precio
+                                                      .toString()) *
+                                                  ((100 -
+                                                          double.tryParse(
+                                                              articulo.dto
+                                                                  .toString())) /
+                                                      100))
+                                              .toString()),
+                                          int.parse(txcant));
+                                      subtotales[posx] = subtotal;
                                     });
                                   }
                                 },
@@ -350,7 +407,7 @@ class CarritoCardState extends State<CarritoCard> {
   }
 
   void sbtotal(double precio, int cantidad) {
-    subtotal = precio * cantidad;
+    subtotal = precio * cantidad * diffRenta;
   }
 
   void sumatoria() {

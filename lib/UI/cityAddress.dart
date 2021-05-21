@@ -205,6 +205,13 @@ class _cityAddressState extends State<CityAddress> {
                                           }
                                         }
                                         _showMyDialog(context);
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Carrito(carrito)),
+                                          (Route<dynamic> route) => false,
+                                        );
                                       }
                                     }
                                   }
@@ -257,14 +264,6 @@ class _cityAddressState extends State<CityAddress> {
       title: Text('Articulos no disponibles'),
       content: Text(
           "Se encontraron articulos no disponibles en las fechas o cantidades especificadas, verifique la información e intente nuevamente. los articulos no disponibles han sido señalados con color rojo."),
-      actions: [
-        FlatButton(
-            child: Text("Aceptar"),
-            textColor: Colors.blue,
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
-      ],
     );
   }
 

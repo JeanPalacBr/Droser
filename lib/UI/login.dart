@@ -28,7 +28,7 @@ class Login extends StatelessWidget {
           decoration: new BoxDecoration(
               gradient: LinearGradient(
                   colors: [Colors.white, Colors.cyanAccent, Colors.blue[500]],
-                  stops: [0.05, 0.4, 0.7],
+                  stops: [0.05, 0.3, 0.6],
                   begin: FractionalOffset.topRight,
                   end: FractionalOffset.bottomLeft)),
           child: Scaffold(

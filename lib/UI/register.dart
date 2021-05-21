@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
+import 'package:lease_drones/UI/login.dart';
 import 'package:string_validator/string_validator.dart';
 
 var globalContext;
@@ -21,13 +22,13 @@ class Registrar extends StatelessWidget {
                     end: FractionalOffset.bottomLeft)),
             child: Scaffold(
               appBar: AppBar(
-                actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(globalContext);
-                      },
-                      child: Text("Atrás"))
-                ],
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login())),
+                ),
+                title: Text("Envío"),
+                centerTitle: true,
               ),
               backgroundColor: Colors.transparent,
               // resizeToAvoidBottomPadding: false,
