@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/searchByCategory.dart';
 
-class categoryCard extends StatelessWidget {
+class CategoryCard extends StatelessWidget {
   Category cat;
-  categoryCard(this.cat);
+  CategoryCard(this.cat);
 
   @override
   Widget build(BuildContext context) {

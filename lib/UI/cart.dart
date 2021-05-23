@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cartCard.dart';
 import 'package:lease_drones/UI/cityaddress.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/login.dart';
-import 'package:lease_drones/UI/receipt.dart';
 import 'package:lease_drones/UI/searchResult.dart';
-import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'navDrawer.dart';
 
 List<double> subtotales = <double>[];
@@ -20,6 +17,8 @@ List<String> horafin = <String>[];
 List<Rent> publicadosa = <Rent>[];
 List<Rent> disponibles = <Rent>[];
 List<Rent> nodisponibles = <Rent>[];
+List<int> formulariolleno = <int>[];
+
 double apagar;
 
 class Carrito extends StatefulWidget {
@@ -117,6 +116,7 @@ class _CarritoState extends State<Carrito> {
                           horainicio.clear();
                           horafin.clear();
                           subtotales.clear();
+                          formulariolleno.clear();
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -149,25 +149,44 @@ class _CarritoState extends State<Carrito> {
                   ),
                   style: ElevatedButton.styleFrom(primary: Colors.indigo[700]),
                   onPressed: () {
-                    publicadosa.clear();
-                    disponibles.clear();
-                    nodisponibles.clear();
-                    if (invited == false) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CityAddress(cupon.value.text)));
-                      // try{
+                    int badformulario = 0;
+                    for (var i = 0; i < formulariolleno.length; i++) {
+                      if (formulariolleno[i] == 4 ||
+                          formulariolleno[i] % 4 == 0) {
+                        carri[i].formulario = true;
+                      } else {
+                        carri[i].formulario = false;
+                        formulariolleno[i] = 0;
+                        badformulario = 1;
+                      }
+                    }
 
+                    if (badformulario != 1) {
+                      publicadosa.clear();
+                      disponibles.clear();
+                      nodisponibles.clear();
+                      if (invited == false) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CityAddress(cupon.value.text)));
+                      } else {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
                     } else {
+                      _showMyDialog(context);
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => Login()),
+                        MaterialPageRoute(
+                            builder: (context) => Carrito(carrito)),
                         (Route<dynamic> route) => false,
                       );
                     }
-                    // }catch(e){}
                   },
                 ),
               ),
@@ -178,22 +197,6 @@ class _CarritoState extends State<Carrito> {
     );
   }
 
-  // Future<void> verificarcupon(String cupon) async {
-  //   verifyCoupon(cupon).then((cup) {
-  //     if (cup != null) {
-  //       valid = cup;
-  //     }
-  //   });
-  // }
-
-  // Future<void> disponibilidad(Rent r) async {
-  //   availability(r).then((cup) {
-  //     if (cup != null) {
-  //       res = cup;
-  //     }
-  //   });
-  // }
-
   void sumatoria() {
     for (var i = 0; i < subtotales.length; i++) {
       apagar = apagar + subtotales[i];
@@ -202,17 +205,9 @@ class _CarritoState extends State<Carrito> {
 
   Widget _buildAlertDialog() {
     return AlertDialog(
-      title: Text('Articulos no disponibles'),
+      title: Text('Fechas u horas no seleccionadas'),
       content: Text(
-          "Se encontraron articulos no disponibles en las fechas o cantidades especificadas, verifique la información e intente nuevamente. los articulos no disponibles han sido señalados con color rojo."),
-      actions: [
-        FlatButton(
-            child: Text("Aceptar"),
-            textColor: Colors.blue,
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
-      ],
+          "Se encontraron articulos con fechas u horas no especificadas, verifique la información e intente nuevamente. los articulos en cuestión han sido señalados con color naranja."),
     );
   }
 
@@ -228,7 +223,6 @@ class _CarritoState extends State<Carrito> {
         ? ListView.builder(
             itemCount: carri.length,
             itemBuilder: (context, posicion) {
-              var element = carri[posicion];
               return Dismissible(
                 key: UniqueKey(),
                 background: Container(

@@ -10,10 +10,10 @@ import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class Categories extends StatefulWidget {
   @override
-  categoriesState createState() => categoriesState();
+  CategoriesState createState() => CategoriesState();
 }
 
-class categoriesState extends State<Categories> {
+class CategoriesState extends State<Categories> {
   List<Category> cat = <Category>[];
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
@@ -21,31 +21,6 @@ class categoriesState extends State<Categories> {
   @override
   void initState() {
     getCategoriesa(context);
-    Category imagen = new Category(
-        imagen:
-            "https://www.dronethusiast.com/wp-content/uploads/2016/04/dji-phantom-3-outdoor-quadcopter-drone-with-camera.jpg",
-        nombre: "Imágenes");
-    Category envios = new Category(
-        imagen:
-            "https://www.elheraldo.co/sites/default/files/articulo/2019/09/19/shutterstock_drone-1168x657.jpg",
-        nombre: "Domicilios");
-    Category topo = new Category(
-        imagen:
-            "https://i0.wp.com/novodrone.com/wp-content/uploads/2021/02/drones-profesionales-para-topografia.jpg?resize=640%2C281&ssl=1",
-        nombre: "Topografía");
-    Category vigilancia = new Category(
-        imagen:
-            "https://vivirenelpoblado.com/wp-content/uploads/2019/09/Drone-Policia-Colombia.jpg",
-        nombre: "Vigilancia");
-    Category fumigacion = new Category(
-        imagen:
-            "https://omegadrone.com.mx/wp-content/uploads/2020/11/DRONESAGRICULTURA-OMEGADRONE-AGRAST20-1-750x300.jpg",
-        nombre: "Agricultura");
-    cat.add(imagen);
-    cat.add(envios);
-    cat.add(topo);
-    cat.add(vigilancia);
-    cat.add(fumigacion);
 
     super.initState();
   }
@@ -116,14 +91,18 @@ class categoriesState extends State<Categories> {
               return Container(
                 color: Colors.white10,
                 alignment: AlignmentDirectional.centerStart,
-                child: categoryCard(cat[posicion]),
+                child: CategoryCard(cat[posicion]),
               );
             })
         : Column(
             children: [
               Text(
                   "No se encontraron categorías, revise su conexión a internet"),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
@@ -132,11 +111,71 @@ class categoriesState extends State<Categories> {
     SharedPrefs shar = new SharedPrefs();
     getCategories(context, shar.token).then((categ) {
       setState(() {
-        cat = cat + categ;
+        cat = categ;
       });
+      for (var i = 0; i < cat.length; i++) {
+        switch (cat[i].nombre) {
+          case "Imágenes":
+            {
+              cat[i].imagen =
+                  "https://www.dronethusiast.com/wp-content/uploads/2016/04/dji-phantom-3-outdoor-quadcopter-drone-with-camera.jpg";
+            }
+            break;
+          case "Domicilios":
+            {
+              cat[i].imagen =
+                  "https://www.elheraldo.co/sites/default/files/articulo/2019/09/19/shutterstock_drone-1168x657.jpg";
+            }
+            break;
+          case "Topografía":
+            {
+              cat[i].imagen =
+                  "https://i0.wp.com/novodrone.com/wp-content/uploads/2021/02/drones-profesionales-para-topografia.jpg?resize=640%2C281&ssl=1";
+            }
+            break;
+          case "Vigilancia":
+            {
+              cat[i].imagen =
+                  "https://vivirenelpoblado.com/wp-content/uploads/2019/09/Drone-Policia-Colombia.jpg";
+            }
+            break;
+          case "Agricultura":
+            {
+              cat[i].imagen =
+                  "https://omegadrone.com.mx/wp-content/uploads/2020/11/DRONESAGRICULTURA-OMEGADRONE-AGRAST20-1-750x300.jpg";
+            }
+            break;
+          case "Básico":
+            {
+              cat[i].imagen =
+                  "https://3dinsider.com/wp-content/uploads/2019/04/beginner-drones.jpg";
+            }
+            break;
+          case "Piloto":
+            {
+              cat[i].imagen =
+                  "https://enterprise-insights.dji.com/hs-fs/hubfs/Blog%20Images/How%20to%20Become%20a%20Professional%20Drone%20Pilot/Commercial%20Drone%20Pilot%20with%20L1.jpg?width=840&name=Commercial%20Drone%20Pilot%20with%20L1.jpg";
+            }
+            break;
+          case "Altura":
+            {
+              cat[i].imagen =
+                  "https://alldronesguide.com/wp-content/uploads/2020/01/High-Altitude-Drones.jpg";
+            }
+            break;
+          case "Accesorios":
+            {
+              cat[i].imagen =
+                  "https://www.radioshack.com.mx/medias/100011111.jpg-300ftw?context=bWFzdGVyfHJvb3R8MjM5NTd8aW1hZ2UvanBlZ3xoZjkvaDRjLzg5Nzc0NTc3NDE4NTQuanBnfGZhZWYxMzZhYTllNWQzYTFhZmRjZDZmNzA2MjJhNTY4MTc3OGYzODIzZDIzMGViNTA3ZmYyOTEwZmQ2MDQ3NjQ";
+            }
+            break;
+        }
+      }
     }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

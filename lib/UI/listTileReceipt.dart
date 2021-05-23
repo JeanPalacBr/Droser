@@ -11,9 +11,7 @@ class ListTileReceipt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        //BUSQUEDA POR CATEGORIA
-      },
+      onTap: () {},
       child: ListTile(
         title: Text(carrito[pos].nombre),
         subtitle: Text("Cantidad: " + ren.cantidad.toString()),

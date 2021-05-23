@@ -63,12 +63,15 @@ class RentsActiveState extends State<RentsActive> {
                 alignment: AlignmentDirectional.centerStart,
                 child: ListTileRentspanel(rentsList[posicion]),
               );
-              //Icon(Icons.delete, color: Colors.white)),
             })
         : Column(
             children: [
               Text("No se encontraron rentas"),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
@@ -84,8 +87,10 @@ class RentsActiveState extends State<RentsActive> {
         }
       }
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

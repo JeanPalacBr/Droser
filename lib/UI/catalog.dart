@@ -106,7 +106,6 @@ class _CatalogState extends State<Catalog> {
                 alignment: AlignmentDirectional.centerStart,
                 child: CardOfert(ofersList[posicion]),
               );
-              //Icon(Icons.delete, color: Colors.white)),
             })
         : Column(
             children: [
@@ -136,8 +135,10 @@ class _CatalogState extends State<Catalog> {
         }
       }
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

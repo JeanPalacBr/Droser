@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lease_drones/UI/Messengers.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/about.dart';
 import 'package:lease_drones/UI/chat.dart';

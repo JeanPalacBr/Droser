@@ -12,10 +12,6 @@ class SharedPrefs {
   String get email => _sharedPrefs.getString("email") ?? "";
   String get token => _sharedPrefs.getString("tokn") ?? "";
 
-  // void setusername(String value) {
-  //   _sharedPrefs.setString(userid, value);
-  // }
-
   Future<void> auth(String userid, String token, String email) async {
     _sharedPrefs.setString("userid", userid);
     _sharedPrefs.setString("email", email);

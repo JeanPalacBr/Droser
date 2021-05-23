@@ -38,19 +38,19 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  provider: ^2.0.1
+  
   shared_preferences: ^2.0.5
   change_app_package_name: ^0.1.2
   flutter_countdown_timer: ^4.1.0
   circular_countdown_timer: ^0.2.0
-  flutter_open_whatsapp: ^0.1.2
+  url_launcher: ^6.0.3
   string_validator: ^0.1.4
   flutter_launcher_icons: "^0.8.0"
 
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/DroneLeaser.png"
+  image_path: "assets/images/DroneLeaser2.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

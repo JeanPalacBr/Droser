@@ -11,8 +11,6 @@ import 'package:lease_drones/UI/searchResult.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends StatefulWidget {
-  //UsuarioRegistrado usreg;
-
   UserProfile();
   @override
   UserProfilestate createState() => UserProfilestate();
@@ -24,11 +22,10 @@ class UserProfilestate extends State<UserProfile> {
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
-  //UsuarioRegistradoProfile usuario = new UsuarioRegistradoProfile();
+
   UserProfilestate();
   @override
   void initState() {
-    // getuserprofile(context);
     if (usuario.imagen != null) {
       searchImage(usuario.imagen).then((aim) {
         setState(() {
@@ -120,7 +117,7 @@ class UserProfilestate extends State<UserProfile> {
                     borderRadius: BorderRadius.circular(100),
                     child: usuario.image == null
                         ? Image.network(
-                            "https://media.istockphoto.com/photos/delivery-drone-with-box-picture-id637413978?k=6&m=637413978&s=612x612&w=0&h=cSlShuU_9YjMzEWJKy4pvenI922DefkiISMPAqAik3A=",
+                            "https://www.seekpng.com/png/full/356-3562377_personal-user.png",
                             width: 200,
                             alignment: Alignment.center,
                           )
@@ -252,16 +249,4 @@ class UserProfilestate extends State<UserProfile> {
       emailed = "esnull";
     }
   }
-
-  // Future<void> getuserprofile(BuildContext context) async {
-  //   SharedPrefs shar = new SharedPrefs();
-  //   getUserInfo(context, shar.token, shar.userid).then((artic) {
-  //     setState(() {
-  //       usuario = artic;
-  //     });
-  //   }).catchError((error) {
-  //     return Scaffold.of(context)
-  //         .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
-  //   });
-  // }
 }

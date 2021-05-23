@@ -24,7 +24,6 @@ class EditProfilestate extends State<EditProfile> {
   EditProfilestate(this.user);
 
   TextEditingController _email = new TextEditingController();
-  TextEditingController _password = new TextEditingController();
   TextEditingController _name = new TextEditingController();
   TextEditingController _direccion = new TextEditingController();
   TextEditingController _documento = new TextEditingController();
@@ -292,7 +291,6 @@ class EditProfilestate extends State<EditProfile> {
                                     duration: const Duration(seconds: 3),
                                   ));
                                   getuserprofile(context);
-                                  // Navigator.pop(context);
                                 },
                               ),
                               ElevatedButton(

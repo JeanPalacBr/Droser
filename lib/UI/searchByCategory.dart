@@ -6,7 +6,6 @@ import 'package:lease_drones/UI/home.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/searchResult.dart';
-import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class SearchByCategory extends StatefulWidget {
   String idcat;
@@ -109,18 +108,20 @@ class SearchByCategoryState extends State<SearchByCategory> {
                 alignment: AlignmentDirectional.centerStart,
                 child: CardOfert(ofersList[posicion]),
               );
-              //Icon(Icons.delete, color: Colors.white)),
             })
         : Column(
             children: [
               Text("La busqueda no ha arrojado resultados"),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
 
   Future<void> getArticlesa(BuildContext context) async {
-    SharedPrefs shar = new SharedPrefs();
     searchByCategory(idcat).then((artic) {
       ofersList = artic;
       for (var v = 0; v < artic.length; v++) {
@@ -134,8 +135,10 @@ class SearchByCategoryState extends State<SearchByCategory> {
         }
       }
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

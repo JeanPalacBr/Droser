@@ -9,9 +9,7 @@ class ListTileRents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        //BUSQUEDA POR CATEGORIA
-      },
+      onTap: () {},
       child: ListTile(
         isThreeLine: true,
         title: Text("Articulo: " + ren.idarticulo),

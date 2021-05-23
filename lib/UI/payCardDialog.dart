@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,22 +109,10 @@ class _PayCardDialogState extends State<PayCardDialog> {
                           TextButton(
                               onPressed: () async {
                                 SharedPrefs shar = new SharedPrefs();
-                                int contad = 0;
-                                int finn = 0;
+
                                 for (var i = 0; i < disponibles.length; i++) {
                                   await for (String res in rent(
-                                      disponibles[i], shar.token, context)) {
-                                    // sleep(new Duration(seconds: 5));
-                                    if (res == "Renta creado") {
-                                      contad++;
-                                    } else {
-                                      if (res != null) {
-                                        contad--;
-                                      }
-                                    }
-                                  }
-
-                                  finn++;
+                                      disponibles[i], shar.token, context)) {}
                                 }
                                 Navigator.push(
                                     context,
@@ -137,7 +124,6 @@ class _PayCardDialogState extends State<PayCardDialog> {
                                     return ConfirmRentDialog(true);
                                   },
                                 );
-                                //Navigator.of(context).pop();
                               },
                               child: Text(
                                 "Aceptar",

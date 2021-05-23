@@ -24,12 +24,6 @@ class Receiptstate extends State<Receipt> {
   Receiptstate(this.rents);
   @override
   void initState() {
-    // Rent r = new Rent(cantidad: 3, valor: 10000, idarticulo: "1");
-    // Rent r2 = new Rent(cantidad: 3, valor: 10000, idarticulo: "1");
-    // Rent r3 = new Rent(cantidad: 3, valor: 10000, idarticulo: "1");
-    // rents.add(r);
-    // rents.add(r2);
-    // rents.add(r3);
     super.initState();
   }
 
@@ -105,7 +99,6 @@ class Receiptstate extends State<Receipt> {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    //crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),

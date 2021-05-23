@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
+import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/detailOfert.dart';
 import 'package:lease_drones/UI/home.dart';
 
@@ -22,7 +20,7 @@ class CardOfert extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.all(15),
           shadowColor: Colors.black,
-          color: Colors.blue[50],
+          color: Colors.white,
           elevation: 20,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -117,7 +115,6 @@ class CardOfert extends StatelessWidget {
                     child: ElevatedButton.icon(
                       style:
                           ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                      //color: Colors.white,
                       icon: Icon(
                         Icons.shopping_cart_outlined,
                         color: Colors.white,
@@ -128,6 +125,13 @@ class CardOfert extends StatelessWidget {
                           )),
                       onPressed: () {
                         carrito.add(ofe);
+                        subtotales.add(0);
+                        cantidades.add("1");
+                        fechainicio.add("1");
+                        fechafin.add("1");
+                        horainicio.add("1");
+                        horafin.add("1");
+                        formulariolleno.add(0);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text('Agregado a carrito'),

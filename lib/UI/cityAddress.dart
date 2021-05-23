@@ -11,16 +11,17 @@ class CityAddress extends StatefulWidget {
   String cuponazo = "";
   CityAddress(this.cuponazo);
   @override
-  _cityAddressState createState() => _cityAddressState(this.cuponazo);
+  _CityAddressState createState() => _CityAddressState(this.cuponazo);
 }
 
-class _cityAddressState extends State<CityAddress> {
+class _CityAddressState extends State<CityAddress> {
   final dir = new TextEditingController();
   String hin = "Seleccione tipo de tarjeta";
   Coupon valid = new Coupon();
   String cupval = "0";
   String cuponazo = "";
   String res = "";
+  bool lleno = false;
   List<City> citiesL = <City>[];
   String ciudad = "Seleccione su ciudad";
   String selciuda = "Seleccione su ciudad";
@@ -30,14 +31,14 @@ class _cityAddressState extends State<CityAddress> {
     super.initState();
   }
 
-  _cityAddressState(this.cuponazo);
+  _CityAddressState(this.cuponazo);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.blue,
       theme: ThemeData(primaryColor: Colors.blue),
-      title: 'Flutterwave',
+      title: 'Droser',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
@@ -111,6 +112,12 @@ class _cityAddressState extends State<CityAddress> {
                             hintStyle: TextStyle(color: Colors.black),
                           )),
                     )),
+                    lleno
+                        ? Text(
+                            "*Por favor, llene todos los campos",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        : Container(),
                     ElevatedButton.icon(
                       icon: Icon(Icons.monetization_on_outlined),
                       label: Text(
@@ -120,113 +127,124 @@ class _cityAddressState extends State<CityAddress> {
                       style:
                           ElevatedButton.styleFrom(primary: Colors.indigo[700]),
                       onPressed: () {
-                        publicadosa.clear();
-                        disponibles.clear();
-                        nodisponibles.clear();
-                        if (invited == false) {
-                          // try{
-                          SharedPrefs shar = new SharedPrefs();
-                          for (var i = 0; i < subtotales.length; i++) {
-                            if (subtotales[i] == 0.0) {
-                              subtotales.removeAt(i);
-                            }
-                          }
-
-                          verifyCoupon(cuponazo).then((cup) {
-                            if (cup != null) {
-                              valid = cup;
-                              if (valid.idcupon != null ||
-                                  valid.nombre != "no" ||
-                                  valid.idcupon != "0000") {
-                                cupval = valid.idcupon;
-                                double mayor = 0;
-                                int gi = 0;
-                                for (var i = 0; i < subtotales.length; i++) {
-                                  if (subtotales[i] > mayor) {
-                                    mayor = subtotales[i];
-                                    gi = i;
-                                  }
-                                }
-                                subtotales[gi] = subtotales[gi] *
-                                    ((100 - double.tryParse(valid.dcto)) / 100);
+                        if (selciuda != "Seleccione su ciudad" ||
+                            ciudad != "Seleccione su ciudad" ||
+                            dir.value.text.isNotEmpty) {
+                          lleno = false;
+                          publicadosa.clear();
+                          disponibles.clear();
+                          nodisponibles.clear();
+                          if (invited == false) {
+                            SharedPrefs shar = new SharedPrefs();
+                            for (var i = 0; i < subtotales.length; i++) {
+                              if (subtotales[i] == 0.0) {
+                                subtotales.removeAt(i);
                               }
-                              for (var i = 0; i < carrito.length; i++) {
-                                Rent articulo = new Rent(
-                                    idarticulo: carrito[i].idarticulo,
-                                    cantidad: int.tryParse(cantidades[i]),
-                                    direccionEntrega: dir.value.text,
-                                    fechaInicio:
-                                        fechainicio[i].substring(0, 10),
-                                    fechaFin: fechafin[i].substring(0, 10),
-                                    horaInicio:
-                                        horainicio[i].substring(10, 15) + ":00",
-                                    horaFin:
-                                        horafin[i].substring(10, 15) + ":00",
-                                    idciudad: ciudad,
-                                    idcupon: cupval.toString(),
-                                    idusuario: shar.userid,
-                                    valor: subtotales[i]);
-                                setState(() {
-                                  publicadosa.add(articulo);
-                                });
-                                availability(articulo, shar.token).then((cup) {
-                                  if (cup != null) {
-                                    res = cup;
-                                  }
-                                  if (res != "" || res == null) {
-                                    if (res == "Disponible") {
-                                      disponibles.add(articulo);
-                                    } else {
-                                      if (res != null) {
-                                        nodisponibles.add(articulo);
-                                      }
+                            }
+
+                            verifyCoupon(cuponazo).then((cup) {
+                              if (cup != null) {
+                                valid = cup;
+                                if (valid.idcupon != null ||
+                                    valid.nombre != "no" ||
+                                    valid.idcupon != "0000") {
+                                  cupval = valid.idcupon;
+                                  double mayor = 0;
+                                  int gi = 0;
+                                  for (var i = 0; i < subtotales.length; i++) {
+                                    if (subtotales[i] > mayor) {
+                                      mayor = subtotales[i];
+                                      gi = i;
                                     }
-                                    if (disponibles.length == carrito.length) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Receipt(disponibles)));
-                                    } else {
-                                      if (nodisponibles.length > 0) {
-                                        for (var i = 0;
-                                            i < carrito.length;
-                                            i++) {
-                                          for (var j = 0;
-                                              j < nodisponibles.length;
-                                              j++) {
-                                            if (carrito[i].idarticulo ==
-                                                nodisponibles[j].idarticulo) {
-                                              setState(() {
-                                                carrito[i].disponible =
-                                                    "No disponible";
-                                              });
+                                  }
+                                  subtotales[gi] = subtotales[gi] *
+                                      ((100 - double.tryParse(valid.dcto)) /
+                                          100);
+                                }
+                                for (var i = 0; i < carrito.length; i++) {
+                                  Rent articulo = new Rent(
+                                      idarticulo: carrito[i].idarticulo,
+                                      cantidad: int.tryParse(cantidades[i]),
+                                      direccionEntrega: dir.value.text,
+                                      fechaInicio:
+                                          fechainicio[i].substring(0, 10),
+                                      fechaFin: fechafin[i].substring(0, 10),
+                                      horaInicio:
+                                          horainicio[i].substring(10, 15) +
+                                              ":00",
+                                      horaFin:
+                                          horafin[i].substring(10, 15) + ":00",
+                                      idciudad: ciudad,
+                                      idcupon: cupval.toString(),
+                                      idusuario: shar.userid,
+                                      valor: subtotales[i]);
+                                  setState(() {
+                                    publicadosa.add(articulo);
+                                  });
+                                  availability(articulo, shar.token)
+                                      .then((cup) {
+                                    if (cup != null) {
+                                      res = cup;
+                                    }
+                                    if (res != "" || res == null) {
+                                      if (res == "Disponible") {
+                                        disponibles.add(articulo);
+                                      } else {
+                                        if (res != null) {
+                                          nodisponibles.add(articulo);
+                                        }
+                                      }
+                                      if (disponibles.length ==
+                                          carrito.length) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Receipt(disponibles)));
+                                      } else {
+                                        if (nodisponibles.length > 0) {
+                                          for (var i = 0;
+                                              i < carrito.length;
+                                              i++) {
+                                            for (var j = 0;
+                                                j < nodisponibles.length;
+                                                j++) {
+                                              if (carrito[i].idarticulo ==
+                                                  nodisponibles[j].idarticulo) {
+                                                setState(() {
+                                                  carrito[i].disponible =
+                                                      "No disponible";
+                                                });
+                                              }
                                             }
                                           }
+                                          _showMyDialog(context);
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Carrito(carrito)),
+                                            (Route<dynamic> route) => false,
+                                          );
                                         }
-                                        _showMyDialog(context);
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Carrito(carrito)),
-                                          (Route<dynamic> route) => false,
-                                        );
                                       }
                                     }
-                                  }
-                                });
+                                  });
+                                }
                               }
-                            }
-                          });
+                            });
+                          } else {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                              (Route<dynamic> route) => false,
+                            );
+                          }
                         } else {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
-                            (Route<dynamic> route) => false,
-                          );
+                          setState(() {
+                            lleno = true;
+                          });
                         }
-                        // }catch(e){}
                       },
                     ),
                   ],

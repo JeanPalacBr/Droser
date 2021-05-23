@@ -98,11 +98,8 @@ Future<List<City>> getCities(BuildContext context) async {
     print('${response.statusCode}');
     if (response.statusCode == 200) {
       print('${response.body}');
-      //"{"data":[{"idciudad":1,"nombre":"Barranquilla","estado":1}]}"
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-      // List<dynamic> coursesList2 = jsonlist["data"];
-      print('${response.body}' + "okiiiiiiiiii");
       List<City> coursesList = <City>[];
       for (var i = 0; i < jsonlist["data"].length; i++) {
         City ciu = new City(
@@ -129,11 +126,8 @@ Future<List<IDocument>> getIDtypes(BuildContext context) async {
     print('${response.statusCode}');
     if (response.statusCode == 200) {
       print('${response.body}');
-      //"{"data":[{"idciudad":1,"nombre":"Barranquilla","estado":1}]}"
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
-      // List<dynamic> coursesList2 = jsonlist["data"];
-      print('${response.body}' + "okiiiiiiiiii");
       List<IDocument> coursesList = <IDocument>[];
       for (var i = 0; i < jsonlist["data"].length; i++) {
         IDocument ciu = new IDocument(
@@ -197,7 +191,6 @@ Future<bool> putUserInfo(
     String tokn,
     String userid) async {
   try {
-    int estado = 1;
     bool exito = false;
     final http.Response response =
         await http.put("https://droser.tech/api/user/" + userid,
@@ -252,7 +245,8 @@ Future<List<Ofert>> getArticles(BuildContext context, String tokn) async {
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
             imagen: jsonlist["data"][i]["imagen"],
-            disponible: "");
+            disponible: "",
+            formulario: true);
         ofertList.add(of);
       }
     } else {
@@ -351,7 +345,8 @@ Future<List<Ofert>> searchByCategory(String idcat) async {
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
             imagen: jsonlist["data"][i]["imagen"],
-            disponible: "");
+            disponible: "",
+            formulario: true);
         ofertList.add(of);
       }
     } else {
@@ -388,7 +383,8 @@ Future<List<Ofert>> searchByName(String nombre) async {
             idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
             cantidad: jsonlist["data"][i]["cantidad"],
             imagen: jsonlist["data"][i]["imagen"],
-            disponible: "");
+            disponible: "",
+            formulario: true);
         ofertList.add(of);
       }
     } else {
@@ -475,16 +471,6 @@ Future<String> availability(Rent renta, String tokn) async {
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
       res = jsonlist["data"];
-      //       nombre: jsonlist["data"][i]["name"],
-      //       categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
-      //       descripcion: jsonlist["data"][i]["descripcion"],
-      //       precio: jsonlist["data"][i]["precio"],
-      //       dto: jsonlist["data"][i]["dcto"].toString(),
-      //       idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
-      //       cantidad: jsonlist["data"][i]["cantidad"]);
-      //   ofertList.add(of);
-      // }
-
     } else {
       if (response.statusCode == 404) {
         print('${response.body}');
@@ -531,16 +517,6 @@ Stream<dynamic> rent(Rent renta, String tokn, BuildContext context) async* {
       Map<dynamic, dynamic> jsonlist = json.decode(response.body);
       print('${response.body}');
       yield res = jsonlist["data"];
-      //       nombre: jsonlist["data"][i]["name"],
-      //       categoria: jsonlist["data"][i]["idcategoria_articulo"].toString(),
-      //       descripcion: jsonlist["data"][i]["descripcion"],
-      //       precio: jsonlist["data"][i]["precio"],
-      //       dto: jsonlist["data"][i]["dcto"].toString(),
-      //       idarticulo: jsonlist["data"][i]["idarticulo"].toString(),
-      //       cantidad: jsonlist["data"][i]["cantidad"]);
-      //   ofertList.add(of);
-      // }
-
     } else {
       if (response.statusCode == 404) {
         print('${response.body}');
@@ -669,8 +645,6 @@ Future<void> droserBotCS(String mensaje) async {
 }
 
 Future<ImageProvider<Object>> searchImage(String image) async {
-  List<Ofert> ofertList = <Ofert>[];
-  //img;
   try {
     final http.Response response = await http.post(
       'https://droser.tech/api/imagenes/',
@@ -683,9 +657,6 @@ Future<ImageProvider<Object>> searchImage(String image) async {
     print('${response.body}');
     print('${response.statusCode}');
     if (response.statusCode == 200) {
-      print('${response.body}');
-      // Map<dynamic, dynamic> jsonlist = json.decode(response.body);
-      print('${response.body}');
       return img;
     } else {
       print("signup failed");

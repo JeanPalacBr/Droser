@@ -31,7 +31,6 @@ class Registrar extends StatelessWidget {
                 centerTitle: true,
               ),
               backgroundColor: Colors.transparent,
-              // resizeToAvoidBottomPadding: false,
               body: Registrarform(),
             )));
   }
@@ -87,8 +86,6 @@ void _onpressedSignUp(
 }
 
 class RegistrarformState extends State {
-  //final GlobalKey<FormState> _signUpfkey = GlobalKey<FormState>();
-
   final _email = new TextEditingController();
   final _password = new TextEditingController();
   final _passwordconf = new TextEditingController();
@@ -113,7 +110,6 @@ class RegistrarformState extends State {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => Form(
-          //key: MultipleKeys.signUpFormKey,
           child: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -273,7 +269,6 @@ class RegistrarformState extends State {
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: containerText(TextFormField(
-                  // key: MultipleKeys.signUpFormKey,
                   autofocus: true,
                   controller: _password,
                   decoration: new InputDecoration(
@@ -285,7 +280,6 @@ class RegistrarformState extends State {
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: containerText(TextFormField(
-                  // key: MultipleKeys.signUpFormKey,
                   autofocus: true,
                   controller: _passwordconf,
                   decoration: new InputDecoration(
@@ -322,18 +316,16 @@ class RegistrarformState extends State {
                                 selid);
                           }
                         } else {
-                          Scaffold.of(globalContext).showSnackBar(SnackBar(
-                              content: Text(
-                            'contraseña demasiado corta',
-                            style: TextStyle(fontSize: 20),
-                          )));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Contraseña demasiado corta"),
+                            duration: Duration(seconds: 5),
+                          ));
                         }
                       } else {
-                        Scaffold.of(globalContext).showSnackBar(SnackBar(
-                            content: Text(
-                          'Email invalido',
-                          style: TextStyle(fontSize: 20),
-                        )));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Email invalido"),
+                          duration: Duration(seconds: 5),
+                        ));
                       }
                     },
                   ),

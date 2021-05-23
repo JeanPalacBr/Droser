@@ -7,11 +7,11 @@ import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/searchResult.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ControlPanelRent extends StatefulWidget {
   Rented ren;
-  //= new Rented();
+
   ControlPanelRent(this.ren);
   @override
   ControlPanelRentstate createState() => ControlPanelRentstate(this.ren);
@@ -61,7 +61,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
         diffCon = created.difference(fechactual).inSeconds;
       }
     }
-    //diffRenta;
+
     super.initState();
   }
 
@@ -126,222 +126,270 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
             elevation: 0,
           ),
           drawer: NavDrawer(),
-          body: SingleChildScrollView(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: <
-                    Widget>[
-              new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new Center(
-                    child: new Container(
-                      margin: EdgeInsets.only(bottom: 5.0),
-                      height: 20.0,
-                      width: 80.0,
+          body: Builder(
+            builder: (context) => SingleChildScrollView(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+                      Widget>[
+                new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    new Center(
+                      child: new Container(
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        height: 20.0,
+                        width: 80.0,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: Text(
-                      ren.estado == "2"
-                          ? "Tiempo transcurrido de renta"
-                          : "Tiempo restante para comienzo de renta",
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          fontSize: 25,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      child: Text(
+                        ren.estado == "2"
+                            ? "Tiempo transcurrido de renta"
+                            : "El producto aún no ha sido entregado",
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    CircularCountDownTimer(
+                      duration: diffRenta,
+                      initialDuration: diffCon,
+                      controller: CountDownController(),
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 2,
+                      ringColor: Colors.white,
+                      ringGradient: null,
+                      fillColor: Colors.green[300],
+                      fillGradient: null,
+                      backgroundColor: Colors.blue[400],
+                      backgroundGradient: null,
+                      strokeWidth: 30,
+                      strokeCap: StrokeCap.round,
+                      textStyle: TextStyle(
+                          fontSize: 33.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  CircularCountDownTimer(
-                    duration: diffRenta,
-                    initialDuration: diffCon,
-                    controller: CountDownController(),
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.height / 2,
-                    ringColor: Colors.white,
-                    ringGradient: null,
-                    fillColor: Colors.green[300],
-                    fillGradient: null,
-                    backgroundColor: Colors.blue[400],
-                    backgroundGradient: null,
-                    strokeWidth: 30,
-                    strokeCap: StrokeCap.round,
-                    textStyle: TextStyle(
-                        fontSize: 33.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                    textFormat: CountdownTextFormat.HH_MM_SS,
-                    isReverse: true,
-                    isReverseAnimation: false,
-                    isTimerTextShown: true,
-                    autoStart: true,
-                    onStart: () {
-                      print('Countdown Started');
-                    },
-                    onComplete: () {
-                      print('Countdown Ended');
-                    },
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.date_range),
-                    Text(
-                      "Fecha y hora de creación: \n" + ren.created,
-                      style: TextStyle(fontSize: 21),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.category),
-                          Text(
-                            "Cantidad: " + ren.cantidad.toString(),
-                            style: TextStyle(fontSize: 21),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.date_range),
-                          Text(
-                            "Fecha de inicio: " + ren.fechaInicio,
-                            style: TextStyle(fontSize: 21),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.date_range),
-                          Text(
-                            "Fecha de fin: " + ren.fechaFin,
-                            style: TextStyle(fontSize: 21),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.hourglass_bottom),
-                          Text(
-                            "Hora de inicio: " + ren.horaInicio,
-                            style: TextStyle(fontSize: 21),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.hourglass_bottom),
-                          Text(
-                            "Hora de fin: " + ren.horaFin,
-                            style: TextStyle(fontSize: 21),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.star),
-                          Text(
-                            "Estado: " +
-                                (ren.estado == "1"
-                                    ? "Pendiente"
-                                    : ren.estado == "2"
-                                        ? "En curso"
-                                        : ren.estado == "3"
-                                            ? "Terminado"
-                                            : "Cancelado"),
-                            style: TextStyle(fontSize: 21),
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      thickness: 3,
-                    ),
-                    Center(
-                        child: ElevatedButton.icon(
-                      icon: Icon(Icons.send),
-                      style:
-                          ElevatedButton.styleFrom(primary: Colors.green[500]),
-                      onPressed: () {
-                        FlutterOpenWhatsapp.sendSingleMessage(
-                            "+573007482244",
-                            "Solicito atención, renta numero: " +
-                                ren.idrenta +
-                                ", producto numero: " +
-                                ren.idarticulo +
-                                ", usuario: " +
-                                usuario.nombre);
+                      textFormat: CountdownTextFormat.HH_MM_SS,
+                      isReverse: true,
+                      isReverseAnimation: false,
+                      isTimerTextShown: true,
+                      autoStart: true,
+                      onStart: () {
+                        print('Countdown Started');
                       },
-                      label: Text("Enviar mensaje por Whatsapp"),
-                    )),
-                    Divider(
-                      thickness: 3,
+                      onComplete: () {
+                        print('Countdown Ended');
+                      },
                     ),
-                    Center(
-                      child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(primary: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                      "Se ha enviado un mensaje urgente a servicio al cliente, nos contactaremos inmediatamente con usted"),
-                                  duration: const Duration(seconds: 7),
-                                ),
-                              );
-                            });
-                            droserBot("SOLICITO AYUDA URGENTE! \n Nombre:" +
-                                usuario.nombre +
-                                "\n Telefono:" +
-                                usuario.telefono +
-                                "\n Renta:" +
-                                ren.idrenta +
-                                "\n Entregado en: " +
-                                ren.direccionEntrega +
-                                "\n en: " +
-                                usuario.ciudad);
-                          },
-                          icon: Icon(
-                            Icons.adjust,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            "Botón de pánico",
-                            style: TextStyle(color: Colors.white, fontSize: 25),
-                          )),
-                    )
                   ],
                 ),
-              ),
-            ]),
+                Divider(
+                  thickness: 3,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 10, 10, 5),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.date_range),
+                      Text(
+                        "Fecha y hora de creación: \n" + ren.created,
+                        style: TextStyle(fontSize: 21),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.category),
+                            Text(
+                              "Cantidad: " + ren.cantidad.toString(),
+                              style: TextStyle(fontSize: 21),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.date_range),
+                            Text(
+                              "Fecha de inicio: " + ren.fechaInicio,
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.date_range),
+                            Text(
+                              "Fecha de fin: " + ren.fechaFin,
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.hourglass_bottom),
+                            Text(
+                              "Hora de inicio: " + ren.horaInicio,
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.hourglass_bottom),
+                            Text(
+                              "Hora de fin: " + ren.horaFin,
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.star),
+                            Text(
+                              "Estado: " +
+                                  (ren.estado == "1"
+                                      ? "Pendiente"
+                                      : ren.estado == "2"
+                                          ? "En curso"
+                                          : ren.estado == "3"
+                                              ? "Terminado"
+                                              : "Cancelado"),
+                              style: TextStyle(fontSize: 21),
+                            )
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        thickness: 3,
+                      ),
+                      Center(
+                          child: ElevatedButton.icon(
+                        icon: Icon(Icons.send),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.green[500]),
+                        onPressed: () async {
+                          var whatsappUrl = "https://wa.me/573005784907/?text=";
+                          String mensaje = "Solicito atención, renta número: " +
+                              ren.idrenta +
+                              ", producto número: " +
+                              ren.idarticulo +
+                              ", usuario: " +
+                              usuario.nombre;
+                          await canLaunch(
+                                  whatsappUrl + mensaje.replaceAll(" ", "%20"))
+                              ? launch(
+                                  whatsappUrl + mensaje.replaceAll(" ", "%20"))
+                              : ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                        "No ha sido posible encontrar la aplicación Whatsapp"),
+                                    duration: const Duration(seconds: 7),
+                                  ),
+                                );
+                        },
+                        label: Text("Enviar mensaje por Whatsapp"),
+                      )),
+                      Divider(
+                        thickness: 3,
+                      ),
+                      Center(
+                          child: ElevatedButton.icon(
+                        icon: Icon(Icons.phone),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blueAccent[400]),
+                        onPressed: () async {
+                          var whatsappUrl = "tel:3005784907";
+                          String mensaje = "Solicito atención, renta número: " +
+                              ren.idrenta +
+                              ", producto número: " +
+                              ren.idarticulo +
+                              ", usuario: " +
+                              usuario.nombre;
+                          await canLaunch(whatsappUrl)
+                              ? launch(whatsappUrl)
+                              : ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                        "No ha sido posible realizar la llamada"),
+                                    duration: const Duration(seconds: 7),
+                                  ),
+                                );
+                        },
+                        label: Text("Llamar a atención al cliente"),
+                      )),
+                      Divider(
+                        thickness: 3,
+                      ),
+                      Center(
+                        child: ElevatedButton.icon(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
+                            onPressed: () {
+                              setState(() {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                        "Se ha enviado un mensaje urgente a servicio al cliente, nos contactaremos inmediatamente con usted"),
+                                    duration: const Duration(seconds: 7),
+                                  ),
+                                );
+                              });
+                              droserBot("SOLICITO AYUDA URGENTE! \n Nombre:" +
+                                  usuario.nombre +
+                                  "\n Email usuario: " +
+                                  usuario.email +
+                                  "\n Telefono: " +
+                                  usuario.telefono +
+                                  "\n Renta: " +
+                                  ren.idrenta +
+                                  "\n Entregado en: " +
+                                  ren.direccionEntrega +
+                                  "\n en: " +
+                                  usuario.ciudad);
+                            },
+                            icon: Icon(
+                              Icons.adjust,
+                              color: Colors.white,
+                              size: 50,
+                            ),
+                            label: Text(
+                              "Botón de pánico",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 25),
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+              ]),
+            ),
           ),
         ),
       ),

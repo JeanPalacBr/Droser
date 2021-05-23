@@ -251,7 +251,6 @@ class DetailOfertstate extends State<DetailOfert> {
                     child: ElevatedButton.icon(
                       style:
                           ElevatedButton.styleFrom(primary: Colors.indigo[700]),
-                      //color: Colors.white,
                       icon: Icon(
                         Icons.shopping_cart_outlined,
                         color: Colors.white,
@@ -268,6 +267,13 @@ class DetailOfertstate extends State<DetailOfert> {
                           ),
                         );
                         carrito.add(ofer);
+                        subtotales.add(0);
+                        cantidades.add("1");
+                        fechainicio.add("1");
+                        fechafin.add("1");
+                        horainicio.add("1");
+                        horafin.add("1");
+                        formulariolleno.add(0);
                       },
                     ),
                   ),

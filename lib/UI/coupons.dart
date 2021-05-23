@@ -102,7 +102,7 @@ class CouponsState extends State<Coupons> {
               return Container(
                 color: Colors.white10,
                 alignment: AlignmentDirectional.centerStart,
-                child: couponCard(cupons[posicion]),
+                child: CouponCard(cupons[posicion]),
               );
             })
         : Column(
@@ -110,7 +110,11 @@ class CouponsState extends State<Coupons> {
               Text(
                 "No se encontraron cupones, vuelve más tarde",
               ),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
@@ -122,8 +126,10 @@ class CouponsState extends State<Coupons> {
         cupons = cupo;
       });
     }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

@@ -86,6 +86,7 @@ class Ofert {
   String disponible;
   String imagen;
   ImageProvider<Object> image;
+  bool formulario;
 
   Ofert(
       {this.nombre,
@@ -97,7 +98,8 @@ class Ofert {
       this.idcategoria,
       this.idarticulo,
       this.disponible,
-      this.imagen});
+      this.imagen,
+      this.formulario});
 
   factory Ofert.fromJson(Map<dynamic, dynamic> json) {
     return Ofert(

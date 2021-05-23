@@ -6,7 +6,7 @@ import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/Catalog.dart';
 import 'package:lease_drones/UI/categories.dart';
-import 'package:lease_drones/UI/categoryCard.dart';
+import 'package:lease_drones/UI/chat.dart';
 import 'package:lease_drones/UI/login.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   int precio2;
   List<Ofert> ofersList = <Ofert>[];
   List<Ofert> nofersList = <Ofert>[];
+  List<Ofert> sofersList = <Ofert>[];
   List<Category> cat = <Category>[];
   void initState() {
     setState(() {
@@ -45,6 +46,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(
@@ -105,16 +107,21 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(top: 12),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Oferta relámpago",
-                        style: TextStyle(color: Colors.white, fontSize: 25),
-                      ),
-                      Icon(Icons.flash_on, color: Colors.yellow)
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Oferta relámpago",
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                        Icon(Icons.flash_on, color: Colors.yellow)
+                      ],
+                    ),
                   ),
-                  ofersList.length != 0 ? CardOfert(ofersList[0]) : Container(),
+                  sofersList.length != 0
+                      ? CardOfert(sofersList[0])
+                      : Container(),
                   Divider(
                     height: 20,
                     thickness: 1,
@@ -218,7 +225,12 @@ class _HomeState extends State<Home> {
                               ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                       primary: Colors.white),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Chat()));
+                                  },
                                   icon: Icon(
                                     Icons.message,
                                     color: Colors.black,
@@ -286,63 +298,33 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void getArticlesa(BuildContext context) async {
+  Future<void> getArticlesa(BuildContext context) async {
     SharedPrefs shar = new SharedPrefs();
-    try {
-      getArticles(context, shar.token).then((artic) {
-        if (artic != null || artic.length > 0) {
-          setState(() {
-            for (var i = 0; i < artic.length; i++) {
-              if (artic[i].dto != "0") {
-                ofersList.add(artic[i]);
-                if (artic[i].imagen != null) {
-                  print(i);
-                  searchImage(artic[i].imagen).then((aim) {
-                    setState(() {
-                      ofersList[ofersList.length - 1].image = aim;
-                    });
-                  });
-                }
-              } else {
-                nofersList.add(artic[i]);
-                if (artic[i].imagen != null) {
-                  print(i);
-                  searchImage(artic[i].imagen).then((aim) {
-                    setState(() {
-                      nofersList[nofersList.length - 1].image = aim;
-                    });
-                  });
-                }
-              }
-            }
+    getArticles(context, shar.token).then((artic) {
+      ofersList = artic;
+      for (var v = 0; v < artic.length; v++) {
+        if (artic[v].imagen != null) {
+          print(v);
+          searchImage(artic[v].imagen).then((aim) {
+            setState(() {
+              ofersList[v].image = aim;
+            });
           });
         }
-      }).catchError((error) {
-        Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
-      });
-    } catch (e) {}
-  }
-
-  Widget _list() {
-    return cat.length > 1
-        ? ListView.builder(
-            itemCount: cat.length,
-            shrinkWrap: true,
-            //scrollDirection: Axis.horizontal,
-            itemBuilder: (context, posicion) {
-              return Container(
-                color: Colors.white10,
-                alignment: AlignmentDirectional.centerStart,
-                child: categoryCard(cat[posicion]),
-              );
-            })
-        : Column(
-            children: [
-              Text(""),
-              new CircularProgressIndicator(),
-            ],
-          );
+      }
+      for (var i = 0; i < ofersList.length; i++) {
+        if (ofersList[i].dto == "0") {
+          nofersList.add(ofersList[i]);
+        } else {
+          sofersList.add(ofersList[i]);
+        }
+      }
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
+    });
   }
 
   Future<void> getCategoriesa(BuildContext context) async {
@@ -352,8 +334,10 @@ class _HomeState extends State<Home> {
         cat = categ;
       });
     }).catchError((error) {
-      return Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

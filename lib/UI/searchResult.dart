@@ -4,7 +4,6 @@ import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/cart.dart';
 import 'package:lease_drones/UI/ofertCard.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
-import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 import 'package:lease_drones/UI/home.dart';
 import 'package:flutter/widgets.dart';
 
@@ -110,19 +109,20 @@ class SearchResultState extends State<SearchResult> {
                 alignment: AlignmentDirectional.centerStart,
                 child: CardOfert(ofersList[posicion]),
               );
-              //Icon(Icons.delete, color: Colors.white)),
             })
         : Column(
             children: [
               Text("No se encontraron resultados de su busqueda"),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
 
   Future<void> getArticlesa(BuildContext context) async {
-    SharedPrefs shar = new SharedPrefs();
-
     searchByName(busqued).then((artic) {
       ofersList = artic;
       for (var v = 0; v < artic.length; v++) {
@@ -136,8 +136,10 @@ class SearchResultState extends State<SearchResult> {
         }
       }
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

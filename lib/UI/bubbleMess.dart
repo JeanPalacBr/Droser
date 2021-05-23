@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class BurbujaMensaje extends StatelessWidget {
   String mensaje;
-  bool enviadopor = true;
+  bool enviadopor;
 
-  BurbujaMensaje(this.mensaje);
+  BurbujaMensaje(this.mensaje, this.enviadopor);
 
   @override
   Widget build(BuildContext context) {

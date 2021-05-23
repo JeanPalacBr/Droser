@@ -4,13 +4,12 @@ import 'package:lease_drones/UI/payCardDialog.dart';
 import 'package:lease_drones/UI/payTransferDialog.dart';
 
 class Pay extends StatelessWidget {
-// This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.blue,
       theme: ThemeData(primaryColor: Colors.blue),
-      title: 'Flutterwave',
+      title: 'Droser',
       debugShowCheckedModeBanner: false,
       home: Payment(),
     );

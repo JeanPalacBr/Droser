@@ -3,7 +3,6 @@ import 'package:lease_drones/Models/modls.dart';
 import 'package:lease_drones/Services/APIcon.dart';
 import 'package:lease_drones/UI/listTileRents.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
-import 'package:lease_drones/UI/rentCard.dart';
 import 'package:lease_drones/ViewModels/sharedPrefs.dart';
 
 class RentsHistory extends StatefulWidget {
@@ -64,12 +63,15 @@ class RentsHistoryState extends State<RentsHistory> {
                 alignment: AlignmentDirectional.centerStart,
                 child: ListTileRents(rentsList[posicion]),
               );
-              //Icon(Icons.delete, color: Colors.white)),
             })
         : Column(
             children: [
               Text("No se encontraron rentas"),
-              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: new CircularProgressIndicator(
+                    backgroundColor: Colors.white),
+              )
             ],
           );
   }
@@ -81,8 +83,10 @@ class RentsHistoryState extends State<RentsHistory> {
         rentsList = artic;
       });
     }).catchError((error) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("Error" + error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Error" + error.toString()),
+        duration: Duration(seconds: 5),
+      ));
     });
   }
 }

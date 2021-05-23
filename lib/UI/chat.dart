@@ -16,30 +16,25 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   List<String> strList = <String>[];
+  List<bool> strListP = <bool>[];
   TextEditingController mensajeaenviar = new TextEditingController();
   TextEditingController busqueda = new TextEditingController();
   bool searching = false;
   bool encontrado = false;
-  _ChatState();
-  Widget chatMessages() {
-    return StreamBuilder(
-      builder: (context, snapshot) {
-        return strList.length > 0
-            ? ListView.builder(
-                itemCount: strList.length,
-                itemBuilder: (context, index) {
-                  return BurbujaMensaje(
-                    strList[index],
-                  );
-                })
-            : Container();
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
+  }
+
+  _ChatState();
+  Widget chatMessages() {
+    return strList.length > 0
+        ? ListView.builder(
+            itemCount: strList.length,
+            itemBuilder: (context, index) {
+              return BurbujaMensaje(strList[index], strListP[index]);
+            })
+        : Container();
   }
 
   @override
@@ -159,6 +154,13 @@ class _ChatState extends State<Chat> {
     setState(() {
       strList.add(mensajeaenviar.value.text);
       mensajeaenviar.text = "";
+      strListP.add(true);
+      if (strList.length == 1) {
+        strList.add("Hola " +
+            usuario.nombre.split(" ")[0] +
+            ", bienvenido al servicio al cliente de Droser, uno de nuestros asesores le contactará muy pronto.");
+        strListP.add(false);
+      }
     });
   }
 

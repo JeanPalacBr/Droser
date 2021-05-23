@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/Models/modls.dart';
-import 'package:lease_drones/UI/detailOfert.dart';
 
 class RentCard extends StatelessWidget {
   Rented rent;
@@ -10,10 +9,7 @@ class RentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => DetailOfert(ofe)));
-        },
+        onTap: () {},
         child: Card(
           margin: EdgeInsets.all(15),
           shadowColor: Colors.black,
@@ -33,7 +29,6 @@ class RentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Icon(Icons.history),
                         Text(

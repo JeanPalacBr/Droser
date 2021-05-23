@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lease_drones/UI/navDrawer.dart';
-import 'package:lease_drones/UI/searchResult.dart';
 
 class About extends StatelessWidget {
   TextEditingController busqueda = new TextEditingController();

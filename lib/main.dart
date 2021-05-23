@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:lease_drones/UI/splashScreen.dart';
 import 'Services/HttpCert.dart';
-import 'UI/login.dart';
 import 'ViewModels/sharedPrefs.dart';
 
 Future<void> main() async {
@@ -10,6 +9,16 @@ Future<void> main() async {
   await sharedPrefs.init();
   HttpOverrides.global = new MyHttpOverrides();
   runApp(
-    Login(),
+    Root(),
   );
+}
+
+class Root extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+    );
+  }
 }
