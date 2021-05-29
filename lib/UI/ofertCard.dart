@@ -80,7 +80,7 @@ class CardOfert extends StatelessWidget {
                     ),
                     if (ofe.dto == "0") ...{
                       Text(
-                        "\$" + ofe.precio,
+                        "\$" + ofe.precio + "/hora",
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.red,
@@ -96,7 +96,8 @@ class CardOfert extends StatelessWidget {
                         "\$" +
                             ((double.tryParse(ofe.precio) *
                                     ((100 - double.tryParse(ofe.dto)) / 100)))
-                                .toString(),
+                                .toString() +
+                            "/hora",
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.red,

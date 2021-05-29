@@ -300,12 +300,12 @@ Future<List<Coupon>> getCoupons(BuildContext context, String tokn) async {
 
       for (var i = 0; i < jsonlist["data"].length; i++) {
         Coupon of = new Coupon(
-          idcupon: jsonlist["data"][i]["idcupon"],
-          nombre: jsonlist["data"][i]["nombre"],
-          codigo: jsonlist["data"][i]["codigo"],
-          dcto: jsonlist["data"][i]["dcto"],
-          cantidad: jsonlist["data"][i]["cantidad"],
-          estado: jsonlist["data"][i]["estado"],
+          idcupon: jsonlist["data"][i]["idcupon"].toString(),
+          nombre: jsonlist["data"][i]["nombre"].toString(),
+          codigo: jsonlist["data"][i]["codigo"].toString(),
+          dcto: jsonlist["data"][i]["dcto"].toString(),
+          cantidad: jsonlist["data"][i]["cantidad"].toString(),
+          estado: jsonlist["data"][i]["estado"].toString(),
         );
         ofertList.add(of);
       }

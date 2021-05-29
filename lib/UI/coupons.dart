@@ -27,6 +27,7 @@ class CouponsState extends State<Coupons> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(
@@ -109,6 +110,7 @@ class CouponsState extends State<Coupons> {
             children: [
               Text(
                 "No se encontraron cupones, vuelve más tarde",
+                style: TextStyle(color: Colors.white),
               ),
               Padding(
                 padding: const EdgeInsets.all(15),

@@ -39,102 +39,105 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavDrawer(),
-      appBar: AppBar(
-        title: !searching
-            ? Text("Droser")
-            : TextField(
-                controller: busqueda,
-                textInputAction: TextInputAction.search,
-                decoration: InputDecoration(
-                    hintText: "Busca drones, artículos y más...",
-                    hintStyle: TextStyle(color: Colors.white),
-                    fillColor: Colors.white),
-                onSubmitted: (busqueda) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SearchResult(busqueda)));
-                },
-              ),
-        actions: <Widget>[
-          Row(
-            children: [
-              IconButton(
-                  icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        drawer: NavDrawer(),
+        appBar: AppBar(
+          title: !searching
+              ? Text("Droser")
+              : TextField(
+                  controller: busqueda,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                      hintText: "Busca drones, artículos y más...",
+                      hintStyle: TextStyle(color: Colors.white),
+                      fillColor: Colors.white),
+                  onSubmitted: (busqueda) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchResult(busqueda)));
+                  },
+                ),
+          actions: <Widget>[
+            Row(
+              children: [
+                IconButton(
+                    icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
+                    onPressed: () {
+                      setState(() {
+                        this.searching = !this.searching;
+                        busqueda.clear();
+                      });
+                    }),
+                IconButton(
                   onPressed: () {
-                    setState(() {
-                      this.searching = !this.searching;
-                      busqueda.clear();
-                    });
-                  }),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Carrito(carrito)));
-                },
-                icon: Icon(Icons.shopping_cart),
-              )
-            ],
-          )
-        ],
-        backgroundColor: Colors.blue[400],
-        elevation: 0,
-      ),
-      body: Container(
-        child: Stack(
-          children: [
-            chatMessages(),
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                color: Colors.blue[400],
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: containerText(
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextField(
-                          autocorrect: true,
-                          showCursor: true,
-                          cursorColor: Colors.black,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          maxLength: 2000,
-                          controller: mensajeaenviar,
-                          decoration: InputDecoration(
-                              hintText: "Envíanos un mensaje...",
-                              hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Carrito(carrito)));
+                  },
+                  icon: Icon(Icons.shopping_cart),
+                )
+              ],
+            )
+          ],
+          backgroundColor: Colors.blue[400],
+          elevation: 0,
+        ),
+        body: Container(
+          child: Stack(
+            children: [
+              chatMessages(),
+              Container(
+                alignment: Alignment.bottomCenter,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  color: Colors.blue[400],
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: containerText(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextField(
+                            autocorrect: true,
+                            showCursor: true,
+                            cursorColor: Colors.black,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            maxLength: 2000,
+                            controller: mensajeaenviar,
+                            decoration: InputDecoration(
+                                hintText: "Envíanos un mensaje...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
+                          ),
                         ),
+                      )),
+                      SizedBox(
+                        width: 16,
                       ),
-                    )),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          enviarmensajebtn();
-                        },
-                        child: Icon(
-                          Icons.send,
-                          size: 30,
-                          color: Colors.white,
-                        )),
-                  ],
+                      GestureDetector(
+                          onTap: () {
+                            enviarmensajebtn();
+                          },
+                          child: Icon(
+                            Icons.send,
+                            size: 30,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

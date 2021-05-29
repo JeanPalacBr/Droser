@@ -295,7 +295,12 @@ class EditProfilestate extends State<EditProfile> {
                               ),
                               ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UserProfile()),
+                                      (Route<dynamic> route) => false,
+                                    );
                                   },
                                   child: Text("Atrás"))
                             ],

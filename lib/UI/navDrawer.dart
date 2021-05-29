@@ -31,9 +31,7 @@ class NavDrawer extends StatelessWidget {
                   image: AssetImage("assets/images/DroneLeaser.png"),
                 ),
                 Text(
-                    usuario.nombre != null ||
-                            usuario.nombre == "" ||
-                            invited == false
+                    usuario.nombre != "" || invited == false
                         ? "Hola, " + usuario.nombre.split(" ")[0]
                         : "Hola, invitado",
                     style: TextStyle(fontSize: 25, color: Colors.white)),

@@ -30,6 +30,7 @@ class SearchByCategoryState extends State<SearchByCategory> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(

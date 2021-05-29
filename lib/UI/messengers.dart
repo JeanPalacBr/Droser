@@ -16,6 +16,7 @@ class Messengers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Container(
             decoration: new BoxDecoration(
                 gradient: LinearGradient(

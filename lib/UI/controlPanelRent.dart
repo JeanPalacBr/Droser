@@ -68,6 +68,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -380,7 +381,7 @@ class ControlPanelRentstate extends State<ControlPanelRent> {
                               size: 50,
                             ),
                             label: Text(
-                              "Botón de pánico",
+                              "Solicitar contacto\n urgente",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 25),
                             )),

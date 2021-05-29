@@ -12,6 +12,7 @@ class Registrar extends StatelessWidget {
   Widget build(BuildContext context) {
     globalContext = context;
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "Droser",
         home: Container(
             decoration: new BoxDecoration(
@@ -24,8 +25,11 @@ class Registrar extends StatelessWidget {
               appBar: AppBar(
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login())),
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                    (Route<dynamic> route) => false,
+                  ),
                 ),
                 title: Text("Envío"),
                 centerTitle: true,

@@ -42,201 +42,209 @@ class UserProfilestate extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Container(
-      decoration: new BoxDecoration(
-          gradient: LinearGradient(colors: [
-        Colors.blue[400],
-        Colors.blue[200],
-        Colors.white,
-      ], stops: [
-        0.4,
-        0.3,
-        0.3
-      ], begin: FractionalOffset.topRight, end: FractionalOffset.bottomLeft)),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: !searching
-              ? Text("Droser")
-              : TextField(
-                  controller: busqueda,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                      hintText: "Busca drones, artículos y más...",
-                      hintStyle: TextStyle(color: Colors.white),
-                      fillColor: Colors.white),
-                  onSubmitted: (busqueda) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SearchResult(busqueda)));
-                  },
-                ),
-          actions: <Widget>[
-            Row(
-              children: [
-                IconButton(
-                    icon: !searching ? Icon(Icons.search) : Icon(Icons.cancel),
-                    onPressed: () {
-                      setState(() {
-                        this.searching = !this.searching;
-                        busqueda.clear();
-                      });
-                    }),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Carrito(carrito)));
-                  },
-                  icon: Icon(Icons.shopping_cart),
+          decoration: new BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                Colors.blue[400],
+                Colors.blue[200],
+                Colors.white,
+              ],
+                  stops: [
+                0.4,
+                0.3,
+                0.3
+              ],
+                  begin: FractionalOffset.topRight,
+                  end: FractionalOffset.bottomLeft)),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: !searching
+                  ? Text("Droser")
+                  : TextField(
+                      controller: busqueda,
+                      textInputAction: TextInputAction.search,
+                      decoration: InputDecoration(
+                          hintText: "Busca drones, artículos y más...",
+                          hintStyle: TextStyle(color: Colors.white),
+                          fillColor: Colors.white),
+                      onSubmitted: (busqueda) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchResult(busqueda)));
+                      },
+                    ),
+              actions: <Widget>[
+                Row(
+                  children: [
+                    IconButton(
+                        icon: !searching
+                            ? Icon(Icons.search)
+                            : Icon(Icons.cancel),
+                        onPressed: () {
+                          setState(() {
+                            this.searching = !this.searching;
+                            busqueda.clear();
+                          });
+                        }),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Carrito(carrito)));
+                      },
+                      icon: Icon(Icons.shopping_cart),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-          backgroundColor: Colors.blue[400],
-          elevation: 0,
-        ),
-        drawer: NavDrawer(),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Column(
-                mainAxisSize: MainAxisSize.min,
+              backgroundColor: Colors.blue[400],
+              elevation: 0,
+            ),
+            drawer: NavDrawer(),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Center(
-                    child: new Container(
-                      margin: EdgeInsets.only(bottom: 5.0),
-                      height: 20.0,
-                      width: 80.0,
-                    ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: usuario.image == null
-                        ? Image.network(
-                            "https://www.seekpng.com/png/full/356-3562377_personal-user.png",
-                            width: 200,
-                            alignment: Alignment.center,
-                          )
-                        : Image(
-                            image: usuario.image,
-                            width: 200,
-                            alignment: Alignment.center,
-                            fit: BoxFit.fill,
-                          ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
-                    child: Text(
-                      usuario.nombre.toString(),
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
+                  new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      new Center(
+                        child: new Container(
+                          margin: EdgeInsets.only(bottom: 5.0),
+                          height: 20.0,
+                          width: 80.0,
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.confirmation_number),
-                    Text(
-                      "Documento ID: " + usuario.documento.toString(),
-                      style: TextStyle(fontSize: 21),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.alternate_email),
-                    Text(
-                      "Email: " + usuario.email.toString(),
-                      style: TextStyle(fontSize: 21),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.phone),
-                    Text(
-                      "Teléfono: " + usuario.telefono.toString(),
-                      style: TextStyle(fontSize: 21),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.location_on),
-                    Text(
-                      "Dirección: " + usuario.direccion.toString(),
-                      style: TextStyle(fontSize: 21),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.location_city),
-                    Text(
-                      "Ciudad: " + usuario.ciudad.toString(),
-                      style: TextStyle(fontSize: 21),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.star),
-                    Text(
-                      "Estado: Activo",
-                      style: TextStyle(fontSize: 21),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile(usuario)));
-                        },
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: usuario.image == null
+                            ? Image.network(
+                                "https://www.seekpng.com/png/full/356-3562377_personal-user.png",
+                                width: 200,
+                                alignment: Alignment.center,
+                              )
+                            : Image(
+                                image: usuario.image,
+                                width: 200,
+                                alignment: Alignment.center,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
                         child: Text(
-                          "Editar",
-                          style: TextStyle(fontSize: 20),
-                        )),
+                          usuario.nombre.toString(),
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 36, 8, 15),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.confirmation_number),
+                        Text(
+                          "Documento ID: " + usuario.documento.toString(),
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.alternate_email),
+                        Text(
+                          "Email: " + usuario.email.toString(),
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.phone),
+                        Text(
+                          "Teléfono: " + usuario.telefono.toString(),
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.location_on),
+                        Text(
+                          "Dirección: " + usuario.direccion.toString(),
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.location_city),
+                        Text(
+                          "Ciudad: " + usuario.ciudad.toString(),
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.star),
+                        Text(
+                          "Estado: Activo",
+                          style: TextStyle(fontSize: 21),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditProfile(usuario)));
+                            },
+                            child: Text(
+                              "Editar",
+                              style: TextStyle(fontSize: 20),
+                            )),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 
   Future<void> loadFromShared() async {
